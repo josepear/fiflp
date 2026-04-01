@@ -18,6 +18,83 @@ function generatepress_child_editorial_anchor( $title = '' ) {
 	return 'capitulo-' . $slug;
 }
 
+function generatepress_child_get_editorial_children( $page_id = 0 ) {
+	$page_id = (int) $page_id;
+
+	if ( $page_id <= 0 ) {
+		return array();
+	}
+
+	return get_pages(
+		array(
+			'post_type'   => 'page',
+			'post_status' => 'publish',
+			'parent'      => $page_id,
+			'sort_column' => 'menu_order,post_title',
+			'hierarchical'=> 0,
+		)
+	);
+}
+
+function generatepress_child_is_editorial_page( $page = null ) {
+	$page = get_post( $page );
+
+	if ( ! ( $page instanceof WP_Post ) || 'page' !== $page->post_type || 'publish' !== $page->post_status ) {
+		return false;
+	}
+
+	if ( generatepress_child_get_editorial_children( $page->ID ) ) {
+		return true;
+	}
+
+	if ( function_exists( 'get_field' ) ) {
+		$bloques = get_field( 'bloques', $page->ID );
+
+		return ! empty( $bloques );
+	}
+
+	return false;
+}
+
+function generatepress_child_get_editorial_menu_pages( $current_page_id = 0 ) {
+	$current_page_id = (int) $current_page_id;
+	$chapter_page_id = wp_get_post_parent_id( $current_page_id );
+
+	if ( ! $chapter_page_id ) {
+		$chapter_page_id = $current_page_id;
+	}
+
+	$chapter_parent_id = wp_get_post_parent_id( $chapter_page_id );
+	$menu_parent_id    = $chapter_parent_id ? (int) $chapter_parent_id : 0;
+
+	$pages = get_pages(
+		array(
+			'post_type'   => 'page',
+			'post_status' => 'publish',
+			'parent'      => $menu_parent_id,
+			'sort_column' => 'menu_order,post_title',
+			'hierarchical'=> 0,
+		)
+	);
+
+	$pages = array_values(
+		array_filter(
+			$pages,
+			'generatepress_child_is_editorial_page'
+		)
+	);
+
+	if ( empty( $pages ) ) {
+		$current_page = get_post( $current_page_id );
+
+		if ( $current_page instanceof WP_Post && 'page' === $current_page->post_type ) {
+			return array( $current_page );
+		}
+	}
+
+	return $pages;
+}
+
 add_filter( 'generate_load_child_theme_stylesheet', '__return_false' );
 
 add_action(
