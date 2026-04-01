@@ -40,7 +40,9 @@ if ( $invertido ) {
 
 	<?php if ( $imagen ) : ?>
 		<div class="col imagen">
-			<img src="<?php echo esc_url( $imagen ); ?>" alt="">
+			<a href="<?php echo esc_url( $imagen ); ?>" class="lightbox-trigger">
+				<img src="<?php echo esc_url( $imagen ); ?>" alt="">
+			</a>
 		</div>
 	<?php endif; ?>
 

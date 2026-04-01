@@ -17,9 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php do_action( 'generate_after_footer' ); ?>
 
-<div class="lightbox-overlay" id="lightbox" aria-hidden="true">
-	<button type="button" class="lightbox-close" aria-label="Cerrar imagen">&times;</button>
+<div id="lightbox" class="lightbox">
+	<span class="lightbox-close">&times;</span>
 	<img class="lightbox-img" src="" alt="">
+	<p class="lightbox-caption"></p>
 </div>
 
 <?php wp_footer(); ?>

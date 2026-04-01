@@ -13,6 +13,13 @@ if ( ! $imagen ) {
 	return;
 }
 
+$imagen_url = is_array( $imagen ) ? ( $imagen['url'] ?? '' ) : $imagen;
+$imagen_alt = is_array( $imagen ) ? ( $imagen['alt'] ?? '' ) : '';
+
+if ( ! $imagen_url ) {
+	return;
+}
+
 $clases = array( 'bloque', 'imagen', 'fade-in' );
 
 if ( $full ) {
@@ -24,10 +31,8 @@ if ( $full ) {
 
 	<figure>
 
-		<a href="<?php echo esc_url( $imagen ); ?>" class="lightbox-trigger">
-
-			<img src="<?php echo esc_url( $imagen ); ?>" alt="">
-
+		<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ?? '' ); ?>">
+			<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
 		</a>
 
 		<?php if ( $caption ) : ?>

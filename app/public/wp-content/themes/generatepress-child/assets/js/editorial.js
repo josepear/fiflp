@@ -1,104 +1,55 @@
 /**
  * EDITORIAL JS
- * - Scroll suave
- * - Capítulo activo
  * - Lightbox
  * - Animaciones
  */
 
 document.addEventListener("DOMContentLoaded", function () {
-    const getScrollOffset = () => {
-        const adminBar = document.getElementById('wpadminbar');
-
-        return (adminBar ? adminBar.offsetHeight : 0) + 40;
-    };
-
-    // =========================
-    // SCROLL SUAVE
-    // =========================
-    document.querySelectorAll('.menu-lateral a').forEach(link => {
-        link.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-
-            if (!href || href.charAt(0) !== '#') {
-                return;
-            }
-
-            e.preventDefault();
-
-            const id = href.replace('#', '');
-            const target = document.getElementById(id);
-
-            if (target) {
-                window.scrollTo({
-                    top: target.getBoundingClientRect().top + window.scrollY - getScrollOffset(),
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // =========================
-    // CAPÍTULO ACTIVO
-    // =========================
-    const sections = document.querySelectorAll('.bloque.capitulo');
-    const menuLinks = document.querySelectorAll('.menu-lateral a');
-
-    const updateActiveChapter = () => {
-
-        let current = sections[0] ? sections[0].getAttribute('id') : '';
-        const scrollPosition = window.scrollY + getScrollOffset() + 1;
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-
-            if (scrollPosition >= sectionTop) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        menuLinks.forEach(link => {
-            link.classList.remove('activo');
-
-            if (link.getAttribute('href') === '#' + current) {
-                link.classList.add('activo');
-            }
-        });
-
-    };
-
-    window.addEventListener('scroll', updateActiveChapter, { passive: true });
-    updateActiveChapter();
-
     // =========================
     // LIGHTBOX
     // =========================
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.querySelector('.lightbox-img');
+    const lightboxCaption = document.querySelector('.lightbox-caption');
     const lightboxClose = document.querySelector('.lightbox-close');
 
     if (lightbox && lightboxImg && lightboxClose) {
+        const openLightbox = (src, alt = '') => {
+            if (!src) {
+                return;
+            }
+
+            lightboxImg.src = src;
+            lightboxImg.alt = alt;
+            if (lightboxCaption) {
+                lightboxCaption.textContent = alt;
+            }
+            lightbox.style.display = 'flex';
+            lightbox.setAttribute('aria-hidden', 'false');
+        };
+
         const closeLightbox = () => {
             lightbox.style.display = 'none';
             lightbox.setAttribute('aria-hidden', 'true');
             lightboxImg.setAttribute('src', '');
+            lightboxImg.setAttribute('alt', '');
+            if (lightboxCaption) {
+                lightboxCaption.textContent = '';
+            }
         };
 
-        document.querySelectorAll('.lightbox-trigger').forEach(link => {
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('.lightbox-trigger');
 
-            link.addEventListener('click', function(e) {
-                const src = this.getAttribute('href');
+            if (!link) {
+                return;
+            }
 
-                if (!src) {
-                    return;
-                }
+            const src = link.getAttribute('href');
+            const caption = link.getAttribute('data-caption') || '';
 
-                e.preventDefault();
-                lightboxImg.src = src;
-                lightbox.style.display = 'flex';
-                lightbox.setAttribute('aria-hidden', 'false');
-            });
-
+            e.preventDefault();
+            openLightbox(src, caption);
         });
 
         lightboxClose.addEventListener('click', function() {
@@ -153,5 +104,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     }
-
 });
