@@ -5,18 +5,21 @@
  * - Añade ID para navegación (ancla)
  */
 
-$titulo = get_sub_field('titulo');
+$titulo = get_sub_field( 'titulo' );
 
-/**
- * Genera ID limpio para usar en enlaces
- */
-$anchor = sanitize_title($titulo);
+if ( ! $titulo ) {
+	return;
+}
+
+$anchor = function_exists( 'generatepress_child_editorial_anchor' )
+	? generatepress_child_editorial_anchor( $titulo )
+	: sanitize_title( $titulo );
 ?>
 
-<section id="<?php echo $anchor; ?>" class="bloque capitulo">
+<section id="<?php echo esc_attr( $anchor ); ?>" class="bloque capitulo fade-in">
 
-    <h2 class="capitulo-titulo">
-        <?php echo esc_html($titulo); ?>
-    </h2>
+	<h2 class="capitulo-titulo">
+		<?php echo esc_html( $titulo ); ?>
+	</h2>
 
 </section>

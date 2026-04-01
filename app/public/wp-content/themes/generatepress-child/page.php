@@ -34,7 +34,17 @@ $bloque_index = 0;
 			<?php while ( have_posts() ) : the_post(); ?>
 				<?php if ( function_exists( 'have_rows' ) && have_rows( 'bloques' ) ) : ?>
 					<?php while ( have_rows( 'bloques' ) ) : the_row(); ?>
-						<?php get_template_part( 'template-parts/bloques/' . get_row_layout() ); ?>
+						<?php
+						$layout      = (string) get_row_layout();
+						$template    = str_replace( '_', '-', $layout );
+						$template_id = 'template-parts/bloques/' . $template;
+
+						if ( locate_template( $template_id . '.php', false, false ) ) {
+							get_template_part( $template_id );
+						} elseif ( locate_template( 'template-parts/bloques/' . $layout . '.php', false, false ) ) {
+							get_template_part( 'template-parts/bloques/' . $layout );
+						}
+						?>
 					<?php endwhile; ?>
 				<?php else : ?>
 					<section class="bloque texto fade-in">

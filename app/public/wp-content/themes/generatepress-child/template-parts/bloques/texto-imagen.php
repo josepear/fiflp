@@ -6,27 +6,42 @@
 
 global $bloque_index;
 
-if (!isset($bloque_index)) {
-    $bloque_index = 0;
+if ( ! isset( $bloque_index ) ) {
+	$bloque_index = 0;
 }
 
 $bloque_index++;
 
-// Detecta si es par
-$invertido = ($bloque_index % 2 === 0);
+$contenido = get_sub_field( 'contenido' );
+$imagen    = get_sub_field( 'imagen' );
 
-// Clases dinámicas
-$clase = $invertido ? 'invertido derecha' : 'izquierda';
+if ( ! $contenido && ! $imagen ) {
+	return;
+}
+
+$invertido = ( $bloque_index % 2 === 0 );
+$clases    = array( 'bloque', 'texto-imagen', 'fade-in' );
+
+if ( $invertido ) {
+	$clases[] = 'invertido';
+	$clases[] = 'derecha';
+} else {
+	$clases[] = 'izquierda';
+}
 ?>
 
-<section class="bloque texto-imagen <?php echo $clase; ?>">
+<section class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>">
 
-    <div class="col texto">
-        <?php the_sub_field('contenido'); ?>
-    </div>
+	<?php if ( $contenido ) : ?>
+		<div class="col texto">
+			<?php echo wp_kses_post( $contenido ); ?>
+		</div>
+	<?php endif; ?>
 
-    <div class="col imagen">
-        <img src="<?php the_sub_field('imagen'); ?>" />
-    </div>
+	<?php if ( $imagen ) : ?>
+		<div class="col imagen">
+			<img src="<?php echo esc_url( $imagen ); ?>" alt="">
+		</div>
+	<?php endif; ?>
 
 </section>

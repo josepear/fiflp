@@ -18,6 +18,8 @@ function generatepress_child_editorial_anchor( $title = '' ) {
 	return 'capitulo-' . $slug;
 }
 
+add_filter( 'generate_load_child_theme_stylesheet', '__return_false' );
+
 add_action(
 	'wp_enqueue_scripts',
 	function() {

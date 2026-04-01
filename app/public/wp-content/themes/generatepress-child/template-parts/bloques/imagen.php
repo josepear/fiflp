@@ -5,30 +5,37 @@
  * - Añade lightbox (clic en imagen)
  */
 
-$imagen = get_sub_field('imagen');
-$caption = get_sub_field('caption');
-$full = get_sub_field('full');
+$imagen  = get_sub_field( 'imagen' );
+$caption = get_sub_field( 'caption' );
+$full    = get_sub_field( 'full' );
 
-$clase = $full ? 'full' : '';
+if ( ! $imagen ) {
+	return;
+}
+
+$clases = array( 'bloque', 'imagen', 'fade-in' );
+
+if ( $full ) {
+	$clases[] = 'imagen-full';
+}
 ?>
 
-<section class="bloque imagen <?php echo $clase; ?>">
+<section class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>">
 
-    <figure>
+	<figure>
 
-        <!-- Envolvemos imagen con enlace para lightbox -->
-        <a href="<?php echo esc_url($imagen); ?>" class="lightbox-trigger">
+		<a href="<?php echo esc_url( $imagen ); ?>" class="lightbox-trigger">
 
-            <img src="<?php echo esc_url($imagen); ?>" alt="">
+			<img src="<?php echo esc_url( $imagen ); ?>" alt="">
 
-        </a>
+		</a>
 
-        <?php if ($caption): ?>
-            <figcaption>
-                <?php echo esc_html($caption); ?>
-            </figcaption>
-        <?php endif; ?>
+		<?php if ( $caption ) : ?>
+			<figcaption>
+				<?php echo esc_html( $caption ); ?>
+			</figcaption>
+		<?php endif; ?>
 
-    </figure>
+	</figure>
 
 </section>
