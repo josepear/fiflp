@@ -368,6 +368,79 @@
                     "min": "",
                     "max": ""
                 },
+                "layout_rotulo_editorial": {
+                    "key": "layout_rotulo_editorial",
+                    "name": "rotulo_editorial",
+                    "label": "Rótulo editorial",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_rotulo_editorial_supertitulo",
+                            "label": "Supertítulo",
+                            "name": "supertitulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_rotulo_editorial_titulo",
+                            "label": "Título",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_rotulo_editorial_subtitulo",
+                            "label": "Subtítulo",
+                            "name": "subtitulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
                 "layout_home_hero": {
                     "key": "layout_home_hero",
                     "name": "home_hero",
@@ -481,5 +554,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1775134267
+    "modified": 1775152000
 }

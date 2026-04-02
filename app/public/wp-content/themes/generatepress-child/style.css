@@ -3,6 +3,30 @@ Theme Name: GeneratePress Child
 Template: generatepress
 */
 
+@font-face {
+    font-family: 'FKScreamer Upright';
+    src: url('assets/fonts/FKScreamerLegacy-Upright.otf') format('opentype');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400 900;
+}
+
+@font-face {
+    font-family: 'FKScreamer Slanted';
+    src: url('assets/fonts/FKScreamerLegacy-Slanted.otf') format('opentype');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400 900;
+}
+
+@font-face {
+    font-family: 'FKScreamer Backslanted';
+    src: url('assets/fonts/FKScreamerLegacy-Backslanted.otf') format('opentype');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400 900;
+}
+
 /* =========================
    BASE GLOBAL
    ========================= */
@@ -74,7 +98,7 @@ p {
 
 /* Estilo del H1 (tipo FK Screamer aproximado) */
 .bloque.hero h1 {
-    font-family: 'Oswald', sans-serif; /* tipografía display */
+    font-family: 'FKScreamer Upright', sans-serif; /* tipografía display */
     font-size: 64px; /* tamaño grande */
     line-height: 1; /* compacto */
     font-weight: 600;
@@ -232,7 +256,7 @@ p {
 
 /* Título del capítulo */
 .capitulo-titulo {
-    font-family: 'Oswald', sans-serif; /* coherente con hero */
+    font-family: 'FKScreamer Upright', sans-serif; /* coherente con hero */
     font-size: 42px;
     line-height: 1.1;
     letter-spacing: -0.5px;
@@ -379,7 +403,7 @@ body {
 
 /* Título */
 .capitulo-titulo {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'FKScreamer Upright', sans-serif;
     font-size: 48px;
     line-height: 1.1;
     font-weight: 600;
@@ -480,7 +504,7 @@ body {
     top: 0;
     right: 0;
     color: rgba(17, 17, 17, 0.56);
-    font-family: 'Oswald', sans-serif;
+    font-family: 'FKScreamer Upright', sans-serif;
     font-size: 16px;
     line-height: 1.2;
 }
@@ -549,7 +573,7 @@ body {
     position: relative;
     color: rgba(17, 17, 17, 0.56);
     text-decoration: none;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'FKScreamer Upright', sans-serif;
     font-size: 13px;
     line-height: 1.45;
     letter-spacing: 0.08em;
@@ -558,7 +582,7 @@ body {
 }
 
 .menu-lateral ul.children a {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'FKScreamer Upright', sans-serif;
     font-size: 15px;
     line-height: 1.4;
     letter-spacing: 0;
@@ -652,6 +676,213 @@ body {
 }
 
 /* =========================
+   RÓTULO EDITORIAL
+   ========================= */
+
+.bloque.rotulo-editorial-bloque {
+    max-width: 1080px;
+}
+
+.rotulo-editorial {
+    --rotulo-color: #0f2d30;
+    --rotulo-bg: #fcfcf8;
+    --rotulo-border: 3px;
+    --rotulo-gap: 0px;
+    --rotulo-overlap: 3px;
+    --rotulo-font-size: clamp(2.15rem, 4.2vw, 4.65rem);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--rotulo-gap);
+    color: var(--rotulo-color);
+    max-width: min(100%, 1080px);
+}
+
+.rotulo-editorial__franja {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    padding: 12px 28px 11px;
+    background: var(--rotulo-bg);
+    line-height: 1;
+    z-index: 0;
+}
+
+.rotulo-editorial__franja > * {
+    position: relative;
+    z-index: 2;
+}
+
+.rotulo-editorial__union {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.18em;
+}
+
+.rotulo-editorial__marco {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.rotulo-editorial__marco-shape {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: miter;
+    stroke-linecap: square;
+}
+
+.rotulo-editorial__franja--superior {
+    margin-left: 10px;
+    padding: 11px 24px 10px;
+    margin-bottom: calc(var(--rotulo-overlap) * -1);
+    z-index: 2;
+}
+
+.rotulo-editorial__franja--principal {
+    margin-left: 28px;
+    padding: 14px 34px 13px 34px;
+    z-index: 1;
+}
+
+.rotulo-editorial__franja--principal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    height: var(--rotulo-border);
+    background: currentColor;
+    z-index: 3;
+}
+
+.rotulo-editorial__franja--principal::before {
+    left: -6%;
+    right: 7%;
+}
+
+.rotulo-editorial__texto {
+    display: block;
+    font-family: 'FKScreamer Upright', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.86;
+    text-align: center;
+    white-space: nowrap;
+    transform-origin: left center;
+}
+
+.rotulo-editorial__texto--superior {
+    font-family: 'FKScreamer Slanted', sans-serif;
+    font-size: var(--rotulo-font-size);
+    letter-spacing: 0.01em;
+}
+
+.rotulo-editorial__texto--principal {
+    font-family: 'FKScreamer Backslanted', sans-serif;
+    font-size: var(--rotulo-font-size);
+    letter-spacing: 0.01em;
+}
+
+.rotulo-editorial__subtitulo {
+    margin: 6px 0 0 34px;
+    max-width: 44ch;
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.08rem;
+    line-height: 1.6;
+    color: rgba(15, 45, 48, 0.82);
+}
+
+.editorial--demo {
+    max-width: 1200px;
+}
+
+.rotulo-editorial-demo {
+    padding: clamp(24px, 5vw, 64px) 0;
+}
+
+.rotulo-editorial-demo__header {
+    max-width: 56ch;
+    margin-bottom: 56px;
+}
+
+.rotulo-editorial-demo__eyebrow {
+    margin: 0 0 12px;
+    font-family: 'FKScreamer Upright', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(17, 17, 17, 0.58);
+}
+
+.rotulo-editorial-demo__title {
+    margin: 0 0 14px;
+    font-family: 'FKScreamer Upright', sans-serif;
+    font-size: clamp(2.2rem, 4.6vw, 4.2rem);
+    line-height: 0.98;
+    text-transform: uppercase;
+}
+
+.rotulo-editorial-demo__intro {
+    max-width: 58ch;
+    margin: 0;
+}
+
+.rotulo-editorial-demo__muestras {
+    display: grid;
+    gap: 72px;
+}
+
+@media (max-width: 900px) {
+
+    .rotulo-editorial__franja--superior,
+    .rotulo-editorial__franja--principal,
+    .rotulo-editorial__subtitulo {
+        margin-left: 0;
+    }
+
+    .rotulo-editorial__texto {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .rotulo-editorial {
+        --rotulo-gap: 10px;
+    }
+
+    .rotulo-editorial__franja {
+        padding: 10px 16px 9px;
+    }
+
+    .rotulo-editorial__marco-shape {
+        stroke-width: 2.5;
+    }
+
+    .rotulo-editorial__subtitulo {
+        margin-top: 4px;
+        font-size: 1rem;
+    }
+
+    .rotulo-editorial-demo__header {
+        margin-bottom: 40px;
+    }
+
+    .rotulo-editorial-demo__muestras {
+        gap: 48px;
+    }
+}
+
+/* =========================
    PRÓLOGOS
    ========================= */
 
@@ -697,7 +928,7 @@ body {
 
 .prologo-nombre {
     margin: 0 0 8px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'FKScreamer Upright', sans-serif;
     font-size: clamp(28px, 4vw, 36px);
     line-height: 1.1;
     font-weight: 600;
@@ -706,7 +937,7 @@ body {
 
 .prologo-cargo {
     margin: 0 0 18px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'FKScreamer Upright', sans-serif;
     color: rgba(17, 17, 17, 0.66);
     font-size: 16px;
     line-height: 1.5;
@@ -1016,7 +1247,7 @@ body.home #colophon {
 }
 
 .home-hero-title {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'FKScreamer Upright', sans-serif;
     font-size: clamp(2.5rem, 6vw, 5rem);
     line-height: 1.08;
     margin: 0 0 1rem;

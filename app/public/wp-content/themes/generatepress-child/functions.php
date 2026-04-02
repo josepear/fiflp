@@ -116,7 +116,7 @@ add_action(
 
 		wp_enqueue_style(
 			'editorial-fonts',
-			'https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;500;600&family=Oswald:wght@400;500;600;700&display=swap',
+			'https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;500;600&display=swap',
 			array(),
 			null
 		);
