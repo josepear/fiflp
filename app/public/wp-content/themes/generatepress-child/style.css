@@ -35,396 +35,35 @@ Template: generatepress
    BASE GLOBAL
    ========================= */
 
-/* Hace que padding y border no rompan el layout */
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
 
-/* Tipografía base del sitio (cuerpo de texto) */
 body {
-    font-family: 'Source Serif 4', serif; /* tipografía lectura */
-    color: #111; /* color texto */
-    font-size: 20px; /* tamaño base */
-    line-height: 1.8; /* interlineado */
+    font-family: 'Source Serif 4', serif;
+    color: #111;
+    font-size: 18px;
+    line-height: 1.75;
     margin: 0;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Imágenes siempre adaptadas al contenedor */
 img {
     max-width: 100%;
     height: auto;
     display: block;
 }
 
-/* Enlaces sin subrayado por defecto */
 a {
     color: inherit;
     text-decoration: none;
 }
 
-/* Espaciado estándar entre párrafos */
 p {
-    margin: 0 0 1.2em;
-}
-
-/* Contenedor principal tipo "columna editorial" */
-.editorial {
-    max-width: 900px; /* ancho tipo libro */
-    margin: 0 auto; /* centrado */
-    padding: 80px 20px; /* aire arriba/abajo */
-}
-
-/* =========================
-   BLOQUES (ACF)
-   ========================= */
-
-/* Separación general entre bloques */
-.bloque {
-    margin-bottom: 80px;
-}
-
-/* Evita espacio extra en el último bloque */
-.bloque:last-child {
-    margin-bottom: 0;
-}
-
-/* =========================
-   HERO (TÍTULO PRINCIPAL)
-   ========================= */
-
-/* Bloque hero con más aire */
-.bloque.hero {
-    margin-bottom: 120px;
-    max-width: 760px; /* más estrecho para elegancia */
-}
-
-/* Estilo del H1 (tipo FK Screamer aproximado) */
-.bloque.hero h1 {
-    font-family: 'Oswald', sans-serif; /* tipografía display */
-    font-size: 64px; /* tamaño grande */
-    line-height: 1; /* compacto */
-    font-weight: 600;
-    letter-spacing: -1px; /* más compacto */
-    text-transform: uppercase; /* look editorial fuerte */
-    margin: 0 0 20px;
-}
-
-/* =========================
-   TEXTO
-   ========================= */
-
-/* Bloque de texto principal */
-.bloque.texto {
-    max-width: 720px; /* ancho cómodo lectura */
-    font-size: 20px;
-    line-height: 1.8;
-}
-
-/* Quita margen al último párrafo */
-.bloque.texto p:last-child {
-    margin-bottom: 0;
-}
-
-/* Negritas */
-.bloque.texto strong {
-    font-weight: 600;
-}
-
-/* Cursivas */
-.bloque.texto em {
-    font-style: italic;
-}
-
-/* =========================
-   IMAGEN
-   ========================= */
-
-/* Bloque imagen con más aire y más ancho */
-.bloque.imagen {
-    margin: 100px auto;
-    max-width: 1100px; /* más ancho que texto */
-}
-
-/* Elimina márgenes por defecto del figure */
-.bloque.imagen figure {
-    margin: 0;
-}
-
-/* Pie de foto */
-.bloque.imagen figcaption {
-    margin-top: 10px;
-    font-size: 14px;
-    line-height: 1.4;
-    color: #666;
-    font-style: italic;
-}
-
-/* =========================
-   TEXTO + IMAGEN (GRID)
-   ========================= */
-
-/* Layout en dos columnas */
-.bloque.texto-imagen {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 columnas iguales */
-    gap: 40px; /* espacio entre columnas */
-    align-items: center; /* centra verticalmente */
-}
-
-/* Ajuste de texto dentro del grid */
-.bloque.texto-imagen .texto {
-    font-size: 20px;
-    line-height: 1.8;
-}
-
-/* Quita margen final del último párrafo */
-.bloque.texto-imagen .texto p:last-child {
-    margin-bottom: 0;
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-
-/* Tablet */
-@media (max-width: 900px) {
-
-    .editorial {
-        padding: 56px 20px;
-    }
-
-    .bloque {
-        margin-bottom: 56px;
-    }
-
-    .bloque.hero {
-        margin-bottom: 80px;
-    }
-
-    /* Reduce tamaño del H1 */
-    .bloque.hero h1 {
-        font-size: 44px;
-    }
-
-    /* Pasa a una sola columna */
-    .bloque.texto-imagen {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
-}
-
-/* Móvil */
-@media (max-width: 640px) {
-
-    /* Reduce tamaño de texto general */
-    body,
-    .bloque.texto,
-    .bloque.texto-imagen .texto {
-        font-size: 18px;
-        line-height: 1.7;
-    }
-
-    /* Ajuste título */
-    .bloque.hero h1 {
-        font-size: 36px;
-        letter-spacing: -0.5px;
-    }
-
-    /* Menos aire en imágenes */
-    .bloque.imagen {
-        margin: 72px auto;
-    }
-}
-
-/* =========================
-   CAPÍTULO (SEPARADOR)
-   ========================= */
-
-/* Bloque con mucho aire arriba/abajo */
-.bloque.capitulo {
-    margin: 140px 0 80px;
-    text-align: center; /* centrado tipo libro */
-}
-
-/* Línea decorativa opcional */
-.bloque.capitulo::before {
-    content: "";
-    display: block;
-    width: 60px;
-    height: 2px;
-    background: #111;
-    margin: 0 auto 20px;
-}
-
-/* Título del capítulo */
-.capitulo-titulo {
-    font-family: 'Oswald', sans-serif; /* coherente con hero */
-    font-size: 42px;
-    line-height: 1.1;
-    letter-spacing: -0.5px;
-    text-transform: uppercase;
-    margin: 0;
-}
-
-/* =========================
-   IMAGEN FULL BLEED
-   ========================= */
-
-/* Hace que la imagen rompa el ancho del contenido */
-.bloque.imagen-full {
-    width: 100vw; /* ocupa todo el ancho de la pantalla */
-    margin-left: calc(-50vw + 50%); /* sale del contenedor centrado */
-    margin-right: calc(-50vw + 50%);
-    margin-top: 120px;
-    margin-bottom: 120px;
-}
-
-/* Imagen ocupa todo el ancho */
-.bloque.imagen-full img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* =========================
-   TEXTO IMAGEN INVERTIDO
-   ========================= */
-
-/* Cambia orden cuando tiene clase invertido */
-.bloque.texto-imagen.invertido {
-    direction: rtl; /* invierte columnas */
-}
-
-/* Corrige contenido interno */
-.bloque.texto-imagen.invertido .texto,
-.bloque.texto-imagen.invertido .imagen {
-    direction: ltr;
-}
-
-/* =========================
-   ALINEACIÓN EDITORIAL FINA
-   ========================= */
-
-/* Por defecto (texto izquierda) */
-.bloque.texto-imagen.izquierda .texto {
-    text-align: left;
-}
-
-/* Cuando está invertido (imagen izquierda) */
-.bloque.texto-imagen.derecha .texto {
-    text-align: left; /* mantenemos lectura natural */
-}
-
-/* Ajuste de padding interno para dar aire */
-.bloque.texto-imagen .texto {
-    padding-right: 20px;
-}
-
-/* Cuando está invertido, cambiamos lado del aire */
-.bloque.texto-imagen.derecha .texto {
-    padding-right: 0;
-    padding-left: 20px;
-}
-
-/* Asegura que imagen no quede pegada */
-.bloque.texto-imagen .imagen {
-    padding: 0;
-}
-
-/* Mejora vertical (muy importante) */
-.bloque.texto-imagen {
-    align-items: start; /* antes center, ahora más editorial */
-}
-
-/* =========================
-   MICROTIPOGRAFÍA EDITORIAL
-   ========================= */
-
-/* Ancho de lectura óptimo */
-.bloque.texto {
-    max-width: 680px; /* ideal lectura libro */
-}
-
-/* Párrafos más finos */
-.bloque.texto p {
-    margin-bottom: 1.4em; /* ritmo vertical */
-    letter-spacing: 0.2px; /* ligera apertura */
-}
-
-/* Mejor legibilidad global */
-body {
-    font-size: 18px;
-    line-height: 1.75;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* TÍTULOS — más carácter editorial */
-.bloque.hero h1 {
-    letter-spacing: -1.5px; /* más compacto */
-    max-width: 900px;
-}
-
-/* Evita líneas demasiado largas en hero */
-.bloque.hero h1 {
-    text-wrap: balance;
-}
-
-/* Separación más elegante entre bloques */
-.bloque {
-    margin-bottom: 90px;
-}
-
-/* Ajuste fino para texto + imagen */
-.bloque.texto-imagen .texto {
-    max-width: 520px;
-}
-
-/* Mejor contraste visual */
-.bloque.texto strong {
-    font-weight: 600;
-}
-
-/* Citas o destacados (por si los usas luego) */
-.bloque.texto blockquote {
-    font-size: 22px;
-    line-height: 1.6;
-    margin: 40px 0;
-    padding-left: 20px;
-    border-left: 2px solid #111;
-}
-
-/* =========================
-   CAPÍTULO / PORTADILLA
-   ========================= */
-
-/* Contenedor */
-.bloque.capitulo {
-    margin: 180px 0 100px 0; /* mucho aire arriba */
-    text-align: left;
-}
-
-/* Título */
-.capitulo-titulo {
-    font-family: 'Oswald', sans-serif;
-    font-size: 48px;
-    line-height: 1.1;
-    font-weight: 600;
-    letter-spacing: -1px;
-    text-transform: uppercase;
-
-    max-width: 600px;
-}
-
-/* Línea decorativa (muy editorial) */
-.capitulo-titulo::before {
-    content: "";
-    display: block;
-    width: 60px;
-    height: 3px;
-    background: #111;
-    margin-bottom: 20px;
+    margin: 0 0 1.4em;
+    letter-spacing: 0.2px;
 }
 
 /* =========================
@@ -433,10 +72,15 @@ body {
 
 .layout-editorial {
     display: grid;
-    grid-template-columns: 240px 1fr; /* menú + contenido */
+    grid-template-columns: 240px 1fr;
     gap: 60px;
     max-width: 1400px;
     margin: 0 auto;
+}
+
+.editorial {
+    max-width: 800px;
+    padding: 80px 20px;
 }
 
 /* =========================
@@ -444,7 +88,7 @@ body {
    ========================= */
 
 .menu-lateral {
-    position: sticky; /* se queda fijo al hacer scroll */
+    position: sticky;
     top: 100px;
     height: fit-content;
 }
@@ -463,41 +107,9 @@ body {
     transition: all 0.2s ease;
 }
 
-/* Hover sutil */
 .menu-lateral li:hover {
     color: #111;
 }
-
-/* =========================
-   CONTENIDO
-   ========================= */
-
-.editorial {
-    max-width: 800px;
-}
-
-/* =========================
-   RESPONSIVE (IMPORTANTE)
-   ========================= */
-
-@media (max-width: 1024px) {
-
-    .layout-editorial {
-        grid-template-columns: 1fr; /* desaparece menú lateral */
-    }
-
-    .menu-lateral {
-        display: none;
-    }
-
-    .editorial {
-        max-width: 100%;
-    }
-}
-
-/* =========================
-   LINKS MENÚ LATERAL
-   ========================= */
 
 .menu-lateral a {
     text-decoration: none;
@@ -505,18 +117,73 @@ body {
     display: block;
 }
 
-/* activo al hover */
-.menu-lateral a:hover {
+.menu-lateral a:hover,
+.menu-lateral a.activo {
+    color: #111;
+    font-weight: 600;
+}
+
+/* =========================
+   BLOQUES (ACF)
+   ========================= */
+
+.bloque {
+    margin-bottom: 90px;
+}
+
+.bloque:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================
+   HERO (TÍTULO PRINCIPAL)
+   ========================= */
+
+.bloque.hero {
+    margin-bottom: 120px;
+    max-width: 760px;
+}
+
+.bloque.hero h1 {
+    font-family: 'FKScreamer Upright', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    margin: 0 0 20px;
+    text-wrap: balance;
     color: #111;
 }
 
 /* =========================
-   MENÚ ACTIVO
+   TEXTO
    ========================= */
 
-.menu-lateral a.activo {
-    color: #111;
+.bloque.texto {
+    max-width: 680px;
+    font-size: 18px;
+    line-height: 1.75;
+}
+
+.bloque.texto p:last-child {
+    margin-bottom: 0;
+}
+
+.bloque.texto strong {
     font-weight: 600;
+}
+
+.bloque.texto em {
+    font-style: italic;
+}
+
+.bloque.texto blockquote {
+    font-size: 22px;
+    line-height: 1.6;
+    margin: 40px 0;
+    padding-left: 20px;
+    border-left: 2px solid #111;
 }
 
 /* =========================
@@ -524,26 +191,286 @@ body {
    ========================= */
 
 .bloque.imagen {
-    width: 100vw; /* ocupa todo el ancho pantalla */
-    margin-left: calc(50% - 50vw); /* rompe contenedor */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-
     margin-top: 120px;
     margin-bottom: 120px;
 }
 
-/* Imagen */
 .bloque.imagen img {
     width: 100%;
     height: auto;
     display: block;
 }
 
-/* Caption centrado debajo */
+.bloque.imagen figure {
+    margin: 0;
+}
+
 .bloque.imagen figcaption {
     max-width: 800px;
     margin: 10px auto 0 auto;
     padding: 0 20px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #666;
+    font-style: italic;
+}
+
+/* =========================
+   IMAGEN FULL BLEED
+   ========================= */
+
+.bloque.imagen-full {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    margin-top: 120px;
+    margin-bottom: 120px;
+}
+
+.bloque.imagen-full img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* =========================
+   TEXTO + IMAGEN (GRID)
+   ========================= */
+
+.bloque.texto-imagen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.bloque.texto-imagen .texto {
+    font-size: 18px;
+    line-height: 1.75;
+    max-width: 520px;
+    padding-right: 20px;
+}
+
+.bloque.texto-imagen .texto p:last-child {
+    margin-bottom: 0;
+}
+
+.bloque.texto-imagen.invertido {
+    direction: rtl;
+}
+
+.bloque.texto-imagen.invertido .texto,
+.bloque.texto-imagen.invertido .imagen {
+    direction: ltr;
+}
+
+.bloque.texto-imagen.derecha .texto {
+    padding-right: 0;
+    padding-left: 20px;
+}
+
+.bloque.texto-imagen .imagen {
+    padding: 0;
+}
+
+/* =========================
+   CAPÍTULO / PORTADILLA
+   ========================= */
+
+.bloque.capitulo {
+    margin: 180px 0 100px 0;
+    text-align: left;
+}
+
+.capitulo-titulo {
+    font-family: 'FKScreamer Upright', sans-serif;
+    font-size: 48px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    max-width: 600px;
+    margin: 0;
+}
+
+.capitulo-titulo::before {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #111;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   RÓTULO EDITORIAL
+   ========================= */
+
+.bloque.rotulo-editorial-bloque {
+    max-width: 1080px;
+}
+
+.rotulo-editorial {
+    --rotulo-color: #0f2d30;
+    --rotulo-bg: #fcfcf8;
+    --rotulo-gap: 0px;
+    --rotulo-overlap: 3px;
+    --rotulo-font-size: clamp(2.15rem, 4.2vw, 4.65rem);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--rotulo-gap);
+    color: var(--rotulo-color);
+    max-width: min(100%, 1080px);
+}
+
+.rotulo-editorial__franja {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    padding: 12px 28px 11px;
+    background: var(--rotulo-bg);
+    line-height: 1;
+    z-index: 0;
+}
+
+.rotulo-editorial__franja > * {
+    position: relative;
+    z-index: 2;
+}
+
+.rotulo-editorial__union {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.18em;
+}
+
+.rotulo-editorial__marco {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.rotulo-editorial__marco-shape {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: miter;
+    stroke-linecap: square;
+}
+
+.rotulo-editorial__marco-shape--sin-top {
+    stroke-dasharray: 291 99;
+    stroke-dashoffset: -99;
+}
+
+.rotulo-editorial__franja--superior {
+    margin-left: 10px;
+    padding: 11px 24px 10px;
+    margin-bottom: calc(var(--rotulo-overlap) * -1);
+    z-index: 2;
+}
+
+.rotulo-editorial__franja--principal {
+    margin-left: 28px;
+    padding: 14px 34px 13px 34px;
+    z-index: 1;
+}
+
+.rotulo-editorial__franja--principal::before {
+    display: none;
+}
+
+.rotulo-editorial__texto {
+    display: block;
+    font-family: 'FKScreamer Upright', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.86;
+    text-align: center;
+    white-space: nowrap;
+    transform-origin: left center;
+}
+
+.rotulo-editorial__texto--superior {
+    font-family: 'FKScreamer Slanted', sans-serif;
+    font-size: var(--rotulo-font-size);
+    letter-spacing: 0.01em;
+}
+
+.rotulo-editorial__texto--principal {
+    font-family: 'FKScreamer Backslanted', sans-serif;
+    font-size: var(--rotulo-font-size);
+    letter-spacing: 0.01em;
+}
+
+.rotulo-editorial__subtitulo {
+    margin: 6px 0 0 34px;
+    max-width: 44ch;
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.08rem;
+    line-height: 1.6;
+    color: rgba(15, 45, 48, 0.82);
+}
+
+/* =========================
+   DEMO RÓTULO EDITORIAL
+   ========================= */
+
+.rotulo-editorial-demo {
+    padding: 60px 0;
+}
+
+.rotulo-editorial-demo__header {
+    margin-bottom: 48px;
+}
+
+.rotulo-editorial-demo__eyebrow {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(15, 45, 48, 0.5);
+    margin: 0 0 8px;
+}
+
+.rotulo-editorial-demo__title {
+    font-family: 'FKScreamer Upright', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    color: #0f2d30;
+}
+
+.rotulo-editorial-demo__intro {
+    max-width: 56ch;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(15, 45, 48, 0.7);
+    margin: 0;
+}
+
+.rotulo-editorial-demo__muestras {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.rotulo-editorial-demo__item {
+    display: flex;
+    align-items: flex-start;
 }
 
 /* =========================
@@ -563,13 +490,11 @@ body {
     z-index: 9999;
 }
 
-/* Imagen */
 .lightbox-img {
     max-width: 90%;
     max-height: 90%;
 }
 
-/* Botón cerrar */
 .lightbox-close {
     position: absolute;
     top: 30px;
@@ -580,13 +505,13 @@ body {
 }
 
 /* =========================
-   ANIMACIÓN EDITORIAL PRO
+   ANIMACIÓN EDITORIAL
    ========================= */
 
 .fade-in {
     opacity: 0;
     transform: translateY(40px);
-    transition: 
+    transition:
         opacity 0.6s ease,
         transform 0.6s ease;
 }
@@ -596,20 +521,76 @@ body {
     transform: translateY(0);
 }
 
+/* Fallback: si JS no activa la clase, se muestra igualmente */
+.no-js .fade-in {
+    opacity: 1;
+    transform: none;
+}
+
 /* =========================
-   SCROLL TIPO LIBRO
+   SCROLL
    ========================= */
 
 html {
     scroll-behavior: smooth;
 }
 
-/* Activa snap vertical */
 body {
     scroll-snap-type: y mandatory;
 }
 
-/* Cada bloque se comporta como sección */
 .bloque {
     scroll-snap-align: start;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1024px) {
+    .layout-editorial {
+        grid-template-columns: 1fr;
+    }
+    .menu-lateral {
+        display: none;
+    }
+    .editorial {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 900px) {
+    .editorial {
+        padding: 56px 20px;
+    }
+    .bloque {
+        margin-bottom: 56px;
+    }
+    .bloque.hero {
+        margin-bottom: 80px;
+    }
+    .bloque.hero h1 {
+        font-size: 44px;
+    }
+    .bloque.texto-imagen {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    body,
+    .bloque.texto,
+    .bloque.texto-imagen .texto {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+    .bloque.hero h1 {
+        font-size: 36px;
+        letter-spacing: -0.5px;
+    }
+    .bloque.imagen {
+        margin-top: 72px;
+        margin-bottom: 72px;
+    }
 }
