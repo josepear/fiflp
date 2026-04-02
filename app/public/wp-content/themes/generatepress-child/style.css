@@ -455,12 +455,51 @@ body {
     margin: 0;
 }
 
+.menu-lateral details {
+    display: block;
+}
+
+.menu-lateral-summary {
+    position: relative;
+    display: block;
+    list-style: none;
+    cursor: pointer;
+}
+
+.menu-lateral-summary::-webkit-details-marker {
+    display: none;
+}
+
+.menu-lateral-summary::marker {
+    display: none;
+}
+
+.menu-lateral-summary::after {
+    content: "+";
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: rgba(17, 17, 17, 0.56);
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+.menu-lateral-grupo[open] > .menu-lateral-summary::after {
+    content: "−";
+}
+
 .menu-lateral ul.children {
     gap: 8px;
     margin-top: 10px;
     margin-left: 6px;
     padding-left: 14px;
     border-left-color: rgba(17, 17, 17, 0.08);
+}
+
+.menu-lateral ul.children ul.children {
+    gap: 6px;
+    margin-top: 8px;
 }
 
 /* =========================
@@ -482,12 +521,18 @@ body {
 
     .layout-editorial {
         grid-template-columns: minmax(0, 1fr); /* desaparece menú lateral */
-        gap: 0;
+        gap: 32px;
         padding: 0 20px;
     }
 
     .menu-lateral {
-        display: none;
+        display: block;
+        position: static;
+        top: auto;
+        width: 100%;
+        min-width: 0;
+        padding-top: 0;
+        margin-bottom: 8px;
     }
 
     .editorial {
@@ -513,11 +558,18 @@ body {
 }
 
 .menu-lateral ul.children a {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Oswald', sans-serif;
     font-size: 15px;
     line-height: 1.4;
     letter-spacing: 0;
     text-transform: none;
+}
+
+.menu-lateral .menu-item-level-2 > a,
+.menu-lateral .menu-item-level-3 > a,
+.menu-lateral .menu-item-level-4 > a {
+    font-size: 14px;
+    line-height: 1.45;
 }
 
 .menu-lateral a::before {
@@ -549,7 +601,8 @@ body {
 
 .menu-lateral .current_page_item > a,
 .menu-lateral .current_page_parent > a,
-.menu-lateral .current_page_ancestor > a {
+.menu-lateral .current_page_ancestor > a,
+.menu-lateral .current_page_parent > .menu-lateral-grupo > .menu-lateral-summary > a {
     color: #111;
     font-weight: 500;
 }
@@ -561,7 +614,8 @@ body {
 
 .menu-lateral .current_page_item > a::before,
 .menu-lateral .current_page_parent > a::before,
-.menu-lateral .current_page_ancestor > a::before {
+.menu-lateral .current_page_ancestor > a::before,
+.menu-lateral .current_page_parent > .menu-lateral-grupo > .menu-lateral-summary > a::before {
     width: 18px;
     opacity: 1;
 }
@@ -591,6 +645,76 @@ body {
 .editorial-indice-list a:focus-visible {
     color: #111;
     border-bottom-color: rgba(17, 17, 17, 0.5);
+}
+
+/* =========================
+   PRÓLOGOS
+   ========================= */
+
+.bloque.prologos {
+    max-width: 900px;
+}
+
+.prologo {
+    display: grid;
+    grid-template-columns: minmax(150px, 150px) minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+}
+
+.prologo + .prologo {
+    margin-top: 56px;
+    padding-top: 56px;
+    border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.prologo-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 22px;
+    overflow: hidden;
+    background: none;
+    display: block;
+}
+
+.prologo-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border-radius: 22px;
+}
+
+.prologo-content {
+    min-width: 0;
+    font-family: 'Source Serif 4', serif;
+}
+
+.prologo-nombre {
+    margin: 0 0 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(28px, 4vw, 36px);
+    line-height: 1.1;
+    font-weight: 600;
+    text-transform: none;
+}
+
+.prologo-cargo {
+    margin: 0 0 18px;
+    font-family: 'Oswald', sans-serif;
+    color: rgba(17, 17, 17, 0.66);
+    font-size: 16px;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.prologo-texto {
+    max-width: 65ch;
+}
+
+.prologo-texto p:last-child {
+    margin-bottom: 0;
 }
 
 /* =========================
@@ -725,20 +849,6 @@ body {
    SCROLL TIPO LIBRO
    ========================= */
 
-html {
-    scroll-behavior: smooth;
-}
-
-/* Activa snap vertical */
-body {
-    scroll-snap-type: y mandatory;
-}
-
-/* Cada bloque se comporta como sección */
-.bloque {
-    scroll-snap-align: start;
-}
-
 /* =========================
    RITMO EDITORIAL FINO
    ========================= */
@@ -795,6 +905,15 @@ body {
     .bloque.texto-imagen {
         gap: 28px;
     }
+
+    .prologo {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .prologo-img {
+        max-width: 280px;
+    }
 }
 
 @media (max-width: 640px) {
@@ -817,3 +936,142 @@ body {
         margin: 16px 0;
     }
 }
+
+/* =========================
+   HERO HOME
+   ========================= */
+
+.home-hero {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    min-width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.layout-editorial,
+.menu-lateral,
+header,
+.site-header,
+.footer,
+#colophon {
+    display: none !important;
+}
+
+
+.home-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1;
+}
+
+.home-hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 24px;
+    text-align: center;
+    color: #fff;
+}
+
+.home-hero-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1.08;
+    margin: 0 0 1rem;
+}
+
+.home-hero-main-logo {
+    margin-bottom: 1rem;
+}
+
+.home-hero-main-logo img {
+    max-height: 80px;
+    width: auto;
+}
+
+.home-hero__button,
+.home-hero__button--ghost {
+    display: inline-block;
+    padding: 0.9rem 1.8rem;
+    border-radius: 999px;
+    border: 2px solid #fff;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.home-hero__button:hover,
+.home-hero__button--ghost:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: #111;
+    transform: translateY(-2px);
+}
+
+.home-hero__button--ghost {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255,255,255,0.8);
+}
+.home-hero-button:hover {
+    background: rgba(255, 255, 255, 0.85);
+    color: #111;
+    transform: translateY(-2px);
+}
+
+.home-hero-logos {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 1.1rem;
+    padding: 0 1rem;
+    flex-wrap: wrap;
+}
+
+.home-hero-logo img {
+    max-height: 40px;
+    width: auto;
+    filter: brightness(1);
+}
+
+.home-hero__subactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.8rem;
+}
+
+.home-hero__small-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    padding: 0.48rem 0.95rem;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.92);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    transition: all .18s ease;
+}
+
+.home-hero__small-button:hover {
+    background: rgba(255,255,255,0.9);
+    color: #111;
+}
+
+

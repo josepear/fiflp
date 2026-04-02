@@ -1,0 +1,485 @@
+{
+    "key": "group_bloques_editoriales",
+    "title": "Bloques editoriales",
+    "fields": [
+        {
+            "key": "field_bloques",
+            "label": "Bloques",
+            "name": "bloques",
+            "aria-label": "",
+            "type": "flexible_content",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layouts": {
+                "layout_hero": {
+                    "key": "layout_hero",
+                    "name": "hero",
+                    "label": "Hero",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_hero_titulo",
+                            "label": "Titulo",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_texto": {
+                    "key": "layout_texto",
+                    "name": "texto",
+                    "label": "Texto",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_texto_contenido",
+                            "label": "Contenido",
+                            "name": "contenido",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "allow_in_bindings": 0,
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 1,
+                            "delay": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_imagen": {
+                    "key": "layout_imagen",
+                    "name": "imagen",
+                    "label": "Imagen",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_imagen_imagen",
+                            "label": "Imagen",
+                            "name": "imagen",
+                            "aria-label": "",
+                            "type": "image",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "url",
+                            "library": "all",
+                            "min_width": "",
+                            "min_height": "",
+                            "min_size": "",
+                            "max_width": "",
+                            "max_height": "",
+                            "max_size": "",
+                            "mime_types": "",
+                            "allow_in_bindings": 0,
+                            "preview_size": "medium"
+                        },
+                        {
+                            "key": "field_imagen_caption",
+                            "label": "Caption",
+                            "name": "caption",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_69cc517c81075",
+                            "label": "A sangre",
+                            "name": "full",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "allow_in_bindings": 0,
+                            "ui_on_text": "",
+                            "ui_off_text": "",
+                            "ui": 1
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_texto_imagen": {
+                    "key": "layout_texto_imagen",
+                    "name": "texto_imagen",
+                    "label": "Texto imagen",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_texto_imagen_contenido",
+                            "label": "Contenido",
+                            "name": "contenido",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "allow_in_bindings": 0,
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 1,
+                            "delay": 0
+                        },
+                        {
+                            "key": "field_texto_imagen_imagen",
+                            "label": "Imagen",
+                            "name": "imagen",
+                            "aria-label": "",
+                            "type": "image",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "url",
+                            "library": "all",
+                            "min_width": "",
+                            "min_height": "",
+                            "min_size": "",
+                            "max_width": "",
+                            "max_height": "",
+                            "max_size": "",
+                            "mime_types": "",
+                            "allow_in_bindings": 0,
+                            "preview_size": "medium"
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_capitulo": {
+                    "key": "layout_capitulo",
+                    "name": "capitulo",
+                    "label": "Capitulo",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_capitulo_titulo",
+                            "label": "Titulo",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_prologos": {
+                    "key": "layout_prologos",
+                    "name": "prologos",
+                    "label": "Prólogos",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_prologos_prologos",
+                            "label": "Prólogos",
+                            "name": "prologos",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "layout": "block",
+                            "pagination": 0,
+                            "min": 0,
+                            "max": 0,
+                            "collapsed": "",
+                            "button_label": "Añadir Prólogo",
+                            "rows_per_page": 20,
+                            "sub_fields": [
+                                {
+                                    "key": "field_prologos_prologo_nombre",
+                                    "label": "Nombre",
+                                    "name": "nombre",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "allow_in_bindings": 0,
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": ""
+                                },
+                                {
+                                    "key": "field_prologos_prologo_cargo",
+                                    "label": "Cargo",
+                                    "name": "cargo",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "allow_in_bindings": 0,
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": ""
+                                },
+                                {
+                                    "key": "field_prologos_prologo_contenido",
+                                    "label": "Contenido",
+                                    "name": "contenido",
+                                    "aria-label": "",
+                                    "type": "wysiwyg",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "allow_in_bindings": 0,
+                                    "tabs": "all",
+                                    "toolbar": "full",
+                                    "media_upload": 1,
+                                    "delay": 0
+                                },
+                                {
+                                    "key": "field_prologos_prologo_foto",
+                                    "label": "Foto",
+                                    "name": "foto",
+                                    "aria-label": "",
+                                    "type": "image",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "return_format": "array",
+                                    "library": "all",
+                                    "min_width": "",
+                                    "min_height": "",
+                                    "min_size": "",
+                                    "max_width": "",
+                                    "max_height": "",
+                                    "max_size": "",
+                                    "mime_types": "",
+                                    "allow_in_bindings": 0,
+                                    "preview_size": "medium"
+                                }
+                            ]
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_home_hero": {
+                    "key": "layout_home_hero",
+                    "name": "home_hero",
+                    "label": "Home Hero",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_home_hero_imagen_de_fondo",
+                            "label": "Imagen de fondo",
+                            "name": "imagen_de_fondo",
+                            "type": "image",
+                            "return_format": "array",
+                            "library": "all",
+                            "preview_size": "medium"
+                        },
+                        {
+                            "key": "field_home_hero_titulo",
+                            "label": "Título",
+                            "name": "titulo",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_home_hero_texto",
+                            "label": "Texto",
+                            "name": "texto",
+                            "type": "textarea"
+                        },
+                        {
+                            "key": "field_home_hero_boton_capitulos_texto",
+                            "label": "Texto del botón capítulos",
+                            "name": "boton_capitulos_texto",
+                            "type": "text",
+                            "default_value": "IR A LOS CAPÍTULOS"
+                        },
+                        {
+                            "key": "field_home_hero_boton_capitulos_url",
+                            "label": "URL del botón capítulos",
+                            "name": "boton_capitulos_url",
+                            "type": "url",
+                            "default_value": "https://wp.pearandco.es/prueba"
+                        },
+                        {
+                            "key": "field_home_hero_link_pdf",
+                            "label": "Enlace PDF",
+                            "name": "link_pdf",
+                            "type": "file",
+                            "return_format": "url",
+                            "library": "all"
+                        },
+                        {
+                            "key": "field_home_hero_link_epub",
+                            "label": "Enlace EPUB",
+                            "name": "link_epub",
+                            "type": "file",
+                            "return_format": "url",
+                            "library": "all"
+                        },
+                        {
+                            "key": "field_home_hero_logo_principal",
+                            "label": "Logo principal",
+                            "name": "logo_principal",
+                            "type": "image",
+                            "return_format": "array",
+                            "library": "all",
+                            "preview_size": "medium"
+                        },
+                        {
+                            "key": "field_home_hero_logos",
+                            "label": "Logos",
+                            "name": "logos",
+                            "type": "repeater",
+                            "sub_fields": [
+                                {
+                                    "key": "field_home_hero_logos_imagen",
+                                    "label": "Logo",
+                                    "name": "imagen",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "library": "all",
+                                    "preview_size": "thumbnail"
+                                }
+                            ],
+                            "button_label": "Añadir logo"
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                }
+            },
+            "min": "",
+            "max": "",
+            "button_label": "Añadir bloque"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1775134267
+}
