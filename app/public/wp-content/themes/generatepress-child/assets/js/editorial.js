@@ -5,6 +5,38 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+    const homeHero = document.querySelector('[data-editorial-hero]');
+    const homeHeroContent = document.querySelector('[data-editorial-hero-content]');
+
+    if (homeHero) {
+        const activateHero = () => {
+            homeHero.classList.add('is-ready');
+
+            window.setTimeout(() => {
+                homeHero.classList.add('is-content-ready');
+            }, 900);
+        };
+
+        if (document.readyState === 'complete') {
+            requestAnimationFrame(activateHero);
+        } else {
+            window.addEventListener('load', activateHero, { once: true });
+            requestAnimationFrame(activateHero);
+        }
+
+        if (homeHeroContent && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+            window.addEventListener('mousemove', function (event) {
+                const x = (event.clientX / window.innerWidth) - 0.5;
+                const y = (event.clientY / window.innerHeight) - 0.5;
+
+                homeHero.style.setProperty('--hero-pan-x', `${x * 18}px`);
+                homeHero.style.setProperty('--hero-pan-y', `${y * 12}px`);
+                homeHeroContent.style.setProperty('--hero-content-x', `${x * -10}px`);
+                homeHeroContent.style.setProperty('--hero-content-y', `${y * -8}px`);
+            }, { passive: true });
+        }
+    }
+
     // =========================
     // LIGHTBOX
     // =========================

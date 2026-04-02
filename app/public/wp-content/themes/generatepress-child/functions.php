@@ -3,21 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function generatepress_child_editorial_anchor( $title = '' ) {
-	$row_index = function_exists( 'get_row_index' ) ? (int) get_row_index() : 0;
-	$slug      = sanitize_title( wp_strip_all_tags( (string) $title ) );
-
-	if ( '' === $slug ) {
-		$slug = 'seccion';
-	}
-
-	if ( $row_index > 0 ) {
-		return 'capitulo-' . $row_index . '-' . $slug;
-	}
-
-	return 'capitulo-' . $slug;
-}
-
 function generatepress_child_get_editorial_children( $page_id = 0 ) {
 	$page_id = (int) $page_id;
 
@@ -56,43 +41,62 @@ function generatepress_child_is_editorial_page( $page = null ) {
 	return false;
 }
 
-function generatepress_child_get_editorial_menu_pages( $current_page_id = 0 ) {
-	$current_page_id = (int) $current_page_id;
-	$chapter_page_id = wp_get_post_parent_id( $current_page_id );
+if ( ! function_exists( 'fiflp_collect_prologo_items_from_blocks' ) ) {
+	function fiflp_collect_prologo_items_from_blocks( $bloques ) {
+		$items = array();
 
-	if ( ! $chapter_page_id ) {
-		$chapter_page_id = $current_page_id;
-	}
-
-	$chapter_parent_id = wp_get_post_parent_id( $chapter_page_id );
-	$menu_parent_id    = $chapter_parent_id ? (int) $chapter_parent_id : 0;
-
-	$pages = get_pages(
-		array(
-			'post_type'   => 'page',
-			'post_status' => 'publish',
-			'parent'      => $menu_parent_id,
-			'sort_column' => 'menu_order,post_title',
-			'hierarchical'=> 0,
-		)
-	);
-
-	$pages = array_values(
-		array_filter(
-			$pages,
-			'generatepress_child_is_editorial_page'
-		)
-	);
-
-	if ( empty( $pages ) ) {
-		$current_page = get_post( $current_page_id );
-
-		if ( $current_page instanceof WP_Post && 'page' === $current_page->post_type ) {
-			return array( $current_page );
+		if ( ! is_array( $bloques ) ) {
+			return $items;
 		}
-	}
 
-	return $pages;
+		foreach ( $bloques as $bloque ) {
+			$layout = isset( $bloque['acf_fc_layout'] ) ? (string) $bloque['acf_fc_layout'] : '';
+
+			if ( 'prologo' === $layout ) {
+				$nombre    = isset( $bloque['nombre'] ) ? trim( (string) $bloque['nombre'] ) : '';
+				$cargo     = isset( $bloque['cargo'] ) ? trim( (string) $bloque['cargo'] ) : '';
+				$contenido = $bloque['texto'] ?? ( $bloque['contenido'] ?? '' );
+				$foto      = $bloque['foto'] ?? null;
+
+				if ( '' === $nombre && '' === $cargo && empty( $contenido ) && empty( $foto ) ) {
+					continue;
+				}
+
+				$items[] = array(
+					'index'     => count( $items ),
+					'label'     => '' !== $nombre ? $nombre : 'Prólogo ' . ( count( $items ) + 1 ),
+					'nombre'    => $nombre,
+					'cargo'     => $cargo,
+					'contenido' => $contenido,
+					'foto'      => $foto,
+				);
+			}
+
+			if ( 'prologos' === $layout && ! empty( $bloque['prologos'] ) && is_array( $bloque['prologos'] ) ) {
+				foreach ( $bloque['prologos'] as $prologo ) {
+					$nombre    = isset( $prologo['nombre'] ) ? trim( (string) $prologo['nombre'] ) : '';
+					$cargo     = isset( $prologo['cargo'] ) ? trim( (string) $prologo['cargo'] ) : '';
+					$contenido = $prologo['texto'] ?? ( $prologo['contenido'] ?? '' );
+					$foto      = $prologo['foto'] ?? null;
+
+					if ( '' === $nombre && '' === $cargo && empty( $contenido ) && empty( $foto ) ) {
+						continue;
+					}
+
+					$items[] = array(
+						'index'     => count( $items ),
+						'label'     => '' !== $nombre ? $nombre : 'Prólogo ' . ( count( $items ) + 1 ),
+						'nombre'    => $nombre,
+						'cargo'     => $cargo,
+						'contenido' => $contenido,
+						'foto'      => $foto,
+					);
+				}
+			}
+		}
+
+		return array_values( $items );
+	}
 }
 
 add_filter( 'generate_load_child_theme_stylesheet', '__return_false' );
