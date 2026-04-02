@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
 					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-						<polygon class="rotulo-editorial__marco-shape rotulo-editorial__marco-shape--sin-top" points="-6,2 93,2 99,98 0,98"></polygon>
+						<polyline class="rotulo-editorial__marco-shape" points="-6,2 0,98 99,98 93,2"></polyline>
 					</svg>
 					<span class="rotulo-editorial__texto rotulo-editorial__texto--principal">Estadio Pepe Gonçalves</span>
 				</div>
@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
 					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-						<polygon class="rotulo-editorial__marco-shape rotulo-editorial__marco-shape--sin-top" points="-6,2 93,2 99,98 0,98"></polygon>
+						<polyline class="rotulo-editorial__marco-shape" points="-6,2 0,98 99,98 93,2"></polyline>
 					</svg>
 					<span class="rotulo-editorial__texto rotulo-editorial__texto--principal">Nace una nueva era federativa</span>
 				</div>
