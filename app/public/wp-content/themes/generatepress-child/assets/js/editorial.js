@@ -112,11 +112,22 @@ document.addEventListener("DOMContentLoaded", function () {
             bloque.style.transitionDelay = (index * 0.08) + 's';
         };
 
+        const mostrarBloque = (bloque) => {
+            bloque.classList.add('visible');
+        };
+
+        const bloqueEnViewport = (bloque) => {
+            const rect = bloque.getBoundingClientRect();
+
+            return rect.top < window.innerHeight && rect.bottom > 0;
+        };
+
         if ('IntersectionObserver' in window) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        mostrarBloque(entry.target);
+                        observer.unobserve(entry.target);
                     }
                 });
             }, {
@@ -124,13 +135,18 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             bloques.forEach((bloque, index) => {
+                applyDelay(bloque, index);
+
+                if (bloqueEnViewport(bloque)) {
+                    mostrarBloque(bloque);
+                    return;
+                }
 
                 observer.observe(bloque);
-                applyDelay(bloque, index);
             });
         } else {
             bloques.forEach((bloque, index) => {
-                bloque.classList.add('visible');
+                mostrarBloque(bloque);
                 applyDelay(bloque, index);
             });
         }

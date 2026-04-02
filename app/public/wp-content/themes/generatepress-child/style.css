@@ -5,26 +5,26 @@ Template: generatepress
 
 @font-face {
     font-family: 'FKScreamer Upright';
-    src: url('assets/fonts/FKScreamerLegacy-Upright.otf') format('opentype');
+    src: url('assets/fonts/FKScreamerLegacy-Upright.woff2') format('woff2');
     font-display: swap;
     font-style: normal;
-    font-weight: 400 900;
+    font-weight: 800;
 }
 
 @font-face {
     font-family: 'FKScreamer Slanted';
-    src: url('assets/fonts/FKScreamerLegacy-Slanted.otf') format('opentype');
+    src: url('assets/fonts/FKScreamerLegacy-Slanted.woff2') format('woff2');
     font-display: swap;
     font-style: normal;
-    font-weight: 400 900;
+    font-weight: 800;
 }
 
 @font-face {
     font-family: 'FKScreamer Backslanted';
-    src: url('assets/fonts/FKScreamerLegacy-Backslanted.otf') format('opentype');
+    src: url('assets/fonts/FKScreamerLegacy-Backslanted.woff2') format('woff2');
     font-display: swap;
     font-style: normal;
-    font-weight: 400 900;
+    font-weight: 800;
 }
 
 /* =========================
@@ -91,13 +91,15 @@ p {
    ========================= */
 
 /* Bloque hero con más aire */
-.bloque.hero {
+.bloque.hero,
+.bloque.home-hero {
     margin-bottom: 120px;
     max-width: 760px; /* más estrecho para elegancia */
 }
 
 /* Estilo del H1 (tipo FK Screamer aproximado) */
-.bloque.hero h1 {
+.bloque.hero h1,
+.bloque.home-hero h1 {
     font-family: 'FKScreamer Upright', sans-serif; /* tipografía display */
     font-size: 64px; /* tamaño grande */
     line-height: 1; /* compacto */
@@ -105,6 +107,11 @@ p {
     letter-spacing: -1px; /* más compacto */
     text-transform: uppercase; /* look editorial fuerte */
     margin: 0 0 20px;
+}
+
+.home .bloque.home-hero {
+    opacity: 1;
+    transform: none;
 }
 
 /* =========================
@@ -195,12 +202,14 @@ p {
         margin-bottom: 56px;
     }
 
-    .bloque.hero {
+    .bloque.hero,
+    .bloque.home-hero {
         margin-bottom: 80px;
     }
 
     /* Reduce tamaño del H1 */
-    .bloque.hero h1 {
+    .bloque.hero h1,
+    .bloque.home-hero h1 {
         font-size: 44px;
     }
 
@@ -223,7 +232,8 @@ p {
     }
 
     /* Ajuste título */
-    .bloque.hero h1 {
+    .bloque.hero h1,
+    .bloque.home-hero h1 {
         font-size: 36px;
         letter-spacing: -0.5px;
     }
@@ -756,17 +766,7 @@ body {
 }
 
 .rotulo-editorial__franja--principal::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    height: var(--rotulo-border);
-    background: currentColor;
-    z-index: 3;
-}
-
-.rotulo-editorial__franja--principal::before {
-    left: -6%;
-    right: 7%;
+    display: none;
 }
 
 .rotulo-editorial__texto {
