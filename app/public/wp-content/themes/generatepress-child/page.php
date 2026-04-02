@@ -30,6 +30,9 @@ $bloque_index = 0;
 	</aside>
 
 	<main class="editorial">
+		<?php if ( is_page( 'prueba' ) ) : ?>
+			<?php get_template_part( 'template-parts/demo-rotulo-editorial' ); ?>
+		<?php endif; ?>
 		<?php if ( have_posts() ) : ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 				<?php if ( function_exists( 'have_rows' ) && have_rows( 'bloques' ) ) : ?>
