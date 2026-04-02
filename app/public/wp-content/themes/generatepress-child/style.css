@@ -4,6 +4,34 @@ Template: generatepress
 */
 
 /* =========================
+   TIPOGRAFÍAS FK SCREAMER LEGACY
+   ========================= */
+
+@font-face {
+    font-family: 'FKScreamer Upright';
+    src: url('assets/fonts/FKScreamerLegacy-Upright.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FKScreamer Slanted';
+    src: url('assets/fonts/FKScreamerLegacy-Slanted.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FKScreamer Backslanted';
+    src: url('assets/fonts/FKScreamerLegacy-Backslanted.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* =========================
    BASE GLOBAL
    ========================= */
 
@@ -41,7 +69,7 @@ p {
     margin: 0 0 1.2em;
 }
 
-/* Contenedor principal tipo “columna editorial” */
+/* Contenedor principal tipo "columna editorial" */
 .editorial {
     max-width: 900px; /* ancho tipo libro */
     margin: 0 auto; /* centrado */
@@ -584,181 +612,4 @@ body {
 /* Cada bloque se comporta como sección */
 .bloque {
     scroll-snap-align: start;
-}
-/* =========================
-   RÓTULO EDITORIAL
-   ========================= */
-
-.bloque.rotulo-editorial-bloque {
-    max-width: 1080px;
-}
-
-.rotulo-editorial {
-    --rotulo-color: #0f2d30;
-    --rotulo-bg: #fcfcf8;
-    --rotulo-border: 3px;
-    --rotulo-gap: 0px;
-    --rotulo-overlap: 3px;
-    --rotulo-font-size: clamp(2.15rem, 4.2vw, 4.65rem);
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--rotulo-gap);
-    color: var(--rotulo-color);
-    max-width: min(100%, 1080px);
-}
-
-.rotulo-editorial__franja {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    max-width: 100%;
-    padding: 12px 28px 11px;
-    background: var(--rotulo-bg);
-    line-height: 1;
-    z-index: 0;
-}
-
-.rotulo-editorial__franja > * {
-    position: relative;
-    z-index: 2;
-}
-
-.rotulo-editorial__union {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0.18em;
-}
-
-.rotulo-editorial__marco {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    pointer-events: none;
-}
-
-.rotulo-editorial__marco-shape {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 3;
-    vector-effect: non-scaling-stroke;
-    stroke-linejoin: miter;
-    stroke-linecap: square;
-}
-
-/* Dibuja solo 3 lados (sin línea superior) para la franja principal.
-   Perímetro aprox. del polígono en viewBox 100×100:
-   - Lado superior: ~99 u  (se omite)
-   - Lado derecho:  ~96 u
-   - Lado inferior: ~99 u
-   - Lado izquierdo:~96 u
-   Total: ~390 u. Empezamos el dash tras el lado superior. */
-.rotulo-editorial__marco-shape--sin-top {
-    stroke-dasharray: 291 99;
-    stroke-dashoffset: -99;
-}
-
-.rotulo-editorial__franja--superior {
-    margin-left: 10px;
-    padding: 11px 24px 10px;
-    margin-bottom: calc(var(--rotulo-overlap) * -1);
-    z-index: 2;
-}
-
-.rotulo-editorial__franja--principal {
-    margin-left: 28px;
-    padding: 14px 34px 13px 34px;
-    z-index: 1;
-}
-
-/* El ::before ya no es necesario; la línea superior se gestiona
-   con stroke-dasharray en el SVG */
-.rotulo-editorial__franja--principal::before {
-    display: none;
-}
-
-.rotulo-editorial__texto {
-    display: block;
-    font-family: 'FKScreamer Upright', sans-serif;
-    font-weight: 800;
-    text-transform: uppercase;
-    line-height: 0.86;
-    text-align: center;
-    white-space: nowrap;
-    transform-origin: left center;
-}
-
-.rotulo-editorial__texto--superior {
-    font-family: 'FKScreamer Slanted', sans-serif;
-    font-size: var(--rotulo-font-size);
-    letter-spacing: 0.01em;
-}
-
-.rotulo-editorial__texto--principal {
-    font-family: 'FKScreamer Backslanted', sans-serif;
-    font-size: var(--rotulo-font-size);
-    letter-spacing: 0.01em;
-}
-
-.rotulo-editorial__subtitulo {
-    margin: 6px 0 0 34px;
-    max-width: 44ch;
-    font-family: 'Source Serif 4', serif;
-    font-size: 1.08rem;
-    line-height: 1.6;
-    color: rgba(15, 45, 48, 0.82);
-}
-
-/* =========================
-   DEMO RÓTULO EDITORIAL
-   ========================= */
-
-.rotulo-editorial-demo {
-    padding: 60px 0;
-}
-
-.rotulo-editorial-demo__header {
-    margin-bottom: 48px;
-}
-
-.rotulo-editorial-demo__eyebrow {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: rgba(15, 45, 48, 0.5);
-    margin: 0 0 8px;
-}
-
-.rotulo-editorial-demo__title {
-    font-family: 'FKScreamer Upright', sans-serif;
-    font-size: 2rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin: 0 0 12px;
-    color: #0f2d30;
-}
-
-.rotulo-editorial-demo__intro {
-    max-width: 56ch;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: rgba(15, 45, 48, 0.7);
-    margin: 0;
-}
-
-.rotulo-editorial-demo__muestras {
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-}
-
-.rotulo-editorial-demo__item {
-    display: flex;
-    align-items: flex-start;
 }
