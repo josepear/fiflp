@@ -569,6 +569,22 @@ body {
 }
 
 /* =========================
+   ALINEACIÓN TEXTO (ACF)
+   ========================= */
+
+.bloque.texto.texto-left {
+    text-align: left;
+}
+
+.bloque.texto.texto-center {
+    text-align: center;
+}
+
+.bloque.texto.texto-right {
+    text-align: right;
+}
+
+/* =========================
    SCROLL TIPO LIBRO
    ========================= */
 
