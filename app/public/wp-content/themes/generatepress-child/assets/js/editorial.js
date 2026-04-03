@@ -87,6 +87,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
+
+        document.querySelectorAll('.rotulo-editorial').forEach(function (rotulo) {
+            const principal = rotulo.querySelector('.rotulo-editorial__franja--principal');
+            const subtitulo = rotulo.querySelector('.rotulo-editorial__subtitulo');
+
+            if (!principal || !subtitulo) {
+                return;
+            }
+
+            subtitulo.style.width = principal.offsetWidth + 'px';
+        });
     };
 
     const scheduleRotuloFit = (() => {

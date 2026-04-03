@@ -225,7 +225,7 @@ body.admin-bar:not(.home) {
 .fiflp-centenario-logo {
     position: absolute;
     left: 50%;
-    top: 36%;
+    top: 26%;
     transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
@@ -241,8 +241,8 @@ body.admin-bar:not(.home) {
 
 .fiflp-centenario-logo img {
     width: auto;
-    height: clamp(72px, 9vw, 110px);
-    max-width: min(38vw, 300px);
+    height: clamp(88px, 10.8vw, 134px);
+    max-width: min(44vw, 360px);
 }
 
 .fiflp-centenario-logo.is-fading {
@@ -938,7 +938,7 @@ body {
     width: min(1400px, 100%);
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: clamp(44px, 6vw, 88px) 24px 0;
     overflow: visible;
 }
 
@@ -1063,7 +1063,7 @@ body {
     .layout-editorial {
         grid-template-columns: minmax(0, 1fr); /* desaparece menú lateral */
         gap: 32px;
-        padding: 0 20px;
+        padding: 36px 20px 0;
     }
 
     .menu-lateral {
@@ -1539,7 +1539,8 @@ body {
 
 .rotulo-editorial__subtitulo {
     margin: 6px 0 0 34px;
-    max-width: 44ch;
+    width: auto;
+    max-width: none;
     font-family: var(--fiflp-font-meta);
     font-size: 1.08rem;
     line-height: 1.6;
@@ -1616,6 +1617,10 @@ body {
     .rotulo-editorial__subtitulo {
         margin-top: 4px;
         font-size: 1rem;
+    }
+
+    .fiflp-centenario-logo {
+        top: 22%;
     }
 
     .rotulo-editorial-demo__header {
