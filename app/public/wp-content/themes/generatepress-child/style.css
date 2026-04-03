@@ -2238,15 +2238,26 @@ body {
 .bloque.texto-imagen figcaption,
 .editorial .wp-caption .wp-caption-text {
     font-family: var(--fiflp-font-body) !important;
-    text-align: left !important;
     text-transform: none;
     letter-spacing: normal;
+}
+
+.bloque.texto :where(p, ul, ol, li, blockquote),
+.bloque.texto-imagen .texto :where(p, ul, ol, li, blockquote),
+.prologo-texto :where(p, ul, ol, li, blockquote),
+.editorial .wp-caption .wp-caption-text {
+    text-align: justify !important;
+    text-align-last: left;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    hanging-punctuation: first last;
 }
 
 .bloque.texto [style*="text-align"],
 .bloque.texto-imagen .texto [style*="text-align"],
 .prologo-texto [style*="text-align"] {
-    text-align: left !important;
+    text-align: justify !important;
 }
 
 .editorial p,

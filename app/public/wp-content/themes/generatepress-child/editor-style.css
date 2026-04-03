@@ -31,7 +31,11 @@ body#tinymce p,
 body#tinymce div,
 body#tinymce blockquote,
 body#tinymce li {
-	text-align: left !important;
+	text-align: justify !important;
+	text-align-last: left;
+	-webkit-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
 }
 
 p,
