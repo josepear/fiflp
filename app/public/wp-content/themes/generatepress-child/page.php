@@ -82,39 +82,7 @@ if (
 								&& ! $rendered_selected_prologo
 							) {
 								$selected_local_item = $local_items[ $selected_prologo - $prologo_offset ];
-								$nombre              = $selected_local_item['nombre'] ?? '';
-								$cargo               = $selected_local_item['cargo'] ?? '';
-								$contenido           = $selected_local_item['contenido'] ?? '';
-								$foto                = $selected_local_item['foto'] ?? null;
-								$foto_url  = is_array( $foto ) ? ( $foto['url'] ?? '' ) : (string) $foto;
-								$foto_alt  = is_array( $foto ) ? ( $foto['alt'] ?? $nombre ) : $nombre;
-								?>
-								<section class="bloque prologos fade-in">
-									<article class="prologo">
-										<?php if ( $foto_url ) : ?>
-											<div class="prologo-img">
-												<img src="<?php echo esc_url( $foto_url ); ?>" alt="<?php echo esc_attr( $foto_alt ); ?>">
-											</div>
-										<?php endif; ?>
-
-										<div class="prologo-content">
-											<?php if ( $nombre ) : ?>
-												<h2 class="prologo-nombre"><?php echo esc_html( $nombre ); ?></h2>
-											<?php endif; ?>
-
-											<?php if ( $cargo ) : ?>
-												<p class="prologo-cargo"><?php echo esc_html( $cargo ); ?></p>
-											<?php endif; ?>
-
-											<?php if ( $contenido ) : ?>
-												<div class="prologo-texto">
-													<?php echo wp_kses_post( $contenido ); ?>
-												</div>
-											<?php endif; ?>
-										</div>
-									</article>
-								</section>
-								<?php
+								fiflp_render_single_prologo( $selected_local_item );
 								$rendered_selected_prologo = true;
 							}
 
@@ -123,14 +91,7 @@ if (
 							continue;
 						}
 
-						$template    = str_replace( '_', '-', $layout );
-						$template_id = 'template-parts/bloques/' . $template;
-
-						if ( locate_template( $template_id . '.php', false, false ) ) {
-							get_template_part( $template_id );
-						} elseif ( locate_template( 'template-parts/bloques/' . $layout . '.php', false, false ) ) {
-							get_template_part( 'template-parts/bloques/' . $layout );
-						}
+						fiflp_render_editorial_block_layout( $layout );
 						?>
 					<?php endwhile; ?>
 				<?php else : ?>
@@ -140,39 +101,7 @@ if (
 				<?php endif; ?>
 
 				<?php if ( $selected_prologo_item && ! $rendered_selected_prologo ) : ?>
-					<?php
-					$nombre    = $selected_prologo_item['nombre'] ?? '';
-					$cargo     = $selected_prologo_item['cargo'] ?? '';
-					$contenido = $selected_prologo_item['contenido'] ?? '';
-					$foto      = $selected_prologo_item['foto'] ?? null;
-					$foto_url  = is_array( $foto ) ? ( $foto['url'] ?? '' ) : (string) $foto;
-					$foto_alt  = is_array( $foto ) ? ( $foto['alt'] ?? $nombre ) : $nombre;
-					?>
-					<section class="bloque prologos fade-in">
-						<article class="prologo">
-							<?php if ( $foto_url ) : ?>
-								<div class="prologo-img">
-									<img src="<?php echo esc_url( $foto_url ); ?>" alt="<?php echo esc_attr( $foto_alt ); ?>">
-								</div>
-							<?php endif; ?>
-
-							<div class="prologo-content">
-								<?php if ( $nombre ) : ?>
-									<h2 class="prologo-nombre"><?php echo esc_html( $nombre ); ?></h2>
-								<?php endif; ?>
-
-								<?php if ( $cargo ) : ?>
-									<p class="prologo-cargo"><?php echo esc_html( $cargo ); ?></p>
-								<?php endif; ?>
-
-								<?php if ( $contenido ) : ?>
-									<div class="prologo-texto">
-										<?php echo wp_kses_post( $contenido ); ?>
-									</div>
-								<?php endif; ?>
-							</div>
-						</article>
-					</section>
+					<?php fiflp_render_single_prologo( $selected_prologo_item ); ?>
 				<?php endif; ?>
 
 				<?php if ( ! $parent_page_id && $current_children && ! $has_prologos_layout ) : ?>
@@ -189,6 +118,13 @@ if (
 						</ul>
 					</section>
 				<?php endif; ?>
+
+				<?php
+				fiflp_render_editorial_pagination(
+					$current_page_id,
+					! empty( $prologo_items ) ? $selected_prologo : null
+				);
+				?>
 			<?php endwhile; ?>
 		<?php endif; ?>
 	</main>

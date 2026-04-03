@@ -5,6 +5,183 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+    const getDisclosureBody = (group) => {
+        return Array.from(group.children).find(function (child) {
+            return child.classList.contains('children') || child.classList.contains('fiflp-global-index__children');
+        });
+    };
+
+    const updateToggleLabel = (toggle, isOpen) => {
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+        const icon = toggle.querySelector('span');
+
+        if (icon) {
+            icon.textContent = isOpen ? '−' : '+';
+        }
+    };
+
+    const setDisclosureState = (group, body, isOpen, immediate) => {
+        const toggle = group.querySelector('[data-disclosure-toggle]');
+
+        if (!body) {
+            return;
+        }
+
+        if (toggle) {
+            updateToggleLabel(toggle, isOpen);
+        }
+
+        if (immediate) {
+            group.classList.toggle('is-open', isOpen);
+            body.hidden = !isOpen;
+            body.style.opacity = isOpen ? '1' : '0';
+            body.style.height = isOpen ? 'auto' : '0px';
+            return;
+        }
+
+        const finishOpen = function () {
+            body.style.height = 'auto';
+            body.removeEventListener('transitionend', finishOpen);
+        };
+
+        const finishClose = function (event) {
+            if (event.propertyName !== 'height') {
+                return;
+            }
+
+            body.hidden = true;
+            body.removeEventListener('transitionend', finishClose);
+        };
+
+        if (isOpen) {
+            body.hidden = false;
+            body.style.height = '0px';
+            body.style.opacity = '0';
+            group.classList.add('is-open');
+            body.offsetHeight;
+            body.addEventListener('transitionend', finishOpen);
+
+            requestAnimationFrame(function () {
+                body.style.height = body.scrollHeight + 'px';
+                body.style.opacity = '1';
+            });
+
+            return;
+        }
+
+        body.hidden = false;
+        body.style.height = body.scrollHeight + 'px';
+        body.style.opacity = '1';
+        body.offsetHeight;
+        group.classList.remove('is-open');
+        body.addEventListener('transitionend', finishClose);
+
+        requestAnimationFrame(function () {
+            body.style.height = '0px';
+            body.style.opacity = '0';
+        });
+    };
+
+    document.querySelectorAll('.menu-lateral-grupo, .fiflp-global-index__group').forEach(function (group) {
+        const body = getDisclosureBody(group);
+
+        if (body) {
+            setDisclosureState(group, body, group.classList.contains('is-open'), true);
+        }
+    });
+
+    const disclosureToggles = document.querySelectorAll('[data-disclosure-toggle]');
+
+    disclosureToggles.forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+            const group = toggle.closest('.menu-lateral-grupo, .fiflp-global-index__group');
+
+            if (!group) {
+                return;
+            }
+
+            const body = getDisclosureBody(group);
+            const isOpen = !group.classList.contains('is-open');
+
+            setDisclosureState(group, body, isOpen, false);
+        });
+    });
+
+    document.querySelectorAll('.menu-lateral-summary > a, .fiflp-global-index__summary > a').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+                return;
+            }
+
+            const group = link.closest('.menu-lateral-grupo, .fiflp-global-index__group');
+
+            if (!group) {
+                return;
+            }
+
+            const body = getDisclosureBody(group);
+
+            if (!body) {
+                return;
+            }
+
+            event.preventDefault();
+            setDisclosureState(group, body, !group.classList.contains('is-open'), false);
+        });
+    });
+
+    const menuPanel = document.querySelector('[data-fiflp-menu-panel]');
+    const menuToggle = document.querySelector('[data-fiflp-menu-toggle]');
+    const menuCloseButtons = document.querySelectorAll('[data-fiflp-menu-close]');
+
+    if (menuPanel && menuToggle) {
+        const openMenu = () => {
+            menuPanel.classList.add('is-open');
+            menuPanel.setAttribute('aria-hidden', 'false');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            document.body.classList.add('fiflp-menu-open');
+        };
+
+        const closeMenu = () => {
+            menuPanel.classList.remove('is-open');
+            menuPanel.setAttribute('aria-hidden', 'true');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('fiflp-menu-open');
+        };
+
+        menuToggle.addEventListener('click', function () {
+            if (menuPanel.classList.contains('is-open')) {
+                closeMenu();
+                return;
+            }
+
+            openMenu();
+        });
+
+        menuCloseButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                closeMenu();
+            });
+        });
+
+        menuPanel.querySelectorAll('.fiflp-global-index__link').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                if (event.defaultPrevented) {
+                    return;
+                }
+
+                closeMenu();
+            });
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && menuPanel.classList.contains('is-open')) {
+                closeMenu();
+            }
+        });
+    }
+
     const homeHero = document.querySelector('[data-editorial-hero]');
     const homeHeroContent = document.querySelector('[data-editorial-hero-content]');
 

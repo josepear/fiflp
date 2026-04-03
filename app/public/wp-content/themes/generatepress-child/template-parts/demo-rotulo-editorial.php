@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="rotulo-editorial-demo__muestras">
 		<div class="rotulo-editorial-demo__item">
-			<div class="rotulo-editorial">
+			<div class="rotulo-editorial rotulo-editorial--linea">
 				<div class="rotulo-editorial__franja rotulo-editorial__franja--superior">
 					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
 						<polygon class="rotulo-editorial__marco-shape" points="12,2 98,2 88,98 2,98"></polygon>
@@ -32,10 +32,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<div class="rotulo-editorial-demo__item">
-			<div class="rotulo-editorial">
+			<div class="rotulo-editorial rotulo-editorial--linea_inversa">
 				<div class="rotulo-editorial__franja rotulo-editorial__franja--superior">
 					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-						<polygon class="rotulo-editorial__marco-shape" points="12,2 98,2 88,98 2,98"></polygon>
+						<polygon class="rotulo-editorial__marco-shape" points="2,2 88,2 98,98 12,98"></polygon>
+					</svg>
+					<span class="rotulo-editorial__union">
+						<span class="rotulo-editorial__texto rotulo-editorial__texto--superior">1930-1940</span>
+					</span>
+				</div>
+				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
+					<svg class="rotulo-editorial__marco" viewBox="0 0 106 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+						<polygon class="rotulo-editorial__marco-shape" points="7,2 106,2 100,98 1,98"></polygon>
+					</svg>
+					<span class="rotulo-editorial__texto rotulo-editorial__texto--principal">Jugadores del Marino CF</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="rotulo-editorial-demo__item">
+			<div class="rotulo-editorial rotulo-editorial--relleno">
+				<div class="rotulo-editorial__franja rotulo-editorial__franja--superior">
+					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+						<polygon class="rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno" points="12,2 98,2 88,98 2,98"></polygon>
 					</svg>
 					<span class="rotulo-editorial__union">
 						<span class="rotulo-editorial__texto rotulo-editorial__texto--superior">1954</span>
@@ -43,11 +62,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
 					<svg class="rotulo-editorial__marco" viewBox="-6 0 106 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-						<polygon class="rotulo-editorial__marco-shape rotulo-editorial__marco-shape--sin-top" points="-6,2 93,2 99,98 0,98"></polygon>
+						<polygon class="rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno" points="-6,2 93,2 99,98 0,98"></polygon>
 					</svg>
 					<span class="rotulo-editorial__texto rotulo-editorial__texto--principal">Nace una nueva era federativa</span>
 				</div>
 				<p class="rotulo-editorial__subtitulo">Variante con una línea de apoyo bajo el titular principal.</p>
+			</div>
+		</div>
+
+		<div class="rotulo-editorial-demo__item">
+			<div class="rotulo-editorial rotulo-editorial--relleno_inverso">
+				<div class="rotulo-editorial__franja rotulo-editorial__franja--superior">
+					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+						<polygon class="rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno" points="2,2 88,2 98,98 12,98"></polygon>
+					</svg>
+					<span class="rotulo-editorial__union">
+						<span class="rotulo-editorial__texto rotulo-editorial__texto--superior">1960-1970</span>
+					</span>
+				</div>
+				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
+					<svg class="rotulo-editorial__marco" viewBox="0 0 106 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+						<polygon class="rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno" points="7,2 106,2 100,98 1,98"></polygon>
+					</svg>
+					<span class="rotulo-editorial__texto rotulo-editorial__texto--principal">Archivo de fotografía histórica</span>
+				</div>
 			</div>
 		</div>
 	</div>

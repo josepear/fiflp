@@ -16,6 +16,8 @@ $boton_capitulos_url   = trim( (string) get_sub_field( 'boton_capitulos_url' ) )
 $link_pdf       = get_sub_field( 'link_pdf' );
 $link_epub      = get_sub_field( 'link_epub' );
 $logos          = get_sub_field( 'logos' );
+$imagen_data    = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $imagen, 'full', (string) $titulo ) : array();
+$logo_data      = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $logo_principal, 'full', get_bloginfo( 'name' ) ) : array();
 
 if ( '' === $boton_capitulos_url ) {
 	$boton_capitulos_url = home_url( '/prueba/' );
@@ -31,13 +33,13 @@ $pdf_visible   = ! empty( $link_pdf );
 $epub_visible  = ! empty( $link_epub );
 
 // Si no hay datos mínimos, no renderiza.
-if ( empty( $imagen ) && empty( $titulo ) && empty( $texto ) && ! $boton_capitulos_visible && ! $pdf_visible && ! $epub_visible ) {
+if ( empty( $imagen_data['url'] ) && empty( $logo_data['url'] ) && empty( $titulo ) && empty( $texto ) && ! $boton_capitulos_visible && ! $pdf_visible && ! $epub_visible && empty( $logos ) ) {
 	return;
 }
 
 $bg_style = '';
-if ( ! empty( $imagen['url'] ) ) {
-	$bg_style = 'style="background-image: url(' . esc_url( $imagen['url'] ) . ');"';
+if ( ! empty( $imagen_data['url'] ) ) {
+	$bg_style = 'style="background-image: url(' . esc_url( $imagen_data['url'] ) . ');"';
 }
 ?>
 
@@ -46,9 +48,9 @@ if ( ! empty( $imagen['url'] ) ) {
 	<div class="home-hero-glow" aria-hidden="true"></div>
 
 	<div class="home-hero-content" data-editorial-hero-content>
-		<?php if ( ! empty( $logo_principal['url'] ) ) : ?>
+		<?php if ( ! empty( $logo_data['url'] ) ) : ?>
 			<div class="home-hero-main-logo home-hero__reveal home-hero__reveal--logo">
-				<img src="<?php echo esc_url( $logo_principal['url'] ); ?>" alt="<?php echo esc_attr( $logo_principal['alt'] ?? '' ); ?>" />
+				<img src="<?php echo esc_url( $logo_data['url'] ); ?>" alt="<?php echo esc_attr( $logo_data['alt'] ?? '' ); ?>" />
 			</div>
 		<?php endif; ?>
 
@@ -77,9 +79,12 @@ if ( ! empty( $imagen['url'] ) ) {
 	<?php if ( is_array( $logos ) && ! empty( $logos ) ) : ?>
 		<div class="home-hero-logos home-hero__reveal home-hero__reveal--logos">
 			<?php foreach ( $logos as $item ) : ?>
-				<?php if ( ! empty( $item['imagen']['url'] ) ) : ?>
+				<?php
+				$item_logo = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $item['imagen'] ?? null, 'full', '' ) : array();
+				?>
+				<?php if ( ! empty( $item_logo['url'] ) ) : ?>
 					<div class="home-hero-logo">
-						<img src="<?php echo esc_url( $item['imagen']['url'] ); ?>" alt="<?php echo esc_attr( $item['imagen']['alt'] ?? '' ); ?>" />
+						<img src="<?php echo esc_url( $item_logo['url'] ); ?>" alt="<?php echo esc_attr( $item_logo['alt'] ?? '' ); ?>" />
 					</div>
 				<?php endif; ?>
 			<?php endforeach; ?>

@@ -431,6 +431,175 @@
                                 "prepend": "",
                                 "append": "",
                                 "parent_layout": "layout_rotulo_editorial"
+                            },
+                            {
+                                "key": "field_rotulo_editorial_variante",
+                                "label": "Variante",
+                                "name": "variante",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "linea": "Línea",
+                                    "linea_inversa": "Línea inversa",
+                                    "relleno": "Relleno",
+                                    "relleno_inverso": "Relleno inverso"
+                                },
+                                "default_value": "linea",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_rotulo_editorial"
+                            },
+                            {
+                                "key": "field_rotulo_editorial_etiqueta_html",
+                                "label": "Etiqueta HTML",
+                                "name": "etiqueta_html",
+                                "aria-label": "",
+                                "type": "select",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "h1": "H1",
+                                    "h2": "H2",
+                                    "h3": "H3",
+                                    "h4": "H4",
+                                    "h5": "H5",
+                                    "h6": "H6"
+                                },
+                                "default_value": "h2",
+                                "return_format": "value",
+                                "multiple": 0,
+                                "allow_null": 0,
+                                "ui": 0,
+                                "ajax": 0,
+                                "placeholder": "",
+                                "parent_layout": "layout_rotulo_editorial"
+                            },
+                            {
+                                "key": "field_rotulo_editorial_tamano",
+                                "label": "Tamaño",
+                                "name": "tamano",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "s": "S",
+                                    "m": "M",
+                                    "l": "L",
+                                    "xl": "XL"
+                                },
+                                "default_value": "m",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_rotulo_editorial"
+                            },
+                            {
+                                "key": "field_rotulo_editorial_color_trazo",
+                                "label": "Color del trazo",
+                                "name": "color_trazo",
+                                "aria-label": "",
+                                "type": "color_picker",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "#0f2d30",
+                                "enable_opacity": 0,
+                                "return_format": "string",
+                                "parent_layout": "layout_rotulo_editorial"
+                            },
+                            {
+                                "key": "field_rotulo_editorial_color_fondo",
+                                "label": "Color de fondo",
+                                "name": "color_fondo",
+                                "aria-label": "",
+                                "type": "color_picker",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "#fcfcf8",
+                                "enable_opacity": 0,
+                                "return_format": "string",
+                                "parent_layout": "layout_rotulo_editorial"
+                            },
+                            {
+                                "key": "field_rotulo_editorial_interlineado",
+                                "label": "Interlineado",
+                                "name": "interlineado",
+                                "aria-label": "",
+                                "type": "number",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": 0.86,
+                                "min": 0.6,
+                                "max": 1.4,
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "step": 0.01,
+                                "prepend": "",
+                                "append": "",
+                                "parent_layout": "layout_rotulo_editorial"
+                            },
+                            {
+                                "key": "field_rotulo_editorial_espaciado_letras",
+                                "label": "Espaciado de letras",
+                                "name": "espaciado_letras",
+                                "aria-label": "",
+                                "type": "number",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": 0.01,
+                                "min": -0.05,
+                                "max": 0.2,
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "step": 0.005,
+                                "prepend": "",
+                                "append": "em",
+                                "parent_layout": "layout_rotulo_editorial"
                             }
                         ],
                         "min": "",

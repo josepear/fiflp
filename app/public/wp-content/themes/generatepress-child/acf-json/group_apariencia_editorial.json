@@ -1,0 +1,177 @@
+{
+    "key": "group_apariencia_editorial",
+    "title": "Apariencia editorial",
+    "fields": [
+        {
+            "key": "field_apariencia_color_fondo",
+            "label": "Color fondo",
+            "name": "apariencia_color_fondo",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#fcfcf8",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_apariencia_color_superficie",
+            "label": "Color superficie",
+            "name": "apariencia_color_superficie",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_apariencia_color_texto",
+            "label": "Color texto",
+            "name": "apariencia_color_texto",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_apariencia_color_texto_secundario",
+            "label": "Color texto secundario",
+            "name": "apariencia_color_texto_secundario",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#666666",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_apariencia_color_acento",
+            "label": "Color acento",
+            "name": "apariencia_color_acento",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0f2d30",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_apariencia_color_borde",
+            "label": "Color borde",
+            "name": "apariencia_color_borde",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#d8d8d2",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_apariencia_radio_imagenes",
+            "label": "Radio imágenes",
+            "name": "apariencia_radio_imagenes",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Radio general para fotos y retratos editoriales.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 18,
+            "min": 0,
+            "max": 48,
+            "placeholder": "",
+            "step": 1,
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_apariencia_ancho_indice",
+            "label": "Ancho índice lateral",
+            "name": "apariencia_ancho_indice",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Ancho del panel índice global.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 380,
+            "min": 280,
+            "max": 520,
+            "placeholder": "",
+            "step": 10,
+            "prepend": "",
+            "append": "px"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "fiflp-apariencia"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1775186400
+}

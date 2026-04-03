@@ -144,8 +144,8 @@ $render_menu_branch = function( $page, $level = 0 ) use ( &$render_menu_branch, 
 	?>
 	<li class="<?php echo esc_attr( implode( ' ', $item_classes ) ); ?>">
 		<?php if ( $has_children ) : ?>
-			<details class="menu-lateral-grupo"<?php echo $is_open ? ' open' : ''; ?>>
-				<summary class="menu-lateral-summary">
+			<div class="menu-lateral-grupo<?php echo $is_open ? ' is-open' : ''; ?>">
+				<div class="menu-lateral-summary">
 					<a
 						href="<?php echo esc_url( get_permalink( $page ) ); ?>"
 						<?php if ( $is_current && empty( $prologo_items ) ) : ?>
@@ -154,7 +154,10 @@ $render_menu_branch = function( $page, $level = 0 ) use ( &$render_menu_branch, 
 					>
 						<?php echo esc_html( get_the_title( $page ) ); ?>
 					</a>
-				</summary>
+					<button class="menu-lateral-toggle" type="button" aria-expanded="<?php echo $is_open ? 'true' : 'false'; ?>" aria-label="<?php echo esc_attr( $is_open ? 'Recoger' : 'Desplegar' ); ?>" data-disclosure-toggle>
+						<span aria-hidden="true"><?php echo $is_open ? '−' : '+'; ?></span>
+					</button>
+				</div>
 
 				<ul class="children">
 					<?php foreach ( $children as $child_page ) : ?>
@@ -180,7 +183,7 @@ $render_menu_branch = function( $page, $level = 0 ) use ( &$render_menu_branch, 
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</ul>
-			</details>
+			</div>
 		<?php else : ?>
 			<a
 				href="<?php echo esc_url( get_permalink( $page ) ); ?>"
