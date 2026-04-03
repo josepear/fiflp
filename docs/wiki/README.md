@@ -7,16 +7,46 @@
 `/Volumes/RAID/Repos/web/fiflp`
 
 ## Rama recomendada de trabajo
-`dev` cuando haya cambios importantes. Si solo vas a consultar o hacer ajustes mínimos, usa la rama que toque según el repo local.
+`dev` para cambios importantes y de integración.
 
-## Qué conviene asumir
-Este proyecto mezcla contenido, WordPress y personalizaciones, así que no conviene tratarlo como una web estática simple.
+## Fuente de verdad del proyecto
+La web real depende de tres patas:
+- repo oficial
+- instalación viva en Local del MacMini
+- base de datos real del sitio WordPress
+
+## Qué va al repo
+- `wp-content/themes/generatepress-child`
+- plantillas PHP
+- CSS y JS
+- `acf-json`
+- assets propios del theme
+- documentación técnica
+
+## Qué no va al repo
+- `wp-content/uploads`
+- cachés
+- thumbnails generados
+- backups
+- logs
+- archivos temporales de WordPress
+
+## Nota sobre imágenes editoriales
+Varias imágenes recuperadas de la web real viven en `wp-content/uploads/...` y deben mantenerse en la instalación viva de WordPress, no en Git.
+
+Ejemplos ya restaurados en Local:
+- `david-garcia.jpeg`
+- `FERNANDO-CLAVIJO.jpg`
+- `ANTONIO-MORALES.jpg`
+- `POLI-SUAREZ.jpg`
 
 ## Qué revisar siempre antes de tocar
-- contenido no versionado
-- cachés de WordPress
-- plugins activos
-- logs o artefactos generados
+- tema hijo activo
+- ACF y grupos de campos
+- portada configurada
+- menús asignados
+- assets del theme
+- `uploads` usados realmente por el frontend
 - posibles diferencias entre copia viva y repo
 
 ## Qué conviene documentar mejor
@@ -24,6 +54,3 @@ Este proyecto mezcla contenido, WordPress y personalizaciones, así que no convi
 - cómo se arranca
 - dónde está el contenido crítico
 - qué carpetas son runtime y cuáles son código
-
-## Siguiente mejora recomendada
-Añadir una guía técnica corta con despliegue, caché, dominios y estructura WordPress real.
