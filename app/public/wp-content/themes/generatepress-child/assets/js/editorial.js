@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
             body.hidden = !isOpen;
             body.style.opacity = isOpen ? '1' : '0';
             body.style.height = isOpen ? 'auto' : '0px';
+            body.style.transform = isOpen ? 'translateY(0)' : 'translateY(-6px)';
             return;
         }
 
@@ -58,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             body.hidden = false;
             body.style.height = '0px';
             body.style.opacity = '0';
+            body.style.transform = 'translateY(-6px)';
             group.classList.add('is-open');
             body.offsetHeight;
             body.addEventListener('transitionend', finishOpen);
@@ -65,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
             requestAnimationFrame(function () {
                 body.style.height = body.scrollHeight + 'px';
                 body.style.opacity = '1';
+                body.style.transform = 'translateY(0)';
             });
 
             return;
@@ -73,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         body.hidden = false;
         body.style.height = body.scrollHeight + 'px';
         body.style.opacity = '1';
+        body.style.transform = 'translateY(0)';
         body.offsetHeight;
         group.classList.remove('is-open');
         body.addEventListener('transitionend', finishClose);
@@ -80,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(function () {
             body.style.height = '0px';
             body.style.opacity = '0';
+            body.style.transform = 'translateY(-6px)';
         });
     };
 

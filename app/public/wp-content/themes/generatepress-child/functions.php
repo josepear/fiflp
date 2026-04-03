@@ -39,6 +39,11 @@ function fiflp_get_image_data( $image, $size = 'full', $fallback_alt = '' ) {
 		if ( $image_id > 0 ) {
 			$data['id'] = $image_id;
 			$data['url'] = (string) wp_get_attachment_image_url( $image_id, $size );
+
+			if ( '' === $data['url'] ) {
+				$data['url'] = (string) wp_get_attachment_url( $image_id );
+			}
+
 			$data['alt'] = (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 		}
 
@@ -65,6 +70,11 @@ function fiflp_get_image_data( $image, $size = 'full', $fallback_alt = '' ) {
 		$image_id     = (int) $image;
 		$data['id']   = $image_id;
 		$data['url']  = (string) wp_get_attachment_image_url( $image_id, $size );
+
+		if ( '' === $data['url'] ) {
+			$data['url'] = (string) wp_get_attachment_url( $image_id );
+		}
+
 		$data['alt']  = (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 
 		if ( '' === $data['alt'] ) {
@@ -800,65 +810,16 @@ add_action(
 	}
 );
 
-add_action(
-	'generate_inside_site_branding',
-	function() {
-		?>
-		<div class="fiflp-centenario-logo" aria-hidden="true">
-			<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/logo-centenario.svg' ); ?>" alt="Logo centenario FIFLP">
-		</div>
-		<div class="fiflp-menu-trigger-wrap">
-			<button
-				class="fiflp-menu-trigger"
-				type="button"
-				aria-expanded="false"
-				aria-controls="fiflp-global-index"
-				data-fiflp-menu-toggle
-			>
-				<span class="fiflp-menu-trigger__icon" aria-hidden="true">
-					<span></span>
-					<span></span>
-					<span></span>
-				</span>
-				<span class="fiflp-menu-trigger__label">Índice</span>
-			</button>
-		</div>
-		<?php
-	},
-	20
-);
+add_filter(
+	'generate_site_branding_output',
+	function( $output ) {
+		$extra = sprintf(
+			'<div class="fiflp-centenario-logo" aria-hidden="true"><img src="%1$s" alt="%2$s"></div>',
+			esc_url( get_stylesheet_directory_uri() . '/assets/logo-centenario.svg' ),
+			esc_attr__( 'Logo centenario FIFLP', 'generatepress' )
+		);
 
-add_action(
-	'generate_after_header',
-	function() {
-		$current_id        = get_queried_object_id();
-		$current_ancestors = array_map( 'intval', get_post_ancestors( $current_id ) );
-		$root_pages        = fiflp_get_global_index_roots();
-
-		if ( empty( $root_pages ) ) {
-			return;
-		}
-		?>
-		<div class="fiflp-global-index" id="fiflp-global-index" aria-hidden="true" data-fiflp-menu-panel>
-			<div class="fiflp-global-index__overlay" data-fiflp-menu-close></div>
-			<div class="fiflp-global-index__panel" role="dialog" aria-modal="true" aria-label="Índice editorial">
-				<div class="fiflp-global-index__header">
-					<p class="fiflp-global-index__eyebrow">Índice</p>
-					<button class="fiflp-global-index__close" type="button" aria-label="Cerrar índice" data-fiflp-menu-close>
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-
-				<nav class="fiflp-global-index__nav" aria-label="Índice global">
-					<ul class="fiflp-global-index__list">
-						<?php foreach ( $root_pages as $root_page ) : ?>
-							<?php fiflp_render_global_index_branch( $root_page, $current_id, $current_ancestors ); ?>
-						<?php endforeach; ?>
-					</ul>
-				</nav>
-			</div>
-		</div>
-		<?php
+		return str_replace( '</div>', $extra . '</div>', $output );
 	},
 	20
 );
