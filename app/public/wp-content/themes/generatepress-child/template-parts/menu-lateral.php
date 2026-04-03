@@ -199,10 +199,24 @@ $render_menu_branch = function( $page, $level = 0 ) use ( &$render_menu_branch, 
 };
 ?>
 
-<aside class="menu-lateral" aria-label="Navegacion editorial">
-	<ul class="menu-lateral-list level-0">
-		<?php foreach ( $root_pages as $root_page ) : ?>
-			<?php $render_menu_branch( $root_page ); ?>
-		<?php endforeach; ?>
-	</ul>
+<aside class="menu-lateral" aria-label="Navegacion editorial" data-mobile-nav>
+	<button
+		class="menu-lateral-mobile-toggle"
+		type="button"
+		aria-expanded="false"
+		aria-controls="menu-lateral-panel"
+		data-mobile-nav-toggle
+	>
+		<span class="menu-lateral-mobile-toggle__eyebrow">Indice</span>
+		<span class="menu-lateral-mobile-toggle__title"><?php echo esc_html( get_the_title( $current_id ) ); ?></span>
+		<span class="menu-lateral-mobile-toggle__icon" aria-hidden="true">+</span>
+	</button>
+
+	<div class="menu-lateral-mobile-panel" id="menu-lateral-panel" data-mobile-nav-panel>
+		<ul class="menu-lateral-list level-0">
+			<?php foreach ( $root_pages as $root_page ) : ?>
+				<?php $render_menu_branch( $root_page ); ?>
+			<?php endforeach; ?>
+		</ul>
+	</div>
 </aside>

@@ -2,6 +2,7 @@
 $supertitulo = trim( (string) get_sub_field( 'supertitulo' ) );
 $titulo      = trim( (string) get_sub_field( 'titulo' ) );
 $subtitulo   = trim( (string) get_sub_field( 'subtitulo' ) );
+$ancho_subtitulo = trim( (string) get_sub_field( 'ancho_subtitulo' ) );
 $variante    = trim( (string) get_sub_field( 'variante' ) );
 $etiqueta    = trim( (string) get_sub_field( 'etiqueta_html' ) );
 $tamano      = trim( (string) get_sub_field( 'tamano' ) );
@@ -34,6 +35,12 @@ $tamanos_validos = array(
 	'xl',
 );
 
+$anchos_subtitulo_validos = array(
+	'igual_rotulo',
+	'estrecho',
+	'ancho',
+);
+
 if ( ! in_array( $variante, $variantes_validas, true ) ) {
 	$variante = 'linea';
 }
@@ -44,6 +51,10 @@ if ( ! in_array( $etiqueta, $etiquetas_validas, true ) ) {
 
 if ( ! in_array( $tamano, $tamanos_validos, true ) ) {
 	$tamano = 'm';
+}
+
+if ( ! in_array( $ancho_subtitulo, $anchos_subtitulo_validos, true ) ) {
+	$ancho_subtitulo = 'igual_rotulo';
 }
 
 if ( ! $color_trazo ) {
@@ -69,6 +80,7 @@ $clases_rotulo       = array(
 	'rotulo-editorial',
 	'rotulo-editorial--' . $variante,
 	'rotulo-editorial--tamano-' . $tamano,
+	'rotulo-editorial--subtitulo-' . $ancho_subtitulo,
 );
 
 if ( $supertitulo_length >= 20 ) {

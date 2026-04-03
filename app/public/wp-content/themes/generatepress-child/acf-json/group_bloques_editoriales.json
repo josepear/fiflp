@@ -438,6 +438,30 @@
                             "append": ""
                         },
                         {
+                            "key": "field_rotulo_editorial_ancho_subtitulo",
+                            "label": "Ancho del subtítulo",
+                            "name": "ancho_subtitulo",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "igual_rotulo": "Igual al rótulo",
+                                "estrecho": "Estrecho (72%)",
+                                "ancho": "Ancho completo"
+                            },
+                            "default_value": "igual_rotulo",
+                            "return_format": "value",
+                            "allow_null": 0,
+                            "layout": "horizontal"
+                        },
+                        {
                             "key": "field_rotulo_editorial_variante",
                             "label": "Variante",
                             "name": "variante",
