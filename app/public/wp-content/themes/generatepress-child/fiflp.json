@@ -77,6 +77,35 @@
                                 "media_upload": 1,
                                 "delay": 0,
                                 "parent_layout": "layout_texto"
+                            },
+                            {
+                                "key": "field_texto_alineacion",
+                                "label": "Alineación",
+                                "name": "alineacion",
+                                "aria-label": "",
+                                "type": "select",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "left": "Izquierda",
+                                    "center": "Centro",
+                                    "right": "Derecha"
+                                },
+                                "default_value": "left",
+                                "allow_null": 0,
+                                "multiple": 0,
+                                "ui": 0,
+                                "return_format": "value",
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "ajax": 0,
+                                "parent_layout": "layout_texto"
                             }
                         ],
                         "min": "",
