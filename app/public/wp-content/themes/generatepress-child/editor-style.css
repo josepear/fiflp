@@ -18,6 +18,20 @@ body {
 	font-size: 20px;
 	line-height: 1.7;
 	color: #111111;
+	text-align: left;
+}
+
+body.mce-content-body,
+body#tinymce,
+body.mce-content-body p,
+body.mce-content-body div,
+body.mce-content-body blockquote,
+body.mce-content-body li,
+body#tinymce p,
+body#tinymce div,
+body#tinymce blockquote,
+body#tinymce li {
+	text-align: left !important;
 }
 
 p,

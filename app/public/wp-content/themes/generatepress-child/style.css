@@ -1349,8 +1349,8 @@ body {
     --rotulo-font-size: clamp(2.15rem, 4.2vw, 4.65rem);
     --rotulo-line-height: 0.86;
     --rotulo-letter-spacing: 0.01em;
-    --rotulo-superior-pad-y: 9px;
-    --rotulo-superior-pad-x: 18px;
+    --rotulo-superior-pad-y: 11px;
+    --rotulo-superior-pad-x: 30px;
     --rotulo-principal-pad-y: 11px;
     --rotulo-principal-pad-x: 24px;
     --rotulo-superior-max-width: none;
@@ -1389,7 +1389,7 @@ body {
     justify-content: center;
     width: auto;
     max-width: none;
-    padding: 0 0.18em;
+    padding: 0;
 }
 
 .rotulo-editorial__marco {
@@ -1498,29 +1498,29 @@ body {
 .rotulo-editorial--tamano-s {
     --rotulo-font-size: clamp(1.65rem, 3.2vw, 3rem);
     --rotulo-superior-pad-y: 8px;
-    --rotulo-superior-pad-x: 15px;
+    --rotulo-superior-pad-x: 24px;
     --rotulo-principal-pad-y: 9px;
-    --rotulo-principal-pad-x: 20px;
+    --rotulo-principal-pad-x: 19px;
 }
 
 .rotulo-editorial--tamano-l {
     --rotulo-font-size: clamp(2.45rem, 5vw, 5.35rem);
-    --rotulo-superior-pad-y: 12px;
-    --rotulo-superior-pad-x: 22px;
+    --rotulo-superior-pad-y: 14px;
+    --rotulo-superior-pad-x: 30px;
     --rotulo-principal-pad-y: 14px;
-    --rotulo-principal-pad-x: 28px;
+    --rotulo-principal-pad-x: 30px;
 }
 
 .rotulo-editorial--tamano-xl {
     --rotulo-font-size: clamp(2.8rem, 5.8vw, 6.15rem);
-    --rotulo-superior-pad-y: 14px;
-    --rotulo-superior-pad-x: 24px;
+    --rotulo-superior-pad-y: 16px;
+    --rotulo-superior-pad-x: 34px;
     --rotulo-principal-pad-y: 16px;
-    --rotulo-principal-pad-x: 30px;
+    --rotulo-principal-pad-x: 34px;
 }
 
 .rotulo-editorial--superior-largo {
-    --rotulo-superior-pad-x: 16px;
+    --rotulo-superior-pad-x: 28px;
 }
 
 .rotulo-editorial--principal-largo {}
@@ -1538,9 +1538,10 @@ body {
 }
 
 .rotulo-editorial__subtitulo {
-    margin: 6px 0 0 34px;
+    margin: 24px 0 0 34px;
     width: auto;
     max-width: none;
+    text-align: left;
     font-family: var(--fiflp-font-meta);
     font-size: 1.08rem;
     line-height: 1.6;
@@ -1604,6 +1605,10 @@ body {
     .rotulo-editorial {
         --rotulo-gap: 0px;
         --rotulo-font-size: clamp(1.25rem, 5.8vw, 2.3rem);
+        --rotulo-superior-pad-y: 9px;
+        --rotulo-superior-pad-x: 20px;
+        --rotulo-principal-pad-y: 9px;
+        --rotulo-principal-pad-x: 16px;
     }
 
     .rotulo-editorial__franja {
@@ -1615,7 +1620,7 @@ body {
     }
 
     .rotulo-editorial__subtitulo {
-        margin-top: 4px;
+        margin-top: 16px;
         font-size: 1rem;
     }
 
@@ -2084,8 +2089,15 @@ body {
 .bloque.texto-imagen figcaption,
 .editorial .wp-caption .wp-caption-text {
     font-family: var(--fiflp-font-body) !important;
+    text-align: left !important;
     text-transform: none;
     letter-spacing: normal;
+}
+
+.bloque.texto [style*="text-align"],
+.bloque.texto-imagen .texto [style*="text-align"],
+.prologo-texto [style*="text-align"] {
+    text-align: left !important;
 }
 
 .editorial p,
