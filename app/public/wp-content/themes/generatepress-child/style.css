@@ -585,3 +585,19 @@ body {
 .bloque {
     scroll-snap-align: start;
 }
+
+/* =========================
+   ALINEACIÓN BLOQUE TEXTO (ACF)
+   ========================= */
+
+.bloque.texto.texto-alineacion-left {
+    text-align: left;
+}
+
+.bloque.texto.texto-alineacion-center {
+    text-align: center;
+}
+
+.bloque.texto.texto-alineacion-right {
+    text-align: right;
+}
