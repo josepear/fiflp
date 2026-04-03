@@ -79,6 +79,13 @@ img {
     border-radius: 0 !important;
 }
 
+.fiflp-inline-svg {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+}
+
 /* Enlaces sin subrayado por defecto */
 a {
     color: inherit;
@@ -140,14 +147,27 @@ p {
     right: 0;
     width: 100%;
     z-index: 9990;
-    background: rgba(252, 252, 248, 0.94);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+    background: transparent;
+    backdrop-filter: none;
+    border-bottom: 0;
+    box-shadow: none;
+}
+
+.site-header,
+.site-header .inside-header,
+.site-header .inside-header.grid-container,
+.site-header .grid-container,
+.site-header .site-branding {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: 0 !important;
 }
 
 .inside-header {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 10px;
+    padding-bottom: 18px;
+    background: transparent;
 }
 
 .admin-bar .site-header {
@@ -186,24 +206,47 @@ body.admin-bar:not(.home) {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    min-height: 72px;
+}
+
+.site-branding .main-title {
+    display: none;
+}
+
+.site-branding .main-title a {
+    display: inline-block;
+    font-family: var(--fiflp-font-display);
+    font-size: clamp(2.2rem, 3.6vw, 3.5rem);
+    line-height: 0.92;
+    letter-spacing: 0;
+    text-transform: lowercase;
 }
 
 .fiflp-centenario-logo {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 36%;
     transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
+    pointer-events: auto;
     z-index: 1;
+    opacity: 1;
+    transition:
+        opacity 0.42s var(--fiflp-ease-soft),
+        transform 0.42s var(--fiflp-ease-soft);
+    will-change: opacity, transform;
 }
 
 .fiflp-centenario-logo img {
     width: auto;
-    height: clamp(44px, 6vw, 68px);
-    max-width: min(26vw, 180px);
+    height: clamp(72px, 9vw, 110px);
+    max-width: min(38vw, 300px);
+}
+
+.fiflp-centenario-logo.is-fading {
+    opacity: 0.08;
 }
 
 .fiflp-menu-trigger-wrap {
@@ -244,6 +287,21 @@ body.admin-bar:not(.home) {
     text-transform: uppercase;
     color: rgba(17, 17, 17, 0.72);
     font-weight: 600;
+}
+
+@media (max-width: 782px) {
+    .site-branding .main-title a {
+        font-size: clamp(1.9rem, 9vw, 2.8rem);
+    }
+
+    .site-branding {
+        min-height: 56px;
+    }
+
+    .fiflp-centenario-logo img {
+        height: clamp(54px, 16vw, 82px);
+        max-width: min(52vw, 240px);
+    }
 }
 
 .fiflp-global-index {
@@ -1289,17 +1347,15 @@ body {
     --rotulo-gap: 0px;
     --rotulo-overlap: 3px;
     --rotulo-font-size: clamp(2.15rem, 4.2vw, 4.65rem);
-    --rotulo-font-size-superior: var(--rotulo-font-size);
-    --rotulo-font-size-principal: var(--rotulo-font-size);
     --rotulo-line-height: 0.86;
     --rotulo-letter-spacing: 0.01em;
     --rotulo-superior-pad-y: 9px;
     --rotulo-superior-pad-x: 18px;
     --rotulo-principal-pad-y: 11px;
     --rotulo-principal-pad-x: 24px;
-    --rotulo-superior-max-width: 20ch;
-    --rotulo-principal-max-width: 22ch;
-    --rotulo-principal-min-width: 12ch;
+    --rotulo-superior-max-width: none;
+    --rotulo-principal-max-width: none;
+    --rotulo-principal-min-width: 0;
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
@@ -1331,8 +1387,8 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: min(100%, var(--rotulo-superior-max-width));
-    max-width: 100%;
+    width: auto;
+    max-width: none;
     padding: 0 0.18em;
 }
 
@@ -1418,8 +1474,8 @@ body {
     text-transform: uppercase;
     line-height: var(--rotulo-line-height);
     text-align: center;
-    white-space: normal;
-    text-wrap: balance;
+    white-space: nowrap;
+    text-wrap: nowrap;
     overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
@@ -1429,20 +1485,18 @@ body {
 
 .rotulo-editorial__texto--superior {
     font-family: var(--fiflp-font-display-slanted);
-    font-size: var(--rotulo-font-size-superior);
-    max-inline-size: 100%;
+    font-size: var(--rotulo-font-size);
+    max-inline-size: none;
 }
 
 .rotulo-editorial__texto--principal {
     font-family: var(--fiflp-font-display-backslanted);
-    font-size: var(--rotulo-font-size-principal);
-    max-width: min(100%, var(--rotulo-principal-max-width));
+    font-size: var(--rotulo-font-size);
+    max-width: none;
 }
 
 .rotulo-editorial--tamano-s {
     --rotulo-font-size: clamp(1.65rem, 3.2vw, 3rem);
-    --rotulo-superior-max-width: 16ch;
-    --rotulo-principal-max-width: 17ch;
     --rotulo-superior-pad-y: 8px;
     --rotulo-superior-pad-x: 15px;
     --rotulo-principal-pad-y: 9px;
@@ -1451,8 +1505,6 @@ body {
 
 .rotulo-editorial--tamano-l {
     --rotulo-font-size: clamp(2.45rem, 5vw, 5.35rem);
-    --rotulo-superior-max-width: 22ch;
-    --rotulo-principal-max-width: 24ch;
     --rotulo-superior-pad-y: 12px;
     --rotulo-superior-pad-x: 22px;
     --rotulo-principal-pad-y: 14px;
@@ -1461,8 +1513,6 @@ body {
 
 .rotulo-editorial--tamano-xl {
     --rotulo-font-size: clamp(2.8rem, 5.8vw, 6.15rem);
-    --rotulo-superior-max-width: 23ch;
-    --rotulo-principal-max-width: 25ch;
     --rotulo-superior-pad-y: 14px;
     --rotulo-superior-pad-x: 24px;
     --rotulo-principal-pad-y: 16px;
@@ -1470,20 +1520,12 @@ body {
 }
 
 .rotulo-editorial--superior-largo {
-    --rotulo-font-size-superior: clamp(1.7rem, 3.1vw, 3rem);
-    --rotulo-superior-max-width: 19ch;
     --rotulo-superior-pad-x: 16px;
 }
 
-.rotulo-editorial--principal-largo {
-    --rotulo-font-size-principal: clamp(1.95rem, 3.8vw, 3.9rem);
-    --rotulo-principal-max-width: 19ch;
-}
+.rotulo-editorial--principal-largo {}
 
-.rotulo-editorial--principal-corto {
-    --rotulo-principal-max-width: 16ch;
-    --rotulo-principal-min-width: 14ch;
-}
+.rotulo-editorial--principal-corto {}
 
 .rotulo-editorial--linea_inversa .rotulo-editorial__texto--superior,
 .rotulo-editorial--relleno_inverso .rotulo-editorial__texto--superior {
@@ -1553,22 +1595,14 @@ body {
         margin-right: 0;
     }
 
-    .rotulo-editorial {
-        --rotulo-superior-max-width: 14ch;
-        --rotulo-principal-max-width: 17ch;
-        --rotulo-principal-min-width: 0;
-    }
+    .rotulo-editorial {}
 }
 
 @media (max-width: 640px) {
 
     .rotulo-editorial {
         --rotulo-gap: 0px;
-        --rotulo-font-size: clamp(1.55rem, 8.2vw, 2.8rem);
-        --rotulo-font-size-superior: var(--rotulo-font-size);
-        --rotulo-font-size-principal: var(--rotulo-font-size);
-        --rotulo-superior-max-width: 15ch;
-        --rotulo-principal-max-width: 16ch;
+        --rotulo-font-size: clamp(1.25rem, 5.8vw, 2.3rem);
     }
 
     .rotulo-editorial__franja {
@@ -1823,6 +1857,7 @@ body {
     width: auto;
     height: auto;
     object-fit: contain;
+    color: var(--fiflp-accent, #0f2d30);
 }
 
 .footer-editorial__brand-text {
@@ -1860,6 +1895,15 @@ body {
     width: auto;
     max-width: 240px;
     object-fit: contain;
+}
+
+.footer-editorial__partner-logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 240px;
+    max-height: 72px;
+    color: var(--fiflp-accent, #0f2d30);
 }
 
 .footer-editorial__partner,
@@ -2224,6 +2268,13 @@ body.home #colophon {
     filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.18));
 }
 
+.home-hero-main-logo__svg {
+    max-height: 92px;
+    max-width: min(46vw, 320px);
+    color: #fff;
+    filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.18));
+}
+
 .home-hero__lead {
     max-width: 720px;
     margin: 0 0 1.5rem;
@@ -2335,6 +2386,13 @@ body.home #colophon {
     width: auto;
     max-width: min(28vw, 180px);
     object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.16));
+}
+
+.home-hero-logo__svg {
+    max-height: 48px;
+    max-width: min(28vw, 180px);
+    color: #fff;
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.16));
 }
 

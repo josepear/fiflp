@@ -36,7 +36,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="footer-editorial__inner">
 			<div class="footer-editorial__brand">
 				<a class="footer-editorial__brand-link" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-					<?php if ( $footer_logo_url ) : ?>
+					<?php $footer_logo_svg = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $footer_logo, array( 'class' => 'footer-editorial__brand-logo', 'alt' => $footer_logo_alt ) ) : ''; ?>
+					<?php if ( $footer_logo_svg ) : ?>
+						<?php echo $footer_logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php elseif ( $footer_logo_url ) : ?>
 						<img class="footer-editorial__brand-logo" src="<?php echo esc_url( $footer_logo_url ); ?>" alt="<?php echo esc_attr( $footer_logo_alt ); ?>">
 					<?php else : ?>
 						<span class="footer-editorial__brand-text"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
@@ -60,20 +63,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 								'url' => is_array( $logo ) ? ( $logo['url'] ?? '' ) : (string) $logo,
 								'alt' => is_array( $logo ) ? ( $logo['alt'] ?? $nombre ) : $nombre,
 							);
+							$logo_svg = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $logo, array( 'class' => 'footer-editorial__partner-logo', 'alt' => $nombre ) ) : '';
 							$url      = isset( $logo_data['url'] ) ? (string) $logo_data['url'] : '';
 							$alt      = isset( $logo_data['alt'] ) ? (string) $logo_data['alt'] : $nombre;
 
-							if ( '' === $url ) {
+							if ( '' === $url && '' === $logo_svg ) {
 								continue;
 							}
 							?>
 							<div class="footer-editorial__partner">
 								<?php if ( $enlace ) : ?>
 									<a href="<?php echo esc_url( $enlace ); ?>" target="_blank" rel="noopener noreferrer">
-										<img src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>">
+										<?php if ( $logo_svg ) : ?>
+											<?php echo $logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+										<?php else : ?>
+											<img src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>">
+										<?php endif; ?>
 									</a>
 								<?php else : ?>
-									<img src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>">
+									<?php if ( $logo_svg ) : ?>
+										<?php echo $logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									<?php else : ?>
+										<img src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>">
+									<?php endif; ?>
 								<?php endif; ?>
 							</div>
 						<?php endforeach; ?>

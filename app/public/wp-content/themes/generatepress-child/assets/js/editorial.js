@@ -5,6 +5,105 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+    const centenarioLogo = document.querySelector('.fiflp-centenario-logo');
+
+    if (centenarioLogo) {
+        const updateCentenarioLogoState = () => {
+            const progress = Math.min(window.scrollY, 180);
+            const opacity = Math.max(0.06, 1 - (progress / 180));
+            const translateY = -50 - Math.min(progress / 20, 8);
+
+            centenarioLogo.style.opacity = opacity.toFixed(3);
+            centenarioLogo.style.transform = 'translate(-50%, ' + translateY.toFixed(2) + '%)';
+            centenarioLogo.classList.toggle('is-fading', progress > 96);
+        };
+
+        updateCentenarioLogoState();
+        window.addEventListener('scroll', updateCentenarioLogoState, { passive: true });
+        window.addEventListener('resize', updateCentenarioLogoState);
+    }
+
+    const fitRotuloText = () => {
+        document.querySelectorAll('.rotulo-editorial__texto').forEach(function (text) {
+            const franja = text.closest('.rotulo-editorial__franja');
+            const rotulo = text.closest('.rotulo-editorial');
+            const bloque = text.closest('.rotulo-editorial-bloque');
+
+            if (!franja) {
+                return;
+            }
+
+            const computedText = window.getComputedStyle(text);
+            const computedFranja = window.getComputedStyle(franja);
+            const baseFontSize = parseFloat(text.dataset.baseFontSize || computedText.fontSize);
+            const paddingLeft = parseFloat(computedFranja.paddingLeft) || 0;
+            const paddingRight = parseFloat(computedFranja.paddingRight) || 0;
+            const slantFactor = franja.classList.contains('rotulo-editorial__franja--superior') ? 1.22 : 1.08;
+            const slantAllowance = Math.ceil(franja.offsetHeight * slantFactor);
+            const maxTrackWidth = Math.max(
+                0,
+                (bloque ? bloque.clientWidth : 0) ||
+                (rotulo ? rotulo.parentElement.clientWidth : 0) ||
+                Math.floor(window.innerWidth * 0.92)
+            );
+
+            if (!baseFontSize || !maxTrackWidth) {
+                return;
+            }
+
+            text.dataset.baseFontSize = String(baseFontSize);
+            text.style.fontSize = baseFontSize + 'px';
+            franja.style.width = '';
+
+            const desiredWidth = Math.min(
+                maxTrackWidth,
+                Math.ceil(text.scrollWidth + paddingLeft + paddingRight + slantAllowance)
+            );
+
+            if (desiredWidth > franja.clientWidth) {
+                franja.style.width = desiredWidth + 'px';
+            }
+
+            const availableWidth = Math.max(0, franja.clientWidth - paddingLeft - paddingRight - slantAllowance);
+
+            const currentWidth = text.scrollWidth;
+
+            if (!currentWidth || currentWidth <= availableWidth) {
+                return;
+            }
+
+            const ratio = availableWidth / currentWidth;
+            const minFontSize = Math.max(18, baseFontSize * 0.42);
+            const fittedFontSize = Math.max(minFontSize, Math.floor(baseFontSize * ratio * 100) / 100);
+
+            text.style.fontSize = fittedFontSize + 'px';
+
+            if (text.scrollWidth > availableWidth && fittedFontSize > minFontSize) {
+                let trialSize = fittedFontSize;
+
+                while (text.scrollWidth > availableWidth && trialSize > minFontSize) {
+                    trialSize -= 0.5;
+                    text.style.fontSize = trialSize + 'px';
+                }
+            }
+        });
+    };
+
+    const scheduleRotuloFit = (() => {
+        let frame = null;
+
+        return function () {
+            if (frame) {
+                window.cancelAnimationFrame(frame);
+            }
+
+            frame = window.requestAnimationFrame(function () {
+                fitRotuloText();
+                frame = null;
+            });
+        };
+    })();
+
     const getDisclosureBody = (group) => {
         return Array.from(group.children).find(function (child) {
             return child.classList.contains('children') || child.classList.contains('fiflp-global-index__children');
@@ -218,6 +317,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }, { passive: true });
         }
     }
+
+    scheduleRotuloFit();
+
+    if (document.fonts && typeof document.fonts.ready === 'object') {
+        document.fonts.ready.then(scheduleRotuloFit).catch(function () {});
+    }
+
+    window.addEventListener('resize', scheduleRotuloFit, { passive: true });
 
     // =========================
     // LIGHTBOX

@@ -96,6 +96,93 @@ function fiflp_get_image_data( $image, $size = 'full', $fallback_alt = '' ) {
 	return $data;
 }
 
+function fiflp_get_local_svg_path_from_url( $url ) {
+	$url = trim( (string) $url );
+
+	if ( '' === $url || '.svg' !== strtolower( substr( strtok( $url, '?' ), -4 ) ) ) {
+		return '';
+	}
+
+	$uploads = wp_get_upload_dir();
+
+	if ( ! empty( $uploads['baseurl'] ) && ! empty( $uploads['basedir'] ) && 0 === strpos( $url, $uploads['baseurl'] ) ) {
+		$relative = ltrim( substr( $url, strlen( $uploads['baseurl'] ) ), '/' );
+		$path     = trailingslashit( $uploads['basedir'] ) . $relative;
+
+		if ( file_exists( $path ) ) {
+			return $path;
+		}
+	}
+
+	$stylesheet_url = get_stylesheet_directory_uri();
+
+	if ( 0 === strpos( $url, $stylesheet_url ) ) {
+		$relative = ltrim( substr( $url, strlen( $stylesheet_url ) ), '/' );
+		$path     = trailingslashit( get_stylesheet_directory() ) . $relative;
+
+		if ( file_exists( $path ) ) {
+			return $path;
+		}
+	}
+
+	return '';
+}
+
+function fiflp_get_svg_logo_markup( $image, $args = array() ) {
+	$args = wp_parse_args(
+		$args,
+		array(
+			'class'            => '',
+			'alt'              => '',
+			'decorative'       => false,
+			'normalize_colors' => true,
+		)
+	);
+
+	$image_data = fiflp_get_image_data( $image, 'full', (string) $args['alt'] );
+	$url        = isset( $image_data['url'] ) ? (string) $image_data['url'] : '';
+
+	if ( '' === $url ) {
+		return '';
+	}
+
+	$svg_path = fiflp_get_local_svg_path_from_url( $url );
+
+	if ( '' === $svg_path ) {
+		return '';
+	}
+
+	$svg_markup = file_get_contents( $svg_path );
+
+	if ( false === $svg_markup || '' === trim( $svg_markup ) ) {
+		return '';
+	}
+
+	$svg_markup = preg_replace( '/<\?xml.*?\?>/i', '', $svg_markup );
+	$svg_markup = preg_replace( '/<!DOCTYPE.*?>/i', '', $svg_markup );
+
+	if ( ! empty( $args['normalize_colors'] ) ) {
+		$svg_markup = preg_replace( '/fill="(?!none)[^"]*"/i', 'fill="currentColor"', $svg_markup );
+		$svg_markup = preg_replace( '/stroke="(?!none)[^"]*"/i', 'stroke="currentColor"', $svg_markup );
+	}
+
+	$svg_class = trim( 'fiflp-inline-svg ' . (string) $args['class'] );
+	$label     = trim( (string) ( $image_data['alt'] ?: $args['alt'] ) );
+
+	$accessibility = ! empty( $args['decorative'] )
+		? ' aria-hidden="true" focusable="false"'
+		: ' role="img" aria-label="' . esc_attr( $label ) . '" focusable="false"';
+
+	$svg_markup = preg_replace(
+		'/<svg\b([^>]*)>/i',
+		'<svg$1 class="' . esc_attr( $svg_class ) . '"' . $accessibility . '>',
+		$svg_markup,
+		1
+	);
+
+	return trim( $svg_markup );
+}
+
 function generatepress_child_get_editorial_children( $page_id = 0 ) {
 	$page_id = (int) $page_id;
 
@@ -814,9 +901,10 @@ add_filter(
 	'generate_site_branding_output',
 	function( $output ) {
 		$extra = sprintf(
-			'<div class="fiflp-centenario-logo" aria-hidden="true"><img src="%1$s" alt="%2$s"></div>',
+			'<a class="fiflp-centenario-logo" href="%3$s" aria-label="%2$s"><img src="%1$s" alt="%2$s"></a>',
 			esc_url( get_stylesheet_directory_uri() . '/assets/logo-centenario.svg' ),
-			esc_attr__( 'Logo centenario FIFLP', 'generatepress' )
+			esc_attr__( 'Logo centenario FIFLP', 'generatepress' ),
+			esc_url( home_url( '/' ) )
 		);
 
 		return str_replace( '</div>', $extra . '</div>', $output );

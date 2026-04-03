@@ -45,7 +45,8 @@ Objetivo del proyecto:
 ## Cómo está resuelto ahora
 
 ### Navegación
-- Hay menú global tipo índice y menú lateral editorial.
+- El índice global tipo hamburguesa se retiró.
+- La navegación editorial activa es el menú lateral editorial.
 - Los menús con hijos son desplegables.
 - El desplegable debe abrir/cerrar tanto desde el botón `+ / −` como desde el texto.
 - La navegación editorial no es onepage.
@@ -59,6 +60,9 @@ Objetivo del proyecto:
 
 ### Logos
 - Hay helpers para normalizar imágenes/logos en `functions.php`.
+- El soporte SVG ya no depende del plugin:
+  - `app/public/wp-content/mu-plugins/fiflp-svg-support.php`
+- Para SVG locales existe render inline desde `functions.php`.
 - Los logos deben soportar ACF en formato:
   - array
   - ID
@@ -74,7 +78,10 @@ Objetivo del proyecto:
 ### Cabecera
 - La cabecera está fija.
 - El logo centenario va centrado en la cabecera.
-- El branding principal y el disparador del índice ya están colocados con una lógica concreta.
+- El branding izquierdo está oculto por CSS.
+- El logo centenario enlaza al inicio.
+- La cabecera debe mantenerse limpia y transparente.
+- El logo centenario tiene fade con scroll.
 - No romper esa composición.
 
 ### Tipografía
@@ -90,6 +97,8 @@ Objetivo del proyecto:
 - Tiene variantes ACF.
 - No rehacer sus ángulos, SVG ni composición salvo que el ajuste sea puntual y muy justificado.
 - Si algo falla en un caso concreto, ajustar el componente, no desmontarlo.
+- El sistema actual mantiene el texto en una sola línea.
+- `assets/js/editorial.js` ajusta automáticamente el tamaño para que el texto encaje en la cartela.
 
 ## ACF
 - Mantener ACF Flexible Content como sistema principal de bloques.
@@ -111,6 +120,12 @@ Objetivo del proyecto:
   - responsive limpio
   - proporción correcta en móvil, tablet y escritorio
   - claridad visual del índice y estados activos
+- `assets/js/editorial.js` concentra:
+  - lightbox
+  - reveal/fade-in
+  - animaciones del hero
+  - disclosures del menú lateral
+  - ajuste automático del rótulo
 
 ## Regla de trabajo
 Antes de tocar algo, comprobar:

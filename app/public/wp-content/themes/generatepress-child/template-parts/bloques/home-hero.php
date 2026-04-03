@@ -50,7 +50,12 @@ if ( ! empty( $imagen_data['url'] ) ) {
 	<div class="home-hero-content" data-editorial-hero-content>
 		<?php if ( ! empty( $logo_data['url'] ) ) : ?>
 			<div class="home-hero-main-logo home-hero__reveal home-hero__reveal--logo">
-				<img src="<?php echo esc_url( $logo_data['url'] ); ?>" alt="<?php echo esc_attr( $logo_data['alt'] ?? '' ); ?>" />
+				<?php $main_logo_svg = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $logo_principal, array( 'class' => 'home-hero-main-logo__svg', 'alt' => $logo_data['alt'] ?? '' ) ) : ''; ?>
+				<?php if ( $main_logo_svg ) : ?>
+					<?php echo $main_logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php else : ?>
+					<img src="<?php echo esc_url( $logo_data['url'] ); ?>" alt="<?php echo esc_attr( $logo_data['alt'] ?? '' ); ?>" />
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
@@ -81,10 +86,15 @@ if ( ! empty( $imagen_data['url'] ) ) {
 			<?php foreach ( $logos as $item ) : ?>
 				<?php
 				$item_logo = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $item['imagen'] ?? null, 'full', '' ) : array();
+				$item_svg  = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $item['imagen'] ?? null, array( 'class' => 'home-hero-logo__svg', 'alt' => $item_logo['alt'] ?? '' ) ) : '';
 				?>
 				<?php if ( ! empty( $item_logo['url'] ) ) : ?>
 					<div class="home-hero-logo">
-						<img src="<?php echo esc_url( $item_logo['url'] ); ?>" alt="<?php echo esc_attr( $item_logo['alt'] ?? '' ); ?>" />
+						<?php if ( $item_svg ) : ?>
+							<?php echo $item_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php else : ?>
+							<img src="<?php echo esc_url( $item_logo['url'] ); ?>" alt="<?php echo esc_attr( $item_logo['alt'] ?? '' ); ?>" />
+						<?php endif; ?>
 					</div>
 				<?php endif; ?>
 			<?php endforeach; ?>
