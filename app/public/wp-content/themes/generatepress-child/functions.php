@@ -507,7 +507,7 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		'source'                => '',
 	);
 
-	if ( ! function_exists( 'get_field' ) || $page_id <= 0 ) {
+	if ( ! function_exists( 'get_field' ) ) {
 		return $data;
 	}
 
@@ -538,6 +538,10 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		return $option_hero;
 	}
 
+	if ( $page_id <= 0 ) {
+		return $data;
+	}
+
 	$legacy_page_hero = array(
 		'imagen'                => get_field( 'home_hero_imagen_fondo', $page_id ),
 		'logo_principal'        => get_field( 'home_hero_logo_principal', $page_id ),
@@ -563,6 +567,45 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 	if ( $has_legacy_page_content ) {
 		$legacy_page_hero['source'] = 'page';
 		return $legacy_page_hero;
+	}
+
+	$legacy_blocks = get_field( 'bloques', $page_id );
+
+	if ( is_array( $legacy_blocks ) ) {
+		foreach ( $legacy_blocks as $row ) {
+			$layout = isset( $row['acf_fc_layout'] ) ? (string) $row['acf_fc_layout'] : '';
+
+			if ( 'home_hero' !== $layout && 'home-hero' !== $layout ) {
+				continue;
+			}
+
+			$legacy_flexible_hero = array(
+				'imagen'                => $row['imagen_de_fondo'] ?? ( $row['imagen_fondo'] ?? null ),
+				'logo_principal'        => $row['logo_principal'] ?? null,
+				'titulo'                => isset( $row['titulo'] ) ? (string) $row['titulo'] : '',
+				'texto'                 => isset( $row['texto'] ) ? (string) $row['texto'] : '',
+				'boton_capitulos_texto' => isset( $row['boton_capitulos_texto'] ) ? (string) $row['boton_capitulos_texto'] : '',
+				'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( $row['boton_capitulos_url'] ?? '' ),
+				'link_pdf'              => $row['link_pdf'] ?? '',
+				'link_epub'             => $row['link_epub'] ?? '',
+				'logos'                 => isset( $row['logos'] ) && is_array( $row['logos'] ) ? $row['logos'] : array(),
+			);
+
+			$has_legacy_flexible_content = ! empty( $legacy_flexible_hero['imagen'] )
+				|| ! empty( $legacy_flexible_hero['logo_principal'] )
+				|| '' !== trim( $legacy_flexible_hero['titulo'] )
+				|| '' !== trim( $legacy_flexible_hero['texto'] )
+				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_texto'] )
+				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_url'] )
+				|| ! empty( $legacy_flexible_hero['link_pdf'] )
+				|| ! empty( $legacy_flexible_hero['link_epub'] )
+				|| ! empty( $legacy_flexible_hero['logos'] );
+
+			if ( $has_legacy_flexible_content ) {
+				$legacy_flexible_hero['source'] = 'flexible_legacy';
+				return $legacy_flexible_hero;
+			}
+		}
 	}
 
 	return $data;
