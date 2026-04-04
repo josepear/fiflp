@@ -1588,7 +1588,6 @@ body {
 .rotulo-editorial--relleno_inverso .rotulo-editorial__subtitulo {
     margin-left: 0;
     margin-right: 34px;
-    text-align: right;
 }
 
 .rotulo-editorial--relleno .rotulo-editorial__franja,
@@ -1686,6 +1685,27 @@ body {
     line-height: 1.6;
     font-weight: 400;
     color: rgba(15, 45, 48, 0.82);
+}
+
+.rotulo-editorial--subtitulo-align-left .rotulo-editorial__subtitulo {
+    align-self: flex-start;
+    margin-left: 34px;
+    margin-right: 0;
+    text-align: left;
+}
+
+.rotulo-editorial--subtitulo-align-center .rotulo-editorial__subtitulo {
+    align-self: center;
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
+}
+
+.rotulo-editorial--subtitulo-align-right .rotulo-editorial__subtitulo {
+    align-self: flex-end;
+    margin-left: 0;
+    margin-right: 34px;
+    text-align: right;
 }
 
 .rotulo-editorial--subtitulo-ancho .rotulo-editorial__subtitulo {
