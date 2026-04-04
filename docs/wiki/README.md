@@ -54,3 +54,6 @@ Ejemplos ya restaurados en Local:
 - cómo se arranca
 - dónde está el contenido crítico
 - qué carpetas son runtime y cuáles son código
+
+## Guías operativas
+- [Local Site, Base de Datos y Flujo Real de Trabajo](./LOCAL-SITE-Y-FLUJO.md)
