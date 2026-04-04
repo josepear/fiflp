@@ -22,7 +22,7 @@ $imagen_data    = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_da
 $logo_data      = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $logo_principal, 'full', get_bloginfo( 'name' ) ) : array();
 
 if ( '' === $boton_capitulos_url ) {
-	$boton_capitulos_url = home_url( '/prueba/' );
+	$boton_capitulos_url = '/prologos/';
 }
 
 if ( '' === $boton_capitulos_texto ) {

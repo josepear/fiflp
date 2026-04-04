@@ -312,6 +312,100 @@ function generatepress_child_is_editorial_page( $page = null ) {
 	return false;
 }
 
+function fiflp_normalize_home_hero_button_url( $value ) {
+	$to_relative_url = static function ( $url ) {
+		$url = trim( (string) $url );
+
+		if ( '' === $url ) {
+			return '';
+		}
+
+		$path  = wp_parse_url( $url, PHP_URL_PATH );
+		$query = wp_parse_url( $url, PHP_URL_QUERY );
+		$hash  = wp_parse_url( $url, PHP_URL_FRAGMENT );
+
+		if ( ! is_string( $path ) || '' === $path ) {
+			$path = '/';
+		}
+
+		$relative = $path;
+
+		if ( is_string( $query ) && '' !== $query ) {
+			$relative .= '?' . $query;
+		}
+
+		if ( is_string( $hash ) && '' !== $hash ) {
+			$relative .= '#' . $hash;
+		}
+
+		return $relative;
+	};
+
+	if ( $value instanceof WP_Post ) {
+		$permalink = get_permalink( $value );
+		return $permalink ? $to_relative_url( $permalink ) : '';
+	}
+
+	if ( is_array( $value ) ) {
+		if ( ! empty( $value['url'] ) ) {
+			return fiflp_normalize_home_hero_button_url( $value['url'] );
+		}
+
+		if ( isset( $value['ID'] ) ) {
+			$value = $value['ID'];
+		} elseif ( isset( $value['id'] ) ) {
+			$value = $value['id'];
+		} elseif ( isset( $value[0] ) && ! is_array( $value[0] ) ) {
+			$value = $value[0];
+		}
+	}
+
+	if ( is_numeric( $value ) ) {
+		$permalink = get_permalink( (int) $value );
+		return $permalink ? $to_relative_url( $permalink ) : '';
+	}
+
+	if ( is_string( $value ) ) {
+		$value = trim( $value );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		if ( 0 === strpos( $value, '/' ) ) {
+			return $value;
+		}
+
+		$post_id = url_to_postid( $value );
+		if ( $post_id > 0 ) {
+			$permalink = get_permalink( $post_id );
+			if ( $permalink ) {
+				return $to_relative_url( $permalink );
+			}
+		}
+
+		if ( wp_http_validate_url( $value ) ) {
+			$current_host = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+			$value_host   = wp_parse_url( $value, PHP_URL_HOST );
+
+			$is_same_host = is_string( $current_host )
+				&& is_string( $value_host )
+				&& 0 === strcasecmp( $current_host, $value_host );
+
+			$is_local_link = in_array( $current_host, array( 'localhost', '127.0.0.1' ), true )
+				&& in_array( $value_host, array( 'localhost', '127.0.0.1' ), true );
+
+			if ( $is_same_host || $is_local_link ) {
+				return $to_relative_url( $value );
+			}
+		}
+
+		return $value;
+	}
+
+	return '';
+}
+
 if ( ! function_exists( 'fiflp_collect_prologo_items_from_blocks' ) ) {
 	function fiflp_collect_prologo_items_from_blocks( $bloques ) {
 		$items = array();
@@ -423,7 +517,7 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		'titulo'                => (string) get_field( 'home_hero_titulo', 'option' ),
 		'texto'                 => (string) get_field( 'home_hero_texto', 'option' ),
 		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', 'option' ),
-		'boton_capitulos_url'   => (string) get_field( 'home_hero_boton_capitulos_url', 'option' ),
+		'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( get_field( 'home_hero_boton_capitulos_url', 'option' ) ),
 		'link_pdf'              => get_field( 'home_hero_link_pdf', 'option' ),
 		'link_epub'             => get_field( 'home_hero_link_epub', 'option' ),
 		'logos'                 => get_field( 'home_hero_logos', 'option' ),
@@ -450,7 +544,7 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		'titulo'                => (string) get_field( 'home_hero_titulo', $page_id ),
 		'texto'                 => (string) get_field( 'home_hero_texto', $page_id ),
 		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', $page_id ),
-		'boton_capitulos_url'   => (string) get_field( 'home_hero_boton_capitulos_url', $page_id ),
+		'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( get_field( 'home_hero_boton_capitulos_url', $page_id ) ),
 		'link_pdf'              => get_field( 'home_hero_link_pdf', $page_id ),
 		'link_epub'             => get_field( 'home_hero_link_epub', $page_id ),
 		'logos'                 => get_field( 'home_hero_logos', $page_id ),
@@ -782,9 +876,16 @@ add_action(
 						),
 						array(
 							'key' => 'field_home_hero_portada_boton_url',
-							'label' => 'URL botón capítulos',
+							'label' => 'Página botón capítulos',
 							'name' => 'home_hero_boton_capitulos_url',
-							'type' => 'url',
+							'type' => 'page_link',
+							'post_type' => array(
+								0 => 'page',
+							),
+							'taxonomy' => array(),
+							'allow_archives' => 0,
+							'multiple' => 0,
+							'allow_null' => 1,
 						),
 						array(
 							'key' => 'field_home_hero_portada_link_pdf',
