@@ -471,33 +471,6 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		return $legacy_page_hero;
 	}
 
-	$bloques = get_field( 'bloques', $page_id );
-
-	if ( ! is_array( $bloques ) ) {
-		return $data;
-	}
-
-	foreach ( $bloques as $bloque ) {
-		$layout = isset( $bloque['acf_fc_layout'] ) ? (string) $bloque['acf_fc_layout'] : '';
-
-		if ( 'home_hero' !== $layout ) {
-			continue;
-		}
-
-		return array(
-			'imagen'                => $bloque['imagen_de_fondo'] ?? ( $bloque['imagen_fondo'] ?? null ),
-			'logo_principal'        => $bloque['logo_principal'] ?? null,
-			'titulo'                => isset( $bloque['titulo'] ) ? (string) $bloque['titulo'] : '',
-			'texto'                 => isset( $bloque['texto'] ) ? (string) $bloque['texto'] : '',
-			'boton_capitulos_texto' => isset( $bloque['boton_capitulos_texto'] ) ? (string) $bloque['boton_capitulos_texto'] : '',
-			'boton_capitulos_url'   => isset( $bloque['boton_capitulos_url'] ) ? (string) $bloque['boton_capitulos_url'] : '',
-			'link_pdf'              => $bloque['link_pdf'] ?? '',
-			'link_epub'             => $bloque['link_epub'] ?? '',
-			'logos'                 => isset( $bloque['logos'] ) && is_array( $bloque['logos'] ) ? $bloque['logos'] : array(),
-			'source'                => 'flexible',
-		);
-	}
-
 	return $data;
 }
 
