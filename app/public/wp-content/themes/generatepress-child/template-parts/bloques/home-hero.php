@@ -6,16 +6,18 @@
  * Usa ACF flexible content con nombre de layout home_hero.
  */
 
-// Campos estándar de ACF.
-$imagen         = get_sub_field( 'imagen_de_fondo' ) ?: get_sub_field( 'imagen_fondo' );
-$logo_principal = get_sub_field( 'logo_principal' );
-$titulo         = get_sub_field( 'titulo' );
-$texto          = get_sub_field( 'texto' );
-$boton_capitulos_texto = trim( (string) get_sub_field( 'boton_capitulos_texto' ) );
-$boton_capitulos_url   = trim( (string) get_sub_field( 'boton_capitulos_url' ) );
-$link_pdf       = get_sub_field( 'link_pdf' );
-$link_epub      = get_sub_field( 'link_epub' );
-$logos          = get_sub_field( 'logos' );
+$hero_data = isset( $args['hero_data'] ) && is_array( $args['hero_data'] ) ? $args['hero_data'] : array();
+$using_direct_data = ! empty( $hero_data );
+
+$imagen                 = $using_direct_data ? ( $hero_data['imagen'] ?? null ) : ( get_sub_field( 'imagen_de_fondo' ) ?: get_sub_field( 'imagen_fondo' ) );
+$logo_principal         = $using_direct_data ? ( $hero_data['logo_principal'] ?? null ) : get_sub_field( 'logo_principal' );
+$titulo                 = $using_direct_data ? (string) ( $hero_data['titulo'] ?? '' ) : (string) get_sub_field( 'titulo' );
+$texto                  = $using_direct_data ? (string) ( $hero_data['texto'] ?? '' ) : (string) get_sub_field( 'texto' );
+$boton_capitulos_texto  = $using_direct_data ? trim( (string) ( $hero_data['boton_capitulos_texto'] ?? '' ) ) : trim( (string) get_sub_field( 'boton_capitulos_texto' ) );
+$boton_capitulos_url    = $using_direct_data ? trim( (string) ( $hero_data['boton_capitulos_url'] ?? '' ) ) : trim( (string) get_sub_field( 'boton_capitulos_url' ) );
+$link_pdf               = $using_direct_data ? ( $hero_data['link_pdf'] ?? '' ) : get_sub_field( 'link_pdf' );
+$link_epub              = $using_direct_data ? ( $hero_data['link_epub'] ?? '' ) : get_sub_field( 'link_epub' );
+$logos                  = $using_direct_data ? ( $hero_data['logos'] ?? array() ) : get_sub_field( 'logos' );
 $imagen_data    = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $imagen, 'full', (string) $titulo ) : array();
 $logo_data      = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $logo_principal, 'full', get_bloginfo( 'name' ) ) : array();
 

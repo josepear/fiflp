@@ -393,6 +393,114 @@ function fiflp_render_editorial_block_layout( $layout ) {
 	return false;
 }
 
+function fiflp_get_home_hero_data( $page_id = 0 ) {
+	$page_id = (int) $page_id;
+
+	if ( $page_id <= 0 ) {
+		$page_id = (int) get_queried_object_id();
+	}
+
+	$data = array(
+		'imagen'                => null,
+		'logo_principal'        => null,
+		'titulo'                => '',
+		'texto'                 => '',
+		'boton_capitulos_texto' => '',
+		'boton_capitulos_url'   => '',
+		'link_pdf'              => '',
+		'link_epub'             => '',
+		'logos'                 => array(),
+		'source'                => '',
+	);
+
+	if ( ! function_exists( 'get_field' ) || $page_id <= 0 ) {
+		return $data;
+	}
+
+	$option_hero = array(
+		'imagen'                => get_field( 'home_hero_imagen_fondo', 'option' ),
+		'logo_principal'        => get_field( 'home_hero_logo_principal', 'option' ),
+		'titulo'                => (string) get_field( 'home_hero_titulo', 'option' ),
+		'texto'                 => (string) get_field( 'home_hero_texto', 'option' ),
+		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', 'option' ),
+		'boton_capitulos_url'   => (string) get_field( 'home_hero_boton_capitulos_url', 'option' ),
+		'link_pdf'              => get_field( 'home_hero_link_pdf', 'option' ),
+		'link_epub'             => get_field( 'home_hero_link_epub', 'option' ),
+		'logos'                 => get_field( 'home_hero_logos', 'option' ),
+	);
+
+	$has_option_content = ! empty( $option_hero['imagen'] )
+		|| ! empty( $option_hero['logo_principal'] )
+		|| '' !== trim( $option_hero['titulo'] )
+		|| '' !== trim( $option_hero['texto'] )
+		|| '' !== trim( $option_hero['boton_capitulos_texto'] )
+		|| '' !== trim( $option_hero['boton_capitulos_url'] )
+		|| ! empty( $option_hero['link_pdf'] )
+		|| ! empty( $option_hero['link_epub'] )
+		|| ! empty( $option_hero['logos'] );
+
+	if ( $has_option_content ) {
+		$option_hero['source'] = 'option';
+		return $option_hero;
+	}
+
+	$legacy_page_hero = array(
+		'imagen'                => get_field( 'home_hero_imagen_fondo', $page_id ),
+		'logo_principal'        => get_field( 'home_hero_logo_principal', $page_id ),
+		'titulo'                => (string) get_field( 'home_hero_titulo', $page_id ),
+		'texto'                 => (string) get_field( 'home_hero_texto', $page_id ),
+		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', $page_id ),
+		'boton_capitulos_url'   => (string) get_field( 'home_hero_boton_capitulos_url', $page_id ),
+		'link_pdf'              => get_field( 'home_hero_link_pdf', $page_id ),
+		'link_epub'             => get_field( 'home_hero_link_epub', $page_id ),
+		'logos'                 => get_field( 'home_hero_logos', $page_id ),
+	);
+
+	$has_legacy_page_content = ! empty( $legacy_page_hero['imagen'] )
+		|| ! empty( $legacy_page_hero['logo_principal'] )
+		|| '' !== trim( $legacy_page_hero['titulo'] )
+		|| '' !== trim( $legacy_page_hero['texto'] )
+		|| '' !== trim( $legacy_page_hero['boton_capitulos_texto'] )
+		|| '' !== trim( $legacy_page_hero['boton_capitulos_url'] )
+		|| ! empty( $legacy_page_hero['link_pdf'] )
+		|| ! empty( $legacy_page_hero['link_epub'] )
+		|| ! empty( $legacy_page_hero['logos'] );
+
+	if ( $has_legacy_page_content ) {
+		$legacy_page_hero['source'] = 'page';
+		return $legacy_page_hero;
+	}
+
+	$bloques = get_field( 'bloques', $page_id );
+
+	if ( ! is_array( $bloques ) ) {
+		return $data;
+	}
+
+	foreach ( $bloques as $bloque ) {
+		$layout = isset( $bloque['acf_fc_layout'] ) ? (string) $bloque['acf_fc_layout'] : '';
+
+		if ( 'home_hero' !== $layout ) {
+			continue;
+		}
+
+		return array(
+			'imagen'                => $bloque['imagen_de_fondo'] ?? ( $bloque['imagen_fondo'] ?? null ),
+			'logo_principal'        => $bloque['logo_principal'] ?? null,
+			'titulo'                => isset( $bloque['titulo'] ) ? (string) $bloque['titulo'] : '',
+			'texto'                 => isset( $bloque['texto'] ) ? (string) $bloque['texto'] : '',
+			'boton_capitulos_texto' => isset( $bloque['boton_capitulos_texto'] ) ? (string) $bloque['boton_capitulos_texto'] : '',
+			'boton_capitulos_url'   => isset( $bloque['boton_capitulos_url'] ) ? (string) $bloque['boton_capitulos_url'] : '',
+			'link_pdf'              => $bloque['link_pdf'] ?? '',
+			'link_epub'             => $bloque['link_epub'] ?? '',
+			'logos'                 => isset( $bloque['logos'] ) && is_array( $bloque['logos'] ) ? $bloque['logos'] : array(),
+			'source'                => 'flexible',
+		);
+	}
+
+	return $data;
+}
+
 function fiflp_render_single_prologo( $prologo_item ) {
 	$nombre    = isset( $prologo_item['nombre'] ) ? trim( (string) $prologo_item['nombre'] ) : '';
 	$cargo     = isset( $prologo_item['cargo'] ) ? trim( (string) $prologo_item['cargo'] ) : '';
@@ -644,6 +752,117 @@ add_action(
 				'position'   => 61,
 			)
 		);
+
+		acf_add_options_page(
+			array(
+				'page_title' => 'Home Hero',
+				'menu_title' => 'Home Hero',
+				'menu_slug'  => 'fiflp-home-hero',
+				'capability' => 'edit_posts',
+				'redirect'   => false,
+				'position'   => 59,
+			)
+		);
+
+		if ( function_exists( 'acf_add_local_field_group' ) ) {
+			acf_add_local_field_group(
+				array(
+					'key' => 'group_home_hero_portada',
+					'title' => 'Home Hero Portada',
+					'fields' => array(
+						array(
+							'key' => 'field_home_hero_portada_imagen_fondo',
+							'label' => 'Imagen de fondo',
+							'name' => 'home_hero_imagen_fondo',
+							'type' => 'image',
+							'return_format' => 'array',
+							'preview_size' => 'medium',
+						),
+						array(
+							'key' => 'field_home_hero_portada_logo_principal',
+							'label' => 'Logo principal',
+							'name' => 'home_hero_logo_principal',
+							'type' => 'image',
+							'return_format' => 'array',
+							'preview_size' => 'medium',
+						),
+						array(
+							'key' => 'field_home_hero_portada_titulo',
+							'label' => 'Título',
+							'name' => 'home_hero_titulo',
+							'type' => 'text',
+						),
+						array(
+							'key' => 'field_home_hero_portada_texto',
+							'label' => 'Texto',
+							'name' => 'home_hero_texto',
+							'type' => 'textarea',
+							'new_lines' => 'br',
+							'rows' => 3,
+						),
+						array(
+							'key' => 'field_home_hero_portada_boton_texto',
+							'label' => 'Texto botón capítulos',
+							'name' => 'home_hero_boton_capitulos_texto',
+							'type' => 'text',
+							'default_value' => 'IR A LOS CAPÍTULOS',
+						),
+						array(
+							'key' => 'field_home_hero_portada_boton_url',
+							'label' => 'URL botón capítulos',
+							'name' => 'home_hero_boton_capitulos_url',
+							'type' => 'url',
+						),
+						array(
+							'key' => 'field_home_hero_portada_link_pdf',
+							'label' => 'Enlace PDF',
+							'name' => 'home_hero_link_pdf',
+							'type' => 'file',
+							'return_format' => 'url',
+						),
+						array(
+							'key' => 'field_home_hero_portada_link_epub',
+							'label' => 'Enlace EPUB',
+							'name' => 'home_hero_link_epub',
+							'type' => 'file',
+							'return_format' => 'url',
+						),
+						array(
+							'key' => 'field_home_hero_portada_logos',
+							'label' => 'Logos inferiores',
+							'name' => 'home_hero_logos',
+							'type' => 'repeater',
+							'layout' => 'table',
+							'button_label' => 'Añadir logo',
+							'sub_fields' => array(
+								array(
+									'key' => 'field_home_hero_portada_logos_imagen',
+									'label' => 'Logo',
+									'name' => 'imagen',
+									'type' => 'image',
+									'return_format' => 'array',
+									'preview_size' => 'thumbnail',
+								),
+							),
+						),
+					),
+					'location' => array(
+						array(
+							array(
+								'param' => 'options_page',
+								'operator' => '==',
+								'value' => 'fiflp-home-hero',
+							),
+						),
+					),
+					'position' => 'normal',
+					'style' => 'default',
+					'label_placement' => 'top',
+					'instruction_placement' => 'label',
+					'active' => true,
+				)
+			);
+		}
 	}
 );
 

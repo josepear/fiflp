@@ -24,22 +24,23 @@ $current_children     = get_pages(
 	)
 );
 $selected_prologo_item = null;
+$home_hero_data         = is_front_page() ? fiflp_get_home_hero_data( $current_page_id ) : array();
+$home_hero_has_content  = ! empty( $home_hero_data['imagen'] )
+	|| ! empty( $home_hero_data['logo_principal'] )
+	|| ! empty( $home_hero_data['titulo'] )
+	|| ! empty( $home_hero_data['texto'] )
+	|| ! empty( $home_hero_data['boton_capitulos_texto'] )
+	|| ! empty( $home_hero_data['boton_capitulos_url'] )
+	|| ! empty( $home_hero_data['link_pdf'] )
+	|| ! empty( $home_hero_data['link_epub'] )
+	|| ! empty( $home_hero_data['logos'] );
 
 if ( ! empty( $prologo_items ) ) {
 	$selected_prologo_item = $prologo_items[ min( $selected_prologo, count( $prologo_items ) - 1 ) ];
 }
 
-// Si el primer bloque es home_hero y estamos en la home, renderizamos solo ese bloque sin consumir filas por error.
-if (
-	is_front_page()
-	&& ! empty( $bloques_data )
-	&& isset( $bloques_data[0]['acf_fc_layout'] )
-	&& 'home_hero' === $bloques_data[0]['acf_fc_layout']
-	&& function_exists( 'have_rows' )
-	&& have_rows( 'bloques' )
-) {
-	the_row();
-	get_template_part( 'template-parts/bloques/home-hero' );
+if ( is_front_page() && $home_hero_has_content ) {
+	get_template_part( 'template-parts/bloques/home-hero', null, array( 'hero_data' => $home_hero_data ) );
 	get_footer();
 	return;
 }
