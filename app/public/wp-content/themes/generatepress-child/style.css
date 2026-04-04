@@ -1511,7 +1511,7 @@ body {
     width: fit-content;
     max-width: 100%;
     padding: 12px 28px 11px;
-    background: var(--rotulo-bg);
+    background: transparent;
     line-height: 1;
     z-index: 0;
 }
@@ -1588,11 +1588,6 @@ body {
 .rotulo-editorial--relleno_inverso .rotulo-editorial__subtitulo {
     margin-left: 0;
     margin-right: 34px;
-}
-
-.rotulo-editorial--relleno .rotulo-editorial__franja,
-.rotulo-editorial--relleno_inverso .rotulo-editorial__franja {
-    background: transparent;
 }
 
 .rotulo-editorial__marco-shape--relleno {
@@ -1673,6 +1668,11 @@ body {
 .rotulo-editorial--linea_inversa .rotulo-editorial__texto--principal,
 .rotulo-editorial--relleno_inverso .rotulo-editorial__texto--principal {
     font-family: var(--fiflp-font-display-slanted);
+}
+
+.rotulo-editorial--linea .rotulo-editorial__texto--principal,
+.rotulo-editorial--relleno .rotulo-editorial__texto--principal {
+    font-family: var(--fiflp-font-display-backslanted);
 }
 
 .rotulo-editorial__subtitulo {
