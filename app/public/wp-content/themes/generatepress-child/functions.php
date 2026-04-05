@@ -1247,3 +1247,257 @@ add_filter(
 	},
 	20
 );
+
+add_action(
+	'acf/input/admin_footer',
+	function() {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+
+		if ( ! $screen || ! in_array( $screen->base, array( 'post', 'post-new' ), true ) ) {
+			return;
+		}
+		?>
+		<style>
+			.layout[data-layout="imagen"] > .acf-fields {
+				display: grid;
+				grid-template-columns: minmax(280px, 46%) repeat(3, minmax(120px, 1fr));
+				gap: 12px;
+				align-items: start;
+			}
+
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field {
+				float: none !important;
+				clear: none !important;
+				width: auto !important;
+				margin: 0 !important;
+				border-top: 0 !important;
+				padding: 10px 8px !important;
+			}
+
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"] {
+				grid-column: 1 / 2;
+				grid-row: 1 / span 6;
+			}
+
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="full"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="variante_titulo_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tipografia_titulo_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tamano_titulo_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="ancho_titulo_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="alineacion_titulo_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_titulo_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="disposicion_titulo_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tipografia_pie_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tamano_pie_imagen"] {
+				grid-column: span 1;
+			}
+
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"],
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="preview_editorial"] {
+				grid-column: 1 / -1;
+			}
+
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="preview_editorial"] {
+				padding-top: 16px !important;
+				border-top: 1px solid #e4e6e9 !important;
+			}
+
+			@media (max-width: 1280px) {
+				.layout[data-layout="imagen"] > .acf-fields {
+					grid-template-columns: minmax(240px, 44%) repeat(2, minmax(120px, 1fr));
+				}
+			}
+
+			@media (max-width: 960px) {
+				.layout[data-layout="imagen"] > .acf-fields {
+					grid-template-columns: 1fr;
+				}
+
+				.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"] {
+					grid-column: 1 / -1;
+					grid-row: auto;
+				}
+			}
+
+			.fiflp-imagen-preview {
+				margin-top: 10px;
+				padding: 12px;
+				border: 1px dashed #c9cec9;
+				border-radius: 10px;
+				background: #f8f8f4;
+			}
+
+			.fiflp-imagen-preview__meta {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				gap: 10px;
+			}
+
+			.fiflp-imagen-preview[data-preview-disposicion="stacked"] .fiflp-imagen-preview__meta {
+				flex-direction: column;
+				flex-wrap: nowrap;
+			}
+
+			.fiflp-imagen-preview[data-preview-alineacion="center"] .fiflp-imagen-preview__meta {
+				justify-content: center;
+				text-align: center;
+			}
+
+			.fiflp-imagen-preview[data-preview-alineacion="right"] .fiflp-imagen-preview__meta {
+				justify-content: flex-end;
+				text-align: right;
+			}
+
+			.fiflp-imagen-preview__titulo {
+				display: inline-block;
+				padding: 6px 14px;
+				border: 2px solid #0f2d30;
+				font-family: 'FKScreamer Backslanted', sans-serif;
+				font-weight: 800;
+				text-transform: uppercase;
+				line-height: 0.95;
+				font-size: 1.1rem;
+				color: #0f2d30;
+				background: transparent;
+			}
+
+			.fiflp-imagen-preview[data-preview-variante="relleno"] .fiflp-imagen-preview__titulo {
+				background: #0f2d30;
+				color: #fcfcf8;
+			}
+
+			.fiflp-imagen-preview[data-preview-tipografia-titulo="slanted"] .fiflp-imagen-preview__titulo {
+				font-family: 'FKScreamer Slanted', sans-serif;
+			}
+
+			.fiflp-imagen-preview[data-preview-size="xs"] .fiflp-imagen-preview__titulo { font-size: 0.82rem; }
+			.fiflp-imagen-preview[data-preview-size="s"] .fiflp-imagen-preview__titulo { font-size: 0.95rem; }
+			.fiflp-imagen-preview[data-preview-size="m"] .fiflp-imagen-preview__titulo { font-size: 1.1rem; }
+			.fiflp-imagen-preview[data-preview-size="l"] .fiflp-imagen-preview__titulo { font-size: 1.3rem; }
+			.fiflp-imagen-preview[data-preview-size="xl"] .fiflp-imagen-preview__titulo { font-size: 1.55rem; }
+
+			.fiflp-imagen-preview__pie {
+				margin: 0;
+				padding-top: 6px;
+				font-family: 'Source Serif 4', serif;
+				font-size: 14px;
+				line-height: 1.45;
+				font-style: italic;
+				color: rgba(17, 17, 17, 0.72);
+				flex: 1 1 14rem;
+				min-width: min(100%, 14rem);
+			}
+
+			.fiflp-imagen-preview[data-preview-disposicion="stacked"] .fiflp-imagen-preview__pie {
+				padding-top: 0;
+				min-width: 0;
+				width: 100%;
+			}
+
+			.fiflp-imagen-preview[data-preview-tipografia-pie="meta"] .fiflp-imagen-preview__pie {
+				font-family: 'Manrope', sans-serif;
+			}
+
+			.fiflp-imagen-preview[data-preview-pie-size="s"] .fiflp-imagen-preview__pie { font-size: 12px; }
+			.fiflp-imagen-preview[data-preview-pie-size="m"] .fiflp-imagen-preview__pie { font-size: 14px; }
+			.fiflp-imagen-preview[data-preview-pie-size="l"] .fiflp-imagen-preview__pie { font-size: 16px; }
+
+			@media (max-width: 782px) {
+				.fiflp-imagen-preview__meta {
+					gap: 8px;
+				}
+
+				.fiflp-imagen-preview__pie {
+					flex-basis: 100%;
+					min-width: 0;
+					padding-top: 0;
+				}
+			}
+		</style>
+		<script>
+			(function () {
+				const readValue = (layout, name) => {
+					const field = layout.querySelector('.acf-field[data-name="' + name + '"]');
+
+					if (!field) {
+						return '';
+					}
+
+					const hidden = field.querySelector('input[type="hidden"]');
+					if (hidden) {
+						return (hidden.value || '').trim();
+					}
+
+					const text = field.querySelector('input[type="text"], textarea');
+					if (text) {
+						return (text.value || '').trim();
+					}
+
+					return '';
+				};
+
+				const updatePreview = (layout) => {
+					const preview = layout.querySelector('[data-fiflp-imagen-preview]');
+					if (!preview) {
+						return;
+					}
+
+					const title = readValue(layout, 'titulo_editorial_imagen') || 'Tu título editorial';
+					const caption = readValue(layout, 'caption') || 'Tu pie de foto aparecerá aquí.';
+					const variante = readValue(layout, 'variante_titulo_imagen') || 'linea';
+					const tipografiaTitulo = readValue(layout, 'tipografia_titulo_imagen') || 'backslanted';
+					const tipografiaPie = readValue(layout, 'tipografia_pie_imagen') || 'body';
+					const alineacion = readValue(layout, 'alineacion_titulo_imagen') || 'left';
+					const disposicion = readValue(layout, 'disposicion_titulo_imagen') || 'inline';
+					const size = readValue(layout, 'tamano_titulo_imagen') || 'm';
+					const pieSize = readValue(layout, 'tamano_pie_imagen') || 'm';
+					const color = readValue(layout, 'color_titulo_imagen') || '#0f2d30';
+
+					const titleNode = preview.querySelector('[data-preview-title]');
+					const captionNode = preview.querySelector('[data-preview-caption]');
+
+					if (titleNode) {
+						titleNode.textContent = title;
+						titleNode.style.borderColor = color;
+						titleNode.style.color = 'relleno' === variante ? '#fcfcf8' : color;
+						titleNode.style.background = 'relleno' === variante ? color : 'transparent';
+					}
+
+					if (captionNode) {
+						captionNode.textContent = caption;
+					}
+
+					preview.setAttribute('data-preview-variante', variante);
+					preview.setAttribute('data-preview-tipografia-titulo', tipografiaTitulo);
+					preview.setAttribute('data-preview-tipografia-pie', tipografiaPie);
+					preview.setAttribute('data-preview-alineacion', alineacion);
+					preview.setAttribute('data-preview-disposicion', disposicion);
+					preview.setAttribute('data-preview-size', size);
+					preview.setAttribute('data-preview-pie-size', pieSize);
+				};
+
+				const updateAll = () => {
+					document.querySelectorAll('.layout[data-layout="imagen"]').forEach(updatePreview);
+				};
+
+				document.addEventListener('input', updateAll, true);
+				document.addEventListener('change', updateAll, true);
+
+				if (window.acf && typeof window.acf.add_action === 'function') {
+					window.acf.add_action('ready append', function () {
+						updateAll();
+					});
+				}
+
+				updateAll();
+			}());
+		</script>
+		<?php
+	}
+);

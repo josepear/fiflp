@@ -116,16 +116,16 @@
                                 "parent_layout": "layout_imagen"
                             },
                             {
-                                "key": "field_imagen_caption",
-                                "label": "Caption",
-                                "name": "caption",
+                                "key": "field_imagen_titulo_editorial_imagen",
+                                "label": "Título editorial de imagen",
+                                "name": "titulo_editorial_imagen",
                                 "aria-label": "",
                                 "type": "text",
                                 "instructions": "",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
-                                    "width": "",
+                                    "width": "100",
                                     "class": "",
                                     "id": ""
                                 },
@@ -135,6 +135,267 @@
                                 "placeholder": "",
                                 "prepend": "",
                                 "append": "",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_variante_titulo_imagen",
+                                "label": "Variante del título",
+                                "name": "variante_titulo_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "linea": "Línea",
+                                    "relleno": "Relleno"
+                                },
+                                "default_value": "linea",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_tipografia_titulo_imagen",
+                                "label": "Tipografía del título",
+                                "name": "tipografia_titulo_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "backslanted": "FKScreamer Backslanted",
+                                    "slanted": "FKScreamer Slanted"
+                                },
+                                "default_value": "backslanted",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_tamano_titulo_imagen",
+                                "label": "Tamaño del título",
+                                "name": "tamano_titulo_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "XS a XL (de menor a mayor).",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "xs": "XS",
+                                    "s": "S",
+                                    "m": "M",
+                                    "l": "L",
+                                    "xl": "XL"
+                                },
+                                "default_value": "m",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_ancho_titulo_imagen",
+                                "label": "Ancho del título",
+                                "name": "ancho_titulo_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "= igual, 72% estrecho, 100% completo.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "igual_rotulo": "=",
+                                    "estrecho": "72%",
+                                    "ancho": "100%"
+                                },
+                                "default_value": "igual_rotulo",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_alineacion_titulo_imagen",
+                                "label": "Alineación",
+                                "name": "alineacion_titulo_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "L izquierda, C centro, R derecha.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "left": "L",
+                                    "center": "C",
+                                    "right": "R"
+                                },
+                                "default_value": "left",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_color_titulo_imagen",
+                                "label": "Color del título",
+                                "name": "color_titulo_imagen",
+                                "aria-label": "",
+                                "type": "color_picker",
+                                "instructions": "Selector visual nativo de WordPress con entrada manual HEX.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "#0f2d30",
+                                "enable_opacity": 0,
+                                "return_format": "string",
+                                "custom_palette_source": "",
+                                "palette_colors": "#0f2d30,#fcfcf8,#111111,#666666",
+                                "show_color_wheel": true,
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_disposicion_titulo_imagen",
+                                "label": "Disposición",
+                                "name": "disposicion_titulo_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "H horizontal (inline), V vertical (stacked).",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "inline": "H",
+                                    "stacked": "V"
+                                },
+                                "default_value": "inline",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_tipografia_pie_imagen",
+                                "label": "Tipografía del pie",
+                                "name": "tipografia_pie_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "TXT texto base, META meta editorial.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "body": "TXT",
+                                    "meta": "Meta"
+                                },
+                                "default_value": "body",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_tamano_pie_imagen",
+                                "label": "Tamaño del pie",
+                                "name": "tamano_pie_imagen",
+                                "aria-label": "",
+                                "type": "button_group",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "s": "S",
+                                    "m": "M",
+                                    "l": "L"
+                                },
+                                "default_value": "m",
+                                "return_format": "value",
+                                "allow_null": 0,
+                                "layout": "horizontal",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_caption",
+                                "label": "Caption",
+                                "name": "caption",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "Pie de foto clásico. Sigue funcionando aunque no uses título editorial.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "100",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_layout": "layout_imagen"
+                            },
+                            {
+                                "key": "field_imagen_preview_editorial",
+                                "label": "Preview composición",
+                                "name": "preview_editorial",
+                                "aria-label": "",
+                                "type": "message",
+                                "instructions": "Vista previa rápida del título editorial + pie de foto para esta imagen.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "100",
+                                    "class": "fiflp-imagen-preview-field",
+                                    "id": ""
+                                },
+                                "message": "<div class=\"fiflp-imagen-preview\" data-fiflp-imagen-preview><div class=\"fiflp-imagen-preview__meta\" data-preview-meta><div class=\"fiflp-imagen-preview__titulo\" data-preview-title>Tu título editorial</div><p class=\"fiflp-imagen-preview__pie\" data-preview-caption>Tu pie de foto aparecerá aquí.</p></div></div>",
+                                "new_lines": "",
+                                "esc_html": 0,
                                 "parent_layout": "layout_imagen"
                             }
                         ],
