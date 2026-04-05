@@ -1262,10 +1262,18 @@ add_action(
 		}
 		?>
 		<style>
+			/*
+			 * Layout admin ACF "imagen" fijado intencionalmente.
+			 * NO modificar este grid sin diagnostico previo en wp-admin.
+			 * ACF no mantiene de forma fiable grids complejos por campo (spans manuales,
+			 * dependencia de wrapper.width, reflujo por orden DOM), y eso provoca solapes.
+			 * Patron a mantener: columna izquierda fija para imagen + flujo vertical limpio a la derecha.
+			 */
+			/* ── layout imagen: imagen fija + panel controles 2+2+3 ── */
 			.layout[data-layout="imagen"] > .acf-fields {
 				display: grid;
-				grid-template-columns: minmax(280px, 46%) repeat(3, minmax(120px, 1fr));
-				gap: 12px;
+				grid-template-columns: 280px repeat(6, 1fr);
+				gap: 0 12px;
 				align-items: start;
 			}
 
@@ -1274,43 +1282,64 @@ add_action(
 				clear: none !important;
 				width: auto !important;
 				margin: 0 !important;
-				border-top: 0 !important;
-				padding: 10px 8px !important;
+				padding: 8px 6px !important;
+				box-sizing: border-box;
+				border-top: 1px solid #f0f0f0 !important;
 			}
 
+			/* imagen: columna fija izquierda, ocupa todo el alto */
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"] {
-				grid-column: 1 / 2;
-				grid-row: 1 / span 6;
+				grid-column: 1;
+				grid-row: 1 / span 20;
+				border-top: none !important;
+				border-right: 1px solid #e0e0e0;
+				padding: 10px 16px 10px 6px !important;
 			}
 
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="full"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="variante_titulo_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tipografia_titulo_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tamano_titulo_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="ancho_titulo_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="alineacion_titulo_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_titulo_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="disposicion_titulo_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tipografia_pie_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tamano_pie_imagen"] {
-				grid-column: span 1;
+			/* caption: línea superior, mayor parte del ancho */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"] {
+				grid-column: 2 / span 4;
 			}
 
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"],
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"],
+			/* full: toggle a sangre, columna final */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="full"] {
+				grid-column: 6 / span 2;
+			}
+
+			/* título editorial: ancho completo del lado derecho */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"] {
+				grid-column: 2 / span 6;
+			}
+
+			/* === panel controles 2+2+3 via nth-child === */
+
+			/* fila 1: variante_titulo_imagen + tipografia_titulo_imagen */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(5) { grid-column: 2 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(6) { grid-column: 5 / span 3; }
+
+			/* fila 2: tamano_titulo_imagen + ancho_titulo_imagen */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(7) { grid-column: 2 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(8) { grid-column: 5 / span 3; }
+
+			/* fila 3: alineacion_titulo_imagen + color_titulo_imagen + disposicion_titulo_imagen */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(9)  { grid-column: 2 / span 2; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(10) { grid-column: 4 / span 2; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(11) { grid-column: 6 / span 2; }
+
+			/* tipografia_pie + tamano_pie: debajo del panel */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(12) { grid-column: 2 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(13) { grid-column: 5 / span 3; }
+
+			/* preview editorial */
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="preview_editorial"] {
-				grid-column: 1 / -1;
-			}
-
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="preview_editorial"] {
+				grid-column: 2 / span 6;
 				padding-top: 16px !important;
 				border-top: 1px solid #e4e6e9 !important;
 			}
 
-			@media (max-width: 1280px) {
-				.layout[data-layout="imagen"] > .acf-fields {
-					grid-template-columns: minmax(240px, 44%) repeat(2, minmax(120px, 1fr));
-				}
+			/* ocultar textos descriptivos */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field p.description {
+				display: none !important;
 			}
 
 			@media (max-width: 960px) {
@@ -1318,9 +1347,11 @@ add_action(
 					grid-template-columns: 1fr;
 				}
 
+				.layout[data-layout="imagen"] > .acf-fields > .acf-field,
 				.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"] {
-					grid-column: 1 / -1;
-					grid-row: auto;
+					grid-column: 1 !important;
+					grid-row: auto !important;
+					border-right: none !important;
 				}
 			}
 
