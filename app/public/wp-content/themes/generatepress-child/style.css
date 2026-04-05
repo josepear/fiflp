@@ -1916,8 +1916,10 @@ body {
 }
 
 .bloque.imagen.imagen-full {
-    width: calc(100% + clamp(96px, 14vw, 240px));
+    width: calc(100% + (50vw - 50%));
     max-width: none;
+    margin-left: 0;
+    margin-right: calc(50% - 50vw);
     overflow: visible;
 }
 

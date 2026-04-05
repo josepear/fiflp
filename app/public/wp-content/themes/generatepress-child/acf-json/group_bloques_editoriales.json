@@ -112,6 +112,27 @@
                             "preview_size": "medium"
                         },
                         {
+                            "key": "field_imagen_caption",
+                            "label": "Caption",
+                            "name": "caption",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
                             "key": "field_69cc517c81075",
                             "label": "A sangre",
                             "name": "full",
@@ -121,7 +142,7 @@
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "25",
+                                "width": "",
                                 "class": "",
                                 "id": ""
                             },
@@ -363,45 +384,6 @@
                             "return_format": "value",
                             "allow_null": 0,
                             "layout": "horizontal"
-                        },
-                        {
-                            "key": "field_imagen_caption",
-                            "label": "Caption",
-                            "name": "caption",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "Pie de foto clásico. Sigue funcionando aunque no uses título editorial.",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "100",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "maxlength": "",
-                            "allow_in_bindings": 0,
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
-                        },
-                        {
-                            "key": "field_imagen_preview_editorial",
-                            "label": "Preview composición",
-                            "name": "preview_editorial",
-                            "aria-label": "",
-                            "type": "message",
-                            "instructions": "Vista previa rápida del título editorial + pie de foto para esta imagen.",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "100",
-                                "class": "fiflp-imagen-preview-field",
-                                "id": ""
-                            },
-                            "message": "<div class=\"fiflp-imagen-preview\" data-fiflp-imagen-preview><div class=\"fiflp-imagen-preview__meta\" data-preview-meta><div class=\"fiflp-imagen-preview__titulo\" data-preview-title>Tu título editorial</div><p class=\"fiflp-imagen-preview__pie\" data-preview-caption>Tu pie de foto aparecerá aquí.</p></div></div>",
-                            "new_lines": "",
-                            "esc_html": 0
                         }
                     ],
                     "min": "",
@@ -701,7 +683,7 @@
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "",
+                                "width": "38",
                                 "class": "",
                                 "id": ""
                             },
@@ -725,19 +707,51 @@
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "",
+                                "width": "24",
                                 "class": "",
                                 "id": ""
                             },
                             "choices": {
-                                "left": "Left",
-                                "center": "Center",
-                                "right": "Right"
+                                "left": "IZQ",
+                                "center": "CEN",
+                                "right": "DER",
+                                "justify": "JUS"
                             },
                             "default_value": "left",
                             "return_format": "value",
                             "allow_null": 0,
                             "layout": "horizontal"
+                        },
+                        {
+                            "key": "field_rotulo_editorial_fuente_rotulo",
+                            "label": "Fuente del rótulo",
+                            "name": "fuente_rotulo",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "38",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "default": "Por defecto (actual)",
+                                "oswald": "Oswald",
+                                "montserrat": "Montserrat",
+                                "bebas_neue": "Bebas Neue",
+                                "merriweather": "Merriweather"
+                            },
+                            "default_value": "default",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": "",
+                            "create_options": 0,
+                            "save_options": 0
                         },
                         {
                             "key": "field_rotulo_editorial_variante",
@@ -877,9 +891,9 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "default_value": 0.86,
-                            "min": 0.6,
-                            "max": 1.4,
+                            "default_value": 0.85999999999999999,
+                            "min": 0.59999999999999998,
+                            "max": 1.3999999999999999,
                             "allow_in_bindings": 0,
                             "placeholder": "",
                             "step": 0.01,
@@ -901,13 +915,239 @@
                                 "id": ""
                             },
                             "default_value": 0.01,
-                            "min": -0.05,
-                            "max": 0.2,
+                            "min": -0.050000000000000003,
+                            "max": 0.20000000000000001,
                             "allow_in_bindings": 0,
                             "placeholder": "",
-                            "step": 0.005,
+                            "step": 0.0050000000000000001,
                             "prepend": "",
                             "append": "em"
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_home_hero": {
+                    "key": "layout_home_hero",
+                    "name": "home_hero",
+                    "label": "Home Hero",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_home_hero_imagen_de_fondo",
+                            "label": "Imagen de fondo",
+                            "name": "imagen_de_fondo",
+                            "aria-label": "",
+                            "type": "image",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "array",
+                            "library": "all",
+                            "preview_size": "medium",
+                            "min_width": 0,
+                            "min_height": 0,
+                            "min_size": 0,
+                            "max_width": 0,
+                            "max_height": 0,
+                            "max_size": 0,
+                            "mime_types": ""
+                        },
+                        {
+                            "key": "field_home_hero_titulo",
+                            "label": "Título",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_home_hero_texto",
+                            "label": "Texto",
+                            "name": "texto",
+                            "aria-label": "",
+                            "type": "textarea",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "new_lines": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "rows": ""
+                        },
+                        {
+                            "key": "field_home_hero_boton_capitulos_texto",
+                            "label": "Texto del botón capítulos",
+                            "name": "boton_capitulos_texto",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "IR A LOS CAPÍTULOS",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_home_hero_boton_capitulos_url",
+                            "label": "URL del botón capítulos",
+                            "name": "boton_capitulos_url",
+                            "aria-label": "",
+                            "type": "url",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "https:\/\/wp.pearandco.es\/prueba",
+                            "placeholder": ""
+                        },
+                        {
+                            "key": "field_home_hero_link_pdf",
+                            "label": "Enlace PDF",
+                            "name": "link_pdf",
+                            "aria-label": "",
+                            "type": "file",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "url",
+                            "library": "all",
+                            "min_size": 0,
+                            "max_size": 0,
+                            "mime_types": ""
+                        },
+                        {
+                            "key": "field_home_hero_link_epub",
+                            "label": "Enlace EPUB",
+                            "name": "link_epub",
+                            "aria-label": "",
+                            "type": "file",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "url",
+                            "library": "all",
+                            "min_size": 0,
+                            "max_size": 0,
+                            "mime_types": ""
+                        },
+                        {
+                            "key": "field_home_hero_logo_principal",
+                            "label": "Logo principal",
+                            "name": "logo_principal",
+                            "aria-label": "",
+                            "type": "image",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "array",
+                            "library": "all",
+                            "preview_size": "medium",
+                            "min_width": 0,
+                            "min_height": 0,
+                            "min_size": 0,
+                            "max_width": 0,
+                            "max_height": 0,
+                            "max_size": 0,
+                            "mime_types": ""
+                        },
+                        {
+                            "key": "field_home_hero_logos",
+                            "label": "Logos",
+                            "name": "logos",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "button_label": "Añadir logo",
+                            "min": 0,
+                            "max": 0,
+                            "rows_per_page": 20,
+                            "layout": "table",
+                            "collapsed": "",
+                            "sub_fields": [
+                                {
+                                    "key": "field_home_hero_logos_imagen",
+                                    "label": "Logo",
+                                    "name": "imagen",
+                                    "aria-label": "",
+                                    "type": "image",
+                                    "instructions": "",
+                                    "required": false,
+                                    "conditional_logic": false,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "return_format": "array",
+                                    "library": "all",
+                                    "preview_size": "thumbnail",
+                                    "min_width": 0,
+                                    "min_height": 0,
+                                    "min_size": 0,
+                                    "max_width": 0,
+                                    "max_height": 0,
+                                    "max_size": 0,
+                                    "mime_types": "",
+                                    "parent_repeater": "field_home_hero_logos"
+                                }
+                            ]
                         }
                     ],
                     "min": "",
@@ -938,5 +1178,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1775258983
+    "modified": 1775358544
 }
