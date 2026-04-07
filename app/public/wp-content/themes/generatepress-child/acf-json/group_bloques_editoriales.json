@@ -611,12 +611,12 @@
                     "display": "block",
                     "sub_fields": [
                         {
-                            "key": "field_rotulo_editorial_supertitulo",
-                            "label": "Supertítulo",
-                            "name": "supertitulo",
+                            "key": "field_rotulo_editorial_titulo_lineas",
+                            "label": "Título por líneas",
+                            "name": "titulo_lineas",
                             "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
+                            "type": "repeater",
+                            "instructions": "Cada línea admite hasta 34 caracteres.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -624,33 +624,87 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "default_value": "",
-                            "maxlength": "",
-                            "allow_in_bindings": 0,
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
-                        },
-                        {
-                            "key": "field_rotulo_editorial_titulo",
-                            "label": "Título",
-                            "name": "titulo",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
-                            "required": 1,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "maxlength": "",
-                            "allow_in_bindings": 0,
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
+                            "layout": "block",
+                            "pagination": 0,
+                            "min": 1,
+                            "max": "",
+                            "collapsed": "",
+                            "button_label": "Añadir línea",
+                            "rows_per_page": 20,
+                            "sub_fields": [
+                                {
+                                    "key": "field_rotulo_editorial_titulo_lineas_texto",
+                                    "label": "Texto",
+                                    "name": "texto",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "Máximo 34 caracteres (incluyendo espacios).",
+                                    "required": 1,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "50",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "34",
+                                    "allow_in_bindings": 0,
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_rotulo_editorial_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_rotulo_editorial_titulo_lineas_tipografia",
+                                    "label": "Tipografía",
+                                    "name": "tipografia",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 1,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "slanted": "Slanted",
+                                        "backslanted": "Backslanted"
+                                    },
+                                    "default_value": "backslanted",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_rotulo_editorial_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_rotulo_editorial_titulo_lineas_variante",
+                                    "label": "Variante",
+                                    "name": "variante",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "Define relleno y sesgado/geométrica de la línea.",
+                                    "required": 1,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "linea": "Línea",
+                                        "relleno": "Relleno",
+                                        "linea_in": "Línea In",
+                                        "relleno_in": "Relleno In"
+                                    },
+                                    "default_value": "linea",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_rotulo_editorial_titulo_lineas"
+                                }
+                            ]
                         },
                         {
                             "key": "field_rotulo_editorial_subtitulo",

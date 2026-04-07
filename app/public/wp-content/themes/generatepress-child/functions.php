@@ -1262,6 +1262,67 @@ add_action(
 		}
 		?>
 		<style>
+			/* ===== Refuerzo visual global del constructor ACF (solo admin) ===== */
+			.acf-flexible-content .layout {
+				border: 2px solid #1e1e1e;
+				margin-bottom: 14px;
+				box-shadow: 0 0 0 1px rgba(30, 30, 30, 0.2);
+			}
+
+			.acf-flexible-content .layout .acf-fc-layout-handle {
+				background: #f5f5f5;
+				color: #111111;
+				font-weight: 600;
+				font-size: 22px;
+				line-height: 1.2;
+				letter-spacing: 0.02em;
+				text-decoration: none !important;
+				border-bottom: 0 !important;
+			}
+
+			.acf-flexible-content .layout .acf-fc-layout-handle *,
+			.acf-flexible-content .layout .acf-fc-layout-handle a {
+				text-decoration: none !important;
+			}
+
+			.acf-flexible-content .layout .acf-fc-layout-handle .acf-fc-layout-title,
+			.acf-flexible-content .layout .acf-fc-layout-handle .acf-fc-layout-title strong,
+			.acf-flexible-content .layout .acf-fc-layout-handle .acf-fc-layout-title span,
+			.acf-flexible-content .layout .acf-fc-layout-handle .acf-fc-layout-title em {
+				font-size: 22px !important;
+				line-height: 1.2 !important;
+				text-decoration: none !important;
+				color: #1e1e1e !important;
+			}
+
+			.acf-flexible-content .layout .acf-fc-layout-handle .acf-fc-layout-order {
+				display: inline-flex !important;
+				align-items: center;
+				justify-content: center;
+				width: 28px;
+				height: 28px;
+				margin-right: 8px;
+				border-radius: 999px;
+				background: #c71818 !important;
+				color: #ffffff !important;
+				font-weight: 700;
+				line-height: 1;
+				text-align: center;
+			}
+
+			.acf-flexible-content .layout .acf-fields {
+				border-top: 2px solid #1e1e1e;
+			}
+
+			.acf-flexible-content .layout .acf-fields > .acf-field {
+				border-top: 1px solid rgba(30, 30, 30, 0.6);
+			}
+
+			.acf-flexible-content .layout.-collapsed {
+				border-style: dashed;
+				background: #f5f5f5;
+			}
+
 			/*
 			 * Layout admin ACF "imagen" fijado intencionalmente.
 			 * NO modificar este grid sin diagnostico previo en wp-admin.
@@ -1353,6 +1414,99 @@ add_action(
 					grid-row: auto !important;
 					border-right: none !important;
 				}
+			}
+
+			/* Repeater rotulo editorial: controles visibles y alto contraste */
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-actions .acf-button,
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-actions .button {
+				background: #c71818 !important;
+				border-color: #a51212 !important;
+				color: #ffffff !important;
+				font-weight: 700;
+				opacity: 1 !important;
+				visibility: visible !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-actions .acf-button:hover,
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-actions .button:hover {
+				background: #a51212 !important;
+				border-color: #8e1010 !important;
+				color: #ffffff !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row {
+				outline: 3px solid #c71818;
+				outline-offset: -2px;
+				background: #ffffff;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table {
+				border-collapse: separate !important;
+				border-spacing: 0 10px !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row > td {
+				border-top: 0 !important;
+				border-bottom: 0 !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+				gap: 10px 12px;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field {
+				float: none !important;
+				clear: none !important;
+				width: auto !important;
+				margin: 0 !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="texto"] {
+				grid-column: 1 / -1;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="tipografia"] {
+				grid-column: 1;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
+				grid-column: 2;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle.order,
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle.order * {
+				background: #c71818 !important;
+				color: #ffffff !important;
+				font-weight: 700;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-minus {
+				display: inline-flex !important;
+				align-items: center;
+				justify-content: center;
+				width: 29px;
+				height: 29px;
+				transform: translateX(-20px);
+				opacity: 1 !important;
+				visibility: visible !important;
+				background: #c71818 !important;
+				border: 1px solid #a51212 !important;
+				border-radius: 999px;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-plus {
+				display: none !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-minus:before {
+				color: #ffffff !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-minus:hover {
+				background: #a51212 !important;
+				border-color: #8e1010 !important;
 			}
 
 			.fiflp-imagen-preview {
