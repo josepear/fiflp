@@ -981,6 +981,41 @@
                     "min": "",
                     "max": ""
                 },
+                "layout_cronologia_editorial": {
+                    "key": "layout_cronologia_editorial",
+                    "name": "cronologia_editorial",
+                    "label": "Cronología editorial",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_cronologia_editorial_referencia",
+                            "label": "Cronología",
+                            "name": "cronologia",
+                            "aria-label": "",
+                            "type": "post_object",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "post_type": [
+                                "fiflp_cronologia"
+                            ],
+                            "taxonomy": "",
+                            "return_format": "id",
+                            "multiple": 0,
+                            "allow_null": 1,
+                            "bidirectional": 0,
+                            "ui": 1,
+                            "bidirectional_target": []
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
                 "layout_home_hero": {
                     "key": "layout_home_hero",
                     "name": "home_hero",

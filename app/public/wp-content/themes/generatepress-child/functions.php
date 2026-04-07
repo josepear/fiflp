@@ -835,6 +835,34 @@ add_action(
 );
 
 add_action(
+	'init',
+	function() {
+		register_post_type(
+			'fiflp_cronologia',
+			array(
+				'labels' => array(
+					'name'          => 'Cronologías',
+					'singular_name' => 'Cronología',
+					'add_new_item'  => 'Añadir cronología',
+					'edit_item'     => 'Editar cronología',
+					'menu_name'     => 'Cronologías',
+				),
+				'public'             => false,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'menu_position'      => 62,
+				'menu_icon'          => 'dashicons-clock',
+				'supports'           => array( 'title' ),
+				'publicly_queryable' => false,
+				'has_archive'        => false,
+				'rewrite'            => false,
+				'show_in_rest'       => false,
+			)
+		);
+	}
+);
+
+add_action(
 	'acf/init',
 	function() {
 		if ( ! function_exists( 'acf_add_options_page' ) ) {

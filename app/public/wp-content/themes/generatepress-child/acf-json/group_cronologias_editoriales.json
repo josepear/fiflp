@@ -1,0 +1,215 @@
+{
+    "key": "group_cronologias_editoriales",
+    "title": "Cronología editorial",
+    "fields": [
+        {
+            "key": "field_cronologia_editorial_hitos",
+            "label": "Hitos",
+            "name": "hitos",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 1,
+            "max": 0,
+            "collapsed": "field_cronologia_editorial_hito_fecha_titulo",
+            "button_label": "Añadir hito",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_cronologia_editorial_hito_fecha_titulo",
+                    "label": "Fecha o título",
+                    "name": "fecha_titulo",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_texto",
+                    "label": "Texto",
+                    "name": "texto",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "new_lines": "wpautop",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "rows": 4,
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_imagen",
+                    "label": "Imagen",
+                    "name": "imagen",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "allow_in_bindings": 0,
+                    "preview_size": "medium",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_imagen_posicion",
+                    "label": "Posición de imagen",
+                    "name": "imagen_posicion",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "izquierda": "Izquierda",
+                        "derecha": "Derecha"
+                    },
+                    "default_value": "izquierda",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_texto_posicion",
+                    "label": "Posición de texto",
+                    "name": "texto_posicion",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "derecha": "Derecha",
+                        "izquierda": "Izquierda"
+                    },
+                    "default_value": "derecha",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_imagen_sangre",
+                    "label": "Sangre de imagen",
+                    "name": "imagen_sangre",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "none": "Sin sangre",
+                        "izquierda": "Sangre izquierda",
+                        "derecha": "Sangre derecha"
+                    },
+                    "default_value": "none",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_caption",
+                    "label": "Caption",
+                    "name": "caption",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fiflp_cronologia"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1775550000
+}
