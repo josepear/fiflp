@@ -875,7 +875,7 @@ body.fiflp-menu-open #page {
 .cronologia-editorial__fecha {
     position: relative;
     margin: 0;
-    transform: translateY(-10px);
+    transform: translateY(-82px);
     padding: 0 0 12px 0;
     font-size: 32px;
     line-height: 1.2;
@@ -981,7 +981,7 @@ body.fiflp-menu-open #page {
 
     .cronologia-editorial__fecha {
         font-size: 32px;
-        transform: translateY(-6px);
+        transform: translateY(-26px);
         padding: 0 0 8px 0;
     }
 
@@ -2732,6 +2732,12 @@ body {
     line-height: 1.2;
     font-family: var(--fiflp-font-display);
     text-transform: uppercase;
+}
+
+/* Título del bloque cronología (CPT): no usar márgenes de encabezado editorial — si no, el h2 empuja/subelista y los bloques de abajo */
+.editorial .bloque.cronologia-editorial .cronologia-editorial__titulo {
+    margin: 0;
+    line-height: 0.95;
 }
 
 .rotulo-editorial__franja .rotulo-editorial__texto {
