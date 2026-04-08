@@ -772,7 +772,7 @@ body.fiflp-menu-open #page {
    ========================= */
 
 .bloque.cronologia-editorial {
-    max-width: 400px;
+    max-width: 600px;
     --cron-media-col: 400px;
     --cron-axis-col: 20px;
     --cron-gap: 0px;

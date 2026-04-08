@@ -1,0 +1,211 @@
+/**
+ * Admin ACF — "zapato" para repeater de lineas en Rotulo editorial.
+ */
+
+/* Dos columnas del módulo: izquierda líneas, derecha configuración */
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 0 14px;
+	align-items: start;
+	align-content: start;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field {
+	float: none !important;
+	clear: none !important;
+	width: auto !important;
+	margin: 0 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo_lineas"] {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group {
+	grid-column: 2;
+	grid-row: 1;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 10px 14px;
+	padding: 0 !important;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-sizing: border-box;
+	align-self: start;
+	margin: 0 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group:empty {
+	display: none !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field {
+	float: none !important;
+	clear: none !important;
+	width: auto !important;
+	margin: 0 0 2px !important;
+	padding-top: 0 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field + .acf-field {
+	border-top: 1.5px solid #1e1e1e !important;
+	padding-top: 10px !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="subtitulo"] {
+	grid-column: 1 / -1;
+	padding-top: 18px !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="ancho_subtitulo"] { grid-column: 1; }
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="alineacion_subtitulo"] { grid-column: 2; }
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="fuente_rotulo"] { grid-column: 3; }
+
+@media (max-width: 1024px) {
+	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields {
+		grid-template-columns: 1fr;
+	}
+	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo_lineas"],
+	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group {
+		grid-column: 1 / -1 !important;
+	}
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater.-block > .acf-table {
+	border-collapse: separate;
+	border-spacing: 0 14px;
+	width: 100%;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle {
+	width: 36px;
+	min-width: 36px;
+	max-width: 36px;
+	padding: 8px 4px !important;
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+	vertical-align: middle !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row-handle .acf-row-number {
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	width: 36px !important;
+	height: 36px !important;
+	margin: 0 auto;
+	padding: 0;
+	border-radius: 50% !important;
+	background: #9aa0a6 !important;
+	color: #fff !important;
+	font-size: 16px !important;
+	font-weight: 800 !important;
+	line-height: 1 !important;
+	position: relative;
+	overflow: hidden;
+	cursor: grab;
+	transition: background-color 120ms ease, color 120ms ease;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater tr.acf-row:not(.-collapsed) > .acf-row-handle .acf-row-number {
+	background: #c71818 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row-handle .acf-row-number:hover {
+	color: transparent !important;
+	font-size: 0 !important;
+	text-indent: -9999px;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row-handle .acf-row-number::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1;
+	color: #fff;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater tr.acf-row.-collapsed > .acf-row-handle .acf-row-number:hover::after {
+	content: "↓";
+	opacity: 1;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater tr.acf-row:not(.-collapsed) > .acf-row-handle .acf-row-number:hover::after {
+	content: "↑";
+	opacity: 1;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row-handle .acf-icon {
+	display: none !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row-handle.remove .acf-icon.-minus {
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	width: 36px !important;
+	height: 36px !important;
+	border-radius: 50% !important;
+	background: var(--fiflp-acf-skin-accent, #ff4d00) !important;
+	border: 0 !important;
+	color: #fff !important;
+	font-size: 18px !important;
+	line-height: 1 !important;
+	margin: 0 auto !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > td.acf-fields {
+	border: 1.5px solid #1e1e1e;
+	border-radius: 4px;
+	box-shadow: none;
+	background: #fff;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields {
+	padding: 12px 14px !important;
+	box-sizing: border-box;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field + .acf-field {
+	border-top: 1.5px solid #1e1e1e !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields {
+	position: relative;
+	min-height: 54px;
+	padding: 0 12px !important;
+	border: 1.5px solid #1e1e1e !important;
+	background: #fafafa !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields::before {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields::before {
+	content: attr(data-collapsed-title);
+	display: block;
+	position: absolute;
+	left: 12px;
+	right: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 16px;
+	font-weight: 800;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	opacity: 1;
+}

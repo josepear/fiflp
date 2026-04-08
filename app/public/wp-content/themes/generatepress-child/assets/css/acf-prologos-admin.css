@@ -1,0 +1,317 @@
+/**
+ * Admin ACF — módulo Prólogos (layout prologos en flexible de páginas).
+ * Replica visual/comportamiento de cronología (solo admin).
+ */
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table {
+    border-collapse: separate;
+    border-spacing: 0 14px;
+    width: 100%;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > td {
+    vertical-align: top;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle {
+    vertical-align: middle !important;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle {
+    width: 36px;
+    padding: 8px 4px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle .acf-row-number {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    height: 36px !important;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 50% !important;
+    border: none !important;
+    background: #9aa0a6 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle .acf-row-number:active {
+    cursor: grabbing;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > .acf-row-handle .acf-row-number {
+    background: #c71818 !important;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle .acf-icon {
+    display: none !important;
+}
+
+/* Mantener estructura horizontal: numero | titulo | eliminar */
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle.order {
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle.remove {
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
+    padding: 8px 4px !important;
+    text-align: center;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle.remove .acf-icon.-minus {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    background: var(--fiflp-acf-skin-accent, #ff4d00) !important;
+    border: 1.5px solid #1e1e1e;
+    color: #ffffff !important;
+    font-size: 18px;
+    line-height: 1;
+    margin: 0 auto !important;
+    box-shadow: none;
+    transition: transform 120ms ease, filter 120ms ease;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle.remove .acf-icon.-minus:hover {
+    filter: brightness(0.95);
+    transform: scale(1.04);
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle .acf-row-number:hover {
+    color: transparent !important;
+    font-size: 0 !important;
+    text-indent: -9999px;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle .acf-row-number::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row.-collapsed > .acf-row-handle .acf-row-number:hover::after {
+    content: "↓";
+    opacity: 1;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > .acf-row-handle .acf-row-number:hover::after {
+    content: "↑";
+    opacity: 1;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > td.acf-fields {
+    border: 1.5px solid #1e1e1e;
+    border-radius: 4px;
+    box-shadow: none;
+    background: #fff;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row > td.acf-fields {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    align-content: flex-start;
+    gap: 14px;
+    padding: 12px 14px !important;
+    box-sizing: border-box;
+    transition: padding 520ms cubic-bezier(0.22, 1, 0.36, 1), min-height 520ms cubic-bezier(0.22, 1, 0.36, 1), background-color 520ms ease, border-color 520ms ease;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row > td.acf-fields::after {
+    display: none;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row > td.acf-fields > .acf-field {
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto,
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px 12px;
+    background: #f5f5f5;
+    border: 1.5px solid #1e1e1e;
+    border-radius: 6px;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto {
+    flex-basis: calc(100% - 250px);
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen {
+    flex: 0 0 236px;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto::before,
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen::before {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #50575e;
+    margin: 0 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid #1e1e1e;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto::before { content: "Texto"; }
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen::before { content: "Imagen"; }
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto > .acf-field,
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen > .acf-field {
+    padding: 5px 0 !important;
+    margin: 0;
+    border: 0;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .fiflp-prologo-item-contenido-full {
+    flex: 1 1 100%;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    padding: 10px 12px 12px !important;
+    background: #f5f5f5;
+    border: 1.5px solid #1e1e1e !important;
+    border-radius: 6px;
+    margin: 0 !important;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto > .acf-field + .acf-field,
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen > .acf-field + .acf-field {
+    border-top: 1.5px solid #1e1e1e !important;
+    padding-top: 10px !important;
+    margin-top: 4px !important;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto .acf-label,
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen .acf-label {
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto .acf-input,
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen .acf-input {
+    margin-top: 0;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto .acf-field[data-name="contenido"] textarea {
+    min-height: 72px;
+    max-height: 220px;
+    line-height: 1.45;
+    resize: vertical;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen .acf-field[data-name="foto"] img {
+    max-height: 200px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Plegado */
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields {
+    border: 1.5px solid #1e1e1e !important;
+    background: #fafafa !important;
+    padding: 0 12px !important;
+    min-height: 54px;
+    display: block !important;
+    position: relative;
+}
+
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto,
+.post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 2000px;
+    overflow: hidden;
+    transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1), transform 620ms cubic-bezier(0.22, 1, 0.36, 1), max-height 620ms cubic-bezier(0.22, 1, 0.36, 1), padding 620ms cubic-bezier(0.22, 1, 0.36, 1), margin 620ms cubic-bezier(0.22, 1, 0.36, 1), border-width 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields > .fiflp-prologo-item-grupo-texto,
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields > .fiflp-prologo-item-grupo-imagen {
+    display: block !important;
+    opacity: 0;
+    transform: translateY(-18px) scale(0.985);
+    max-height: 0;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+    border-width: 0 !important;
+    pointer-events: none;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields > .acf-field {
+    display: none !important;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row > td.acf-fields::before {
+    opacity: 0;
+    transform: translateY(calc(-50% - 10px));
+    transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1), transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields::before {
+    content: attr(data-collapsed-title);
+    display: block;
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 50%;
+    line-height: 1.2;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    color: #1e1e1e;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 1;
+    transform: translateY(-50%);
+}
+
+@media (max-width: 900px) {
+    .post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row > td.acf-fields {
+        flex-direction: column;
+    }
+}

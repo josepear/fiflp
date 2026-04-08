@@ -1116,31 +1116,77 @@ add_action(
 			return;
 		}
 		$screen = get_current_screen();
-		if ( ! $screen || 'fiflp_cronologia' !== $screen->post_type ) {
+		if ( ! $screen ) {
 			return;
 		}
 		if ( 'post.php' !== $hook_suffix && 'post-new.php' !== $hook_suffix ) {
 			return;
 		}
-		$css_path = get_stylesheet_directory() . '/assets/css/acf-cronologia-editorial-admin.css';
-		if ( is_readable( $css_path ) ) {
-			wp_enqueue_style(
-				'fiflp-acf-cronologia-editorial-admin',
-				get_stylesheet_directory_uri() . '/assets/css/acf-cronologia-editorial-admin.css',
-				array(),
-				(string) filemtime( $css_path )
-			);
+		if ( 'fiflp_cronologia' === $screen->post_type ) {
+			$css_path = get_stylesheet_directory() . '/assets/css/acf-cronologia-editorial-admin.css';
+			if ( is_readable( $css_path ) ) {
+				wp_enqueue_style(
+					'fiflp-acf-cronologia-editorial-admin',
+					get_stylesheet_directory_uri() . '/assets/css/acf-cronologia-editorial-admin.css',
+					array(),
+					(string) filemtime( $css_path )
+				);
+			}
+
+			$js_path = get_stylesheet_directory() . '/assets/js/acf-cronologia-editorial-admin.js';
+			if ( is_readable( $js_path ) ) {
+				wp_enqueue_script(
+					'fiflp-acf-cronologia-editorial-admin',
+					get_stylesheet_directory_uri() . '/assets/js/acf-cronologia-editorial-admin.js',
+					array( 'jquery', 'acf-input' ),
+					(string) filemtime( $js_path ),
+					true
+				);
+			}
 		}
 
-		$js_path = get_stylesheet_directory() . '/assets/js/acf-cronologia-editorial-admin.js';
-		if ( is_readable( $js_path ) ) {
-			wp_enqueue_script(
-				'fiflp-acf-cronologia-editorial-admin',
-				get_stylesheet_directory_uri() . '/assets/js/acf-cronologia-editorial-admin.js',
-				array( 'jquery', 'acf-input' ),
-				(string) filemtime( $js_path ),
-				true
-			);
+		if ( 'page' === $screen->post_type ) {
+			$prologos_css = get_stylesheet_directory() . '/assets/css/acf-prologos-admin.css';
+			if ( is_readable( $prologos_css ) ) {
+				wp_enqueue_style(
+					'fiflp-acf-prologos-admin',
+					get_stylesheet_directory_uri() . '/assets/css/acf-prologos-admin.css',
+					array(),
+					(string) filemtime( $prologos_css )
+				);
+			}
+
+			$prologos_js = get_stylesheet_directory() . '/assets/js/acf-prologos-admin.js';
+			if ( is_readable( $prologos_js ) ) {
+				wp_enqueue_script(
+					'fiflp-acf-prologos-admin',
+					get_stylesheet_directory_uri() . '/assets/js/acf-prologos-admin.js',
+					array( 'jquery', 'acf-input' ),
+					(string) filemtime( $prologos_js ),
+					true
+				);
+			}
+
+			$rotulo_css = get_stylesheet_directory() . '/assets/css/acf-rotulo-editorial-admin.css';
+			if ( is_readable( $rotulo_css ) ) {
+				wp_enqueue_style(
+					'fiflp-acf-rotulo-editorial-admin',
+					get_stylesheet_directory_uri() . '/assets/css/acf-rotulo-editorial-admin.css',
+					array(),
+					(string) filemtime( $rotulo_css )
+				);
+			}
+
+			$rotulo_js = get_stylesheet_directory() . '/assets/js/acf-rotulo-editorial-admin.js';
+			if ( is_readable( $rotulo_js ) ) {
+				wp_enqueue_script(
+					'fiflp-acf-rotulo-editorial-admin',
+					get_stylesheet_directory_uri() . '/assets/js/acf-rotulo-editorial-admin.js',
+					array( 'jquery', 'acf-input' ),
+					(string) filemtime( $rotulo_js ),
+					true
+				);
+			}
 		}
 	},
 	20
@@ -1663,6 +1709,72 @@ add_action(
 				border: none !important;
 				border-radius: 0 !important;
 				transform: none !important;
+			}
+
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle.order,
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle.remove {
+				width: 36px !important;
+				min-width: 36px !important;
+				max-width: 36px !important;
+				vertical-align: middle !important;
+				text-align: center;
+			}
+
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle.remove {
+				padding-top: 0 !important;
+				padding-bottom: 0 !important;
+			}
+
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row-handle.remove .acf-icon.-minus {
+				display: inline-flex !important;
+				align-items: center;
+				justify-content: center;
+				width: 36px !important;
+				height: 36px !important;
+				border-radius: 50% !important;
+				background: var(--fiflp-acf-skin-accent, #ff4d00) !important;
+				border: 0 !important;
+				color: #fff !important;
+				font-size: 18px !important;
+				line-height: 1 !important;
+				margin: 0 auto !important;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+			}
+
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields {
+				display: grid !important;
+				grid-template-columns: minmax(220px, 0.9fr) 236px minmax(260px, 1.1fr) !important;
+				grid-template-areas:
+					"nombre foto contenido"
+					"cargo foto contenido";
+				column-gap: 14px;
+				row-gap: 10px;
+				align-items: stretch;
+			}
+
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="nombre"] { grid-area: nombre; }
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="cargo"] { grid-area: cargo; }
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="foto"] {
+				grid-area: foto;
+				align-self: stretch;
+			}
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="contenido"] {
+				grid-area: contenido;
+				align-self: stretch;
+			}
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="contenido"] textarea {
+				min-height: 48px !important;
+				max-height: 85px !important;
+				line-height: 1.35 !important;
+				font-size: 14px !important;
+				resize: vertical;
+			}
+
+			/* Evita que la capa del título plegado bloquee clic/edición en abierto */
+			.post-type-page .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-row > td.acf-fields::before {
+				pointer-events: none !important;
 			}
 		</style>
 		<script>

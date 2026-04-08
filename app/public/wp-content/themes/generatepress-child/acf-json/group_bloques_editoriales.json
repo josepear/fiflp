@@ -29,7 +29,7 @@
                             "name": "titulo",
                             "aria-label": "",
                             "type": "text",
-                            "instructions": "",
+                            "instructions": "= igual al rótulo · ◧ estrecho (72%) · ◫ ancho completo",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -501,7 +501,7 @@
                             "pagination": 0,
                             "min": 0,
                             "max": 0,
-                            "collapsed": "",
+                            "collapsed": "field_prologos_prologo_nombre",
                             "button_label": "Añadir Prólogo",
                             "rows_per_page": 20,
                             "sub_fields": [
@@ -628,7 +628,7 @@
                             "pagination": 0,
                             "min": 1,
                             "max": "",
-                            "collapsed": "",
+                            "collapsed": "field_rotulo_editorial_titulo_lineas_texto",
                             "button_label": "Añadir línea",
                             "rows_per_page": 20,
                             "sub_fields": [
@@ -742,9 +742,9 @@
                                 "id": ""
                             },
                             "choices": {
-                                "igual_rotulo": "Igual al rótulo",
-                                "estrecho": "Estrecho (72%)",
-                                "ancho": "Ancho completo"
+                                "igual_rotulo": "=",
+                                "estrecho": "◧",
+                                "ancho": "◫"
                             },
                             "default_value": "igual_rotulo",
                             "return_format": "value",
@@ -766,10 +766,10 @@
                                 "id": ""
                             },
                             "choices": {
-                                "left": "IZQ",
-                                "center": "CEN",
-                                "right": "DER",
-                                "justify": "JUS"
+                                "left": "⟵",
+                                "center": "⟷",
+                                "right": "⟶",
+                                "justify": "☰"
                             },
                             "default_value": "left",
                             "return_format": "value",
@@ -822,10 +822,10 @@
                                 "id": ""
                             },
                             "choices": {
-                                "linea": "Línea",
-                                "linea_inversa": "Línea inversa",
-                                "relleno": "Relleno",
-                                "relleno_inverso": "Relleno inverso"
+                                "linea": "◫",
+                                "linea_inversa": "◪",
+                                "relleno": "■",
+                                "relleno_inverso": "▣"
                             },
                             "default_value": "linea",
                             "return_format": "value",
