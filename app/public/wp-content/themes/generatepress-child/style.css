@@ -875,8 +875,8 @@ body.fiflp-menu-open #page {
 .cronologia-editorial__fecha {
     position: relative;
     margin: 0;
-    transform: translateY(-82px);
-    padding: 0 0 12px 0;
+    transform: translateY(-88px);
+    padding: 0;
     font-size: 32px;
     line-height: 1.2;
     font-weight: 700;
@@ -922,6 +922,11 @@ body.fiflp-menu-open #page {
 
 .cronologia-editorial__texto p:last-child {
     margin-bottom: 0;
+}
+
+/* La fecha usa translateY negativo; el flujo sigue reservando su caja. Sin mover el título, subimos el cuerpo el mismo valor para que quede pegado debajo. */
+.cronologia-editorial__fecha + .cronologia-editorial__texto {
+    margin-top: -106px;
 }
 
 .cronologia-editorial__media img {
@@ -982,7 +987,11 @@ body.fiflp-menu-open #page {
     .cronologia-editorial__fecha {
         font-size: 32px;
         transform: translateY(-26px);
-        padding: 0 0 8px 0;
+        padding: 0;
+    }
+
+    .cronologia-editorial__fecha + .cronologia-editorial__texto {
+        margin-top: -26px;
     }
 
     .cronologia-editorial__item--txt-izquierda .cronologia-editorial__meta::before {
