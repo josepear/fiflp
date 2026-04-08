@@ -68,7 +68,7 @@ img {
 .bloque img,
 .editorial img,
 .prologo-img img {
-    border-radius: var(--fiflp-image-radius, 18px);
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px);
 }
 
 .fiflp-centenario-logo img,
@@ -772,15 +772,16 @@ body.fiflp-menu-open #page {
    ========================= */
 
 .bloque.cronologia-editorial {
-    max-width: 1100px;
-    --cron-media-col: 320px;
+    max-width: 400px;
+    --cron-media-col: 400px;
     --cron-axis-col: 20px;
     --cron-gap: 0px;
 }
 
 .cronologia-editorial__header {
     margin-bottom: 36px;
-    margin-left: calc(var(--cron-media-col) + var(--cron-axis-col) + (var(--cron-gap) * 2));
+    margin-right: calc(var(--cron-axis-col) + (var(--cron-gap) * 2));
+    text-align: right;
 }
 
 .cronologia-editorial__titulo {
@@ -789,7 +790,7 @@ body.fiflp-menu-open #page {
     font-size: 64px;
     line-height: 0.95;
     text-transform: uppercase;
-    text-align: left;
+    text-align: right;
 }
 
 .cronologia-editorial__lista {
@@ -801,75 +802,52 @@ body.fiflp-menu-open #page {
 }
 
 .cronologia-editorial__item {
-    display: grid;
-    grid-template-columns: var(--cron-media-col) var(--cron-axis-col) minmax(0, 1fr);
-    column-gap: var(--cron-gap);
     margin: 0;
+}
+
+.cronologia-editorial__contenido-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--cron-axis-col);
+    column-gap: var(--cron-gap);
+    align-items: stretch;
+}
+
+.cronologia-editorial__contenido {
+    position: relative;
+    grid-column: 1;
+    margin-top: 5px;
+    padding: 0 0 72px 0;
+    text-align: right;
 }
 
 .cronologia-editorial__meta {
     position: relative;
     grid-column: 2;
+    align-self: stretch;
     padding: 0 0 72px 0;
 }
 
 .cronologia-editorial__meta::before {
     content: "";
     position: absolute;
-    left: 0;
+    left: auto;
+    right: 0;
     top: 0;
     bottom: 0;
     width: 18px;
-    border-left: 2px solid #1e1e1e;
-    border-top: 2px solid #1e1e1e;
-    border-bottom: 2px solid #1e1e1e;
-    border-right: 0;
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
+    border-left: 0;
+    border-right: 1.5px solid #1e1e1e;
+    border-top: 1.5px solid #1e1e1e;
+    border-bottom: 1.5px solid #1e1e1e;
+    border-top-left-radius: 0;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 16px;
     box-sizing: border-box;
 }
 
 .cronologia-editorial__meta::after {
     content: none;
-}
-
-.cronologia-editorial__media {
-    grid-column: 1;
-    margin: 0;
-    align-self: center;
-    padding-right: 20px;
-    padding-bottom: 72px;
-}
-
-.cronologia-editorial__media .lightbox-trigger {
-    display: block;
-    border-radius: var(--fiflp-image-radius, 18px);
-    overflow: hidden;
-}
-
-.cronologia-editorial__item:not(.has-image) .cronologia-editorial__media {
-    display: none;
-}
-
-.cronologia-editorial__item--img-derecha .cronologia-editorial__media {
-    grid-column: 3;
-}
-
-.cronologia-editorial__item--img-izquierda .cronologia-editorial__media {
-    grid-column: 1;
-}
-
-.cronologia-editorial__contenido {
-    position: relative;
-    grid-column: 3;
-    margin-top: 0;
-    padding: 0 0 72px 0;
-    text-align: left;
-}
-
-.cronologia-editorial__item--txt-izquierda .cronologia-editorial__contenido {
-    grid-column: 1;
-    text-align: right;
 }
 
 .cronologia-editorial__fecha {
@@ -881,25 +859,75 @@ body.fiflp-menu-open #page {
     line-height: 1.2;
     font-weight: 700;
     text-transform: uppercase;
-    text-align: left;
-}
-
-.cronologia-editorial__item--txt-izquierda .cronologia-editorial__fecha,
-.cronologia-editorial__item--txt-izquierda .cronologia-editorial__texto p {
     text-align: right;
 }
 
-.cronologia-editorial__item--txt-izquierda .cronologia-editorial__meta::before {
-    left: auto;
-    right: 0;
-    border-left: 0;
-    border-right: 2px solid #1e1e1e;
-    border-top: 2px solid #1e1e1e;
-    border-bottom: 2px solid #1e1e1e;
-    border-top-left-radius: 0;
-    border-top-right-radius: 16px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 16px;
+.cronologia-editorial__texto p {
+    margin: 0 0 1em;
+    text-align: right;
+}
+
+.cronologia-editorial__texto p:last-child {
+    margin-bottom: 0;
+}
+
+.cronologia-editorial__fecha + .cronologia-editorial__texto {
+    margin-top: -106px;
+}
+
+.cronologia-editorial__media {
+    width: var(--cron-media-col);
+    max-width: 100%;
+    margin: 24px 0 0 auto;
+    padding-left: 20px;
+    padding-right: 0;
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px);
+    overflow: hidden;
+}
+
+.cronologia-editorial__item:not(.has-image) .cronologia-editorial__media {
+    display: none;
+}
+
+.cronologia-editorial__media .lightbox-trigger {
+    display: block;
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+    overflow: hidden;
+}
+
+.cronologia-editorial__media .lightbox-trigger img,
+.cronologia-editorial__media img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+}
+
+.cronologia-editorial__media figcaption {
+    max-width: 100%;
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+.cronologia-editorial__media--bleed-derecha,
+.cronologia-editorial__media--bleed-derecha .lightbox-trigger,
+.cronologia-editorial__media--bleed-derecha .lightbox-trigger img,
+.cronologia-editorial__media--bleed-derecha img {
+    border-top-left-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+    border-bottom-left-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.cronologia-editorial__media--bleed-izquierda,
+.cronologia-editorial__media--bleed-izquierda .lightbox-trigger,
+.cronologia-editorial__media--bleed-izquierda .lightbox-trigger img,
+.cronologia-editorial__media--bleed-izquierda img {
+    border-top-right-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+    border-bottom-right-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
 }
 
 .cronologia-editorial__media--bleed-izquierda {
@@ -915,37 +943,13 @@ body.fiflp-menu-open #page {
     margin-right: calc(50% - 50vw);
 }
 
-.cronologia-editorial__texto p {
-    margin: 0 0 1em;
-    text-align: left;
-}
-
-.cronologia-editorial__texto p:last-child {
-    margin-bottom: 0;
-}
-
-/* La fecha usa translateY negativo; el flujo sigue reservando su caja. Sin mover el título, subimos el cuerpo el mismo valor para que quede pegado debajo. */
-.cronologia-editorial__fecha + .cronologia-editorial__texto {
-    margin-top: -106px;
-}
-
-.cronologia-editorial__media img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    display: block;
-    border-radius: var(--fiflp-image-radius, 18px);
-}
-
-.cronologia-editorial__media figcaption {
-    max-width: 100%;
-    margin: 10px 0 0;
-    padding: 0;
-}
-
-.cronologia-editorial__item:last-child .cronologia-editorial__meta,
-.cronologia-editorial__item:last-child .cronologia-editorial__contenido {
+.cronologia-editorial__item:last-child .cronologia-editorial__contenido,
+.cronologia-editorial__item:last-child .cronologia-editorial__meta {
     padding-bottom: 0;
+}
+
+.cronologia-editorial__item:last-child .cronologia-editorial__media {
+    margin-bottom: 0;
 }
 
 @media (max-width: 900px) {
@@ -955,29 +959,30 @@ body.fiflp-menu-open #page {
     }
 
     .cronologia-editorial__header {
-        margin-left: calc(var(--cron-axis-col) + var(--cron-gap));
+        margin-right: calc(var(--cron-axis-col) + var(--cron-gap));
         margin-bottom: 26px;
     }
 
     .cronologia-editorial__titulo {
         font-size: 44px;
+        text-align: right;
     }
 
-    .cronologia-editorial__item {
-        grid-template-columns: var(--cron-axis-col) minmax(0, 1fr);
+    .cronologia-editorial__contenido-wrap {
+        grid-template-columns: minmax(0, 1fr) var(--cron-axis-col);
         row-gap: 14px;
     }
 
     .cronologia-editorial__meta {
-        grid-column: 1;
+        grid-column: 2;
         padding-bottom: 0;
     }
 
     .cronologia-editorial__meta::before {
         width: 12px;
         height: auto;
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 
     .cronologia-editorial__media {
@@ -994,13 +999,7 @@ body.fiflp-menu-open #page {
         margin-top: -26px;
     }
 
-    .cronologia-editorial__item--txt-izquierda .cronologia-editorial__meta::before {
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-    }
-
     .cronologia-editorial__contenido {
-        grid-column: 2;
         padding-bottom: 48px;
     }
 }
@@ -2188,6 +2187,8 @@ body {
 .bloque.imagen figure {
     width: 100%;
     max-width: 100%;
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px);
+    overflow: hidden;
 }
 
 .bloque.imagen img {
@@ -2200,8 +2201,25 @@ body {
 .bloque.imagen .lightbox-trigger,
 .bloque.texto-imagen .lightbox-trigger {
     display: block;
-    border-radius: var(--fiflp-image-radius, 18px);
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
     overflow: hidden;
+}
+
+.bloque.imagen .lightbox-trigger img,
+.bloque.texto-imagen .lightbox-trigger img {
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+}
+
+.bloque.imagen.imagen-full figure,
+.bloque.imagen.imagen-full .lightbox-trigger,
+.bloque.imagen.imagen-full .lightbox-trigger img,
+.bloque.imagen-full .lightbox-trigger,
+.bloque.imagen-full .lightbox-trigger img,
+.bloque.imagen-full img {
+    border-top-left-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+    border-bottom-left-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 }
 
 /* Caption centrado debajo */
@@ -2387,7 +2405,7 @@ body {
 
 .bloque.texto-imagen .imagen {
     overflow: hidden;
-    border-radius: var(--fiflp-image-radius, 18px);
+    border-radius: max(var(--fiflp-image-radius, 18px), 18px);
 }
 
 .bloque.texto-imagen .imagen img,

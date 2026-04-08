@@ -1093,6 +1093,60 @@ add_action(
 );
 
 add_action(
+	'admin_enqueue_scripts',
+	function () {
+		$skin_path = get_stylesheet_directory() . '/assets/css/acf-admin-skin-divipixel.css';
+		if ( ! is_readable( $skin_path ) ) {
+			return;
+		}
+		wp_enqueue_style(
+			'fiflp-acf-admin-skin-divipixel',
+			get_stylesheet_directory_uri() . '/assets/css/acf-admin-skin-divipixel.css',
+			array(),
+			(string) filemtime( $skin_path )
+		);
+	},
+	15
+);
+
+add_action(
+	'admin_enqueue_scripts',
+	function ( $hook_suffix ) {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+		$screen = get_current_screen();
+		if ( ! $screen || 'fiflp_cronologia' !== $screen->post_type ) {
+			return;
+		}
+		if ( 'post.php' !== $hook_suffix && 'post-new.php' !== $hook_suffix ) {
+			return;
+		}
+		$css_path = get_stylesheet_directory() . '/assets/css/acf-cronologia-editorial-admin.css';
+		if ( is_readable( $css_path ) ) {
+			wp_enqueue_style(
+				'fiflp-acf-cronologia-editorial-admin',
+				get_stylesheet_directory_uri() . '/assets/css/acf-cronologia-editorial-admin.css',
+				array(),
+				(string) filemtime( $css_path )
+			);
+		}
+
+		$js_path = get_stylesheet_directory() . '/assets/js/acf-cronologia-editorial-admin.js';
+		if ( is_readable( $js_path ) ) {
+			wp_enqueue_script(
+				'fiflp-acf-cronologia-editorial-admin',
+				get_stylesheet_directory_uri() . '/assets/js/acf-cronologia-editorial-admin.js',
+				array( 'jquery', 'acf-input' ),
+				(string) filemtime( $js_path ),
+				true
+			);
+		}
+	},
+	20
+);
+
+add_action(
 	'acf/input/admin_footer',
 	function() {
 		if ( ! function_exists( 'get_current_screen' ) ) {
@@ -1323,21 +1377,6 @@ add_action(
 				color: #1e1e1e !important;
 			}
 
-			.acf-flexible-content .layout .acf-fc-layout-handle .acf-fc-layout-order {
-				display: inline-flex !important;
-				align-items: center;
-				justify-content: center;
-				width: 28px;
-				height: 28px;
-				margin-right: 8px;
-				border-radius: 999px;
-				background: #c71818 !important;
-				color: #ffffff !important;
-				font-weight: 700;
-				line-height: 1;
-				text-align: center;
-			}
-
 			.acf-flexible-content .layout .acf-fields {
 				border-top: 2px solid #1e1e1e;
 			}
@@ -1463,8 +1502,6 @@ add_action(
 			}
 
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row {
-				outline: 3px solid #c71818;
-				outline-offset: -2px;
 				background: #ffffff;
 			}
 
@@ -1503,38 +1540,8 @@ add_action(
 				grid-column: 2;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle.order,
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle.order * {
-				background: #c71818 !important;
-				color: #ffffff !important;
-				font-weight: 700;
-			}
-
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-minus {
-				display: inline-flex !important;
-				align-items: center;
-				justify-content: center;
-				width: 29px;
-				height: 29px;
-				transform: translateX(-20px);
-				opacity: 1 !important;
-				visibility: visible !important;
-				background: #c71818 !important;
-				border: 1px solid #a51212 !important;
-				border-radius: 999px;
-			}
-
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-plus {
 				display: none !important;
-			}
-
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-minus:before {
-				color: #ffffff !important;
-			}
-
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-minus:hover {
-				background: #a51212 !important;
-				border-color: #8e1010 !important;
 			}
 
 			.fiflp-imagen-preview {
@@ -1631,6 +1638,31 @@ add_action(
 					min-width: 0;
 					padding-top: 0;
 				}
+			}
+
+			/*
+			 * Repeaters ACF (todas las pantallas post): columna del orden / −
+			 * sin recuadro en la celda del asa, número sin círculo rojo, iconos por defecto.
+			 */
+			.acf-repeater .acf-row-handle {
+				background: transparent !important;
+				border: none !important;
+				box-shadow: none !important;
+			}
+
+			.acf-repeater .acf-row-handle .acf-row-number {
+				background: transparent !important;
+				color: #646970 !important;
+				border-radius: 0 !important;
+				box-shadow: none !important;
+			}
+
+			.acf-repeater .acf-row-handle .acf-icon.-minus,
+			.acf-repeater .acf-row-handle .acf-icon.-plus {
+				background: transparent !important;
+				border: none !important;
+				border-radius: 0 !important;
+				transform: none !important;
 			}
 		</style>
 		<script>

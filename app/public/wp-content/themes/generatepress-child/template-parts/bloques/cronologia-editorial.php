@@ -74,32 +74,29 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			}
 			?>
 			<article class="<?php echo esc_attr( implode( ' ', $item_classes ) ); ?>">
-				<?php if ( '' !== $imagen_url ) : ?>
-					<figure class="cronologia-editorial__media cronologia-editorial__media--bleed-<?php echo esc_attr( $img_bleed ); ?>">
-						<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
-							<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
-						</a>
-						<?php if ( '' !== $caption ) : ?>
-							<figcaption class="imagen-meta__caption imagen-meta__caption--tamano-m imagen-meta__caption--tipografia-body">
-								<?php echo esc_html( $caption ); ?>
-							</figcaption>
+				<div class="cronologia-editorial__contenido-wrap">
+					<div class="cronologia-editorial__contenido">
+						<?php if ( '' !== $fecha_titulo ) : ?>
+							<h3 class="cronologia-editorial__fecha"><?php echo esc_html( $fecha_titulo ); ?></h3>
 						<?php endif; ?>
-					</figure>
-				<?php endif; ?>
 
-				<div class="cronologia-editorial__meta">
-				</div>
+						<?php if ( '' !== trim( wp_strip_all_tags( $texto ) ) ) : ?>
+							<div class="cronologia-editorial__texto">
+								<?php echo wp_kses_post( wpautop( $texto ) ); ?>
+							</div>
+						<?php endif; ?>
 
-				<div class="cronologia-editorial__contenido">
-					<?php if ( '' !== $fecha_titulo ) : ?>
-						<h3 class="cronologia-editorial__fecha"><?php echo esc_html( $fecha_titulo ); ?></h3>
-					<?php endif; ?>
+						<?php if ( '' !== $imagen_url ) : ?>
+							<figure class="cronologia-editorial__media cronologia-editorial__media--bleed-<?php echo esc_attr( $img_bleed ); ?>">
+								<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
+									<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
+								</a>
+							</figure>
+						<?php endif; ?>
+					</div>
 
-					<?php if ( '' !== trim( wp_strip_all_tags( $texto ) ) ) : ?>
-						<div class="cronologia-editorial__texto">
-							<?php echo wp_kses_post( wpautop( $texto ) ); ?>
-						</div>
-					<?php endif; ?>
+					<div class="cronologia-editorial__meta">
+					</div>
 				</div>
 			</article>
 		<?php endforeach; ?>

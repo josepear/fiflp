@@ -13,7 +13,7 @@
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
-                "class": "",
+                "class": "fiflp-acf-cronologia-hitos",
                 "id": ""
             },
             "layout": "block",
@@ -34,8 +34,8 @@
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
-                        "class": "",
+                        "width": "100",
+                        "class": "fiflp-crono-hito-fecha",
                         "id": ""
                     },
                     "default_value": "",
@@ -56,15 +56,39 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
-                        "class": "",
+                        "width": "100",
+                        "class": "fiflp-crono-hito-texto",
                         "id": ""
                     },
                     "default_value": "",
                     "new_lines": "wpautop",
                     "maxlength": "",
                     "placeholder": "",
-                    "rows": 4,
+                    "rows": 3,
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_texto_posicion",
+                    "label": "Posición de texto",
+                    "name": "texto_posicion",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-texto-pos",
+                        "id": ""
+                    },
+                    "choices": {
+                        "derecha": "Derecha",
+                        "izquierda": "Izquierda"
+                    },
+                    "default_value": "derecha",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal",
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 },
                 {
@@ -77,8 +101,8 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
-                        "class": "",
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen",
                         "id": ""
                     },
                     "return_format": "array",
@@ -95,6 +119,27 @@
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 },
                 {
+                    "key": "field_cronologia_editorial_hito_caption",
+                    "label": "Caption",
+                    "name": "caption",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-caption",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "new_lines": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "rows": 2,
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
                     "key": "field_cronologia_editorial_hito_imagen_posicion",
                     "label": "Posición de imagen",
                     "name": "imagen_posicion",
@@ -104,8 +149,8 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
-                        "class": "",
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-meta",
                         "id": ""
                     },
                     "choices": {
@@ -113,30 +158,6 @@
                         "derecha": "Derecha"
                     },
                     "default_value": "izquierda",
-                    "return_format": "value",
-                    "allow_null": 0,
-                    "layout": "horizontal",
-                    "parent_repeater": "field_cronologia_editorial_hitos"
-                },
-                {
-                    "key": "field_cronologia_editorial_hito_texto_posicion",
-                    "label": "Posición de texto",
-                    "name": "texto_posicion",
-                    "aria-label": "",
-                    "type": "button_group",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "choices": {
-                        "derecha": "Derecha",
-                        "izquierda": "Izquierda"
-                    },
-                    "default_value": "derecha",
                     "return_format": "value",
                     "allow_null": 0,
                     "layout": "horizontal",
@@ -152,8 +173,8 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
-                        "class": "",
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-meta",
                         "id": ""
                     },
                     "choices": {
@@ -165,28 +186,6 @@
                     "return_format": "value",
                     "allow_null": 0,
                     "layout": "horizontal",
-                    "parent_repeater": "field_cronologia_editorial_hitos"
-                },
-                {
-                    "key": "field_cronologia_editorial_hito_caption",
-                    "label": "Caption",
-                    "name": "caption",
-                    "aria-label": "",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "maxlength": "",
-                    "allow_in_bindings": 0,
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 }
             ]
@@ -211,5 +210,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1775550000
+    "modified": 1744045200
 }
