@@ -154,6 +154,27 @@
                             "ui": 1
                         },
                         {
+                            "key": "field_imagen_sin_redondeo",
+                            "label": "Sin redondeo",
+                            "name": "sin_redondeo",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Activa para quitar bordes redondeados en esta imagen.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "40",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No",
+                            "allow_in_bindings": 0
+                        },
+                        {
                             "key": "field_imagen_titulo_editorial_imagen",
                             "label": "Título editorial de imagen",
                             "name": "titulo_editorial_imagen",
@@ -1083,6 +1104,42 @@
                             "mime_types": ""
                         },
                         {
+                            "key": "field_home_hero_video_fondo",
+                            "label": "Vídeo de fondo",
+                            "name": "video_fondo",
+                            "aria-label": "",
+                            "type": "file",
+                            "instructions": "Opcional. Si existe, se muestra como fondo del hero.",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "url",
+                            "library": "all",
+                            "min_size": 0,
+                            "max_size": 0,
+                            "mime_types": "mp4,webm,ogg"
+                        },
+                        {
+                            "key": "field_home_hero_color_fondo",
+                            "label": "Color de fondo",
+                            "name": "color_fondo",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "Se usa cuando no hay imagen, o como base visual del hero.",
+                            "required": false,
+                            "conditional_logic": false,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "#0f2d30"
+                        },
+                        {
                             "key": "field_home_hero_titulo",
                             "label": "Título",
                             "name": "titulo",
@@ -1302,5 +1359,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1775358545
+    "modified": 1778187845
 }

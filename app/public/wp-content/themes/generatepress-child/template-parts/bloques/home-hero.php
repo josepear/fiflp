@@ -10,6 +10,8 @@ $hero_data = isset( $args['hero_data'] ) && is_array( $args['hero_data'] ) ? $ar
 $using_direct_data = ! empty( $hero_data );
 
 $imagen                 = $using_direct_data ? ( $hero_data['imagen'] ?? null ) : ( get_sub_field( 'imagen_de_fondo' ) ?: get_sub_field( 'imagen_fondo' ) );
+$video_fondo            = $using_direct_data ? (string) ( $hero_data['video'] ?? '' ) : (string) get_sub_field( 'video_fondo' );
+$color_fondo            = $using_direct_data ? (string) ( $hero_data['color_fondo'] ?? '' ) : (string) get_sub_field( 'color_fondo' );
 $logo_principal         = $using_direct_data ? ( $hero_data['logo_principal'] ?? null ) : get_sub_field( 'logo_principal' );
 $titulo                 = $using_direct_data ? (string) ( $hero_data['titulo'] ?? '' ) : (string) get_sub_field( 'titulo' );
 $texto                  = $using_direct_data ? (string) ( $hero_data['texto'] ?? '' ) : (string) get_sub_field( 'texto' );
@@ -35,17 +37,31 @@ $pdf_visible   = ! empty( $link_pdf );
 $epub_visible  = ! empty( $link_epub );
 
 // Si no hay datos mínimos, no renderiza.
-if ( empty( $imagen_data['url'] ) && empty( $logo_data['url'] ) && empty( $titulo ) && empty( $texto ) && ! $boton_capitulos_visible && ! $pdf_visible && ! $epub_visible && empty( $logos ) ) {
+$color_fondo = sanitize_hex_color( $color_fondo );
+
+if ( empty( $imagen_data['url'] ) && empty( $video_fondo ) && empty( $color_fondo ) && empty( $logo_data['url'] ) && empty( $titulo ) && empty( $texto ) && ! $boton_capitulos_visible && ! $pdf_visible && ! $epub_visible && empty( $logos ) ) {
 	return;
 }
 
-$bg_style = '';
-if ( ! empty( $imagen_data['url'] ) ) {
-	$bg_style = 'style="background-image: url(' . esc_url( $imagen_data['url'] ) . ');"';
+$bg_rules = array();
+
+if ( ! empty( $color_fondo ) ) {
+	$bg_rules[] = 'background-color: ' . $color_fondo;
 }
+
+if ( ! empty( $imagen_data['url'] ) ) {
+	$bg_rules[] = 'background-image: url(' . esc_url_raw( $imagen_data['url'] ) . ')';
+}
+
+$bg_style = ! empty( $bg_rules ) ? 'style="' . esc_attr( implode( '; ', $bg_rules ) ) . ';"' : '';
 ?>
 
 <section class="home-hero" <?php echo $bg_style; ?> data-editorial-hero>
+	<?php if ( ! empty( $video_fondo ) ) : ?>
+		<video class="home-hero__bg-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+			<source src="<?php echo esc_url( $video_fondo ); ?>">
+		</video>
+	<?php endif; ?>
 	<div class="home-hero-overlay"></div>
 	<div class="home-hero-glow" aria-hidden="true"></div>
 
@@ -70,15 +86,15 @@ if ( ! empty( $imagen_data['url'] ) ) {
 		<?php endif; ?>
 
 		<?php if ( $boton_capitulos_visible ) : ?>
-			<a class="home-hero__button home-hero__reveal home-hero__reveal--button" href="<?php echo esc_url( $boton_capitulos_url ); ?>"><?php echo esc_html( $boton_capitulos_texto ); ?></a>
+			<a class="home-hero__button home-hero__button--rotulo home-hero__reveal home-hero__reveal--button" href="<?php echo esc_url( $boton_capitulos_url ); ?>"><span><?php echo esc_html( $boton_capitulos_texto ); ?></span></a>
 		<?php endif; ?>
 
 		<div class="home-hero__subactions home-hero__reveal home-hero__reveal--subactions">
 			<?php if ( $pdf_visible ) : ?>
-				<a class="home-hero__small-button" href="<?php echo esc_url( $link_pdf ); ?>">Descargar PDF</a>
+				<a class="home-hero__small-button home-hero__small-button--rotulo" href="<?php echo esc_url( $link_pdf ); ?>"><span>Descargar PDF</span></a>
 			<?php endif; ?>
 			<?php if ( $epub_visible ) : ?>
-				<a class="home-hero__small-button" href="<?php echo esc_url( $link_epub ); ?>">Descargar EPUB</a>
+				<a class="home-hero__small-button home-hero__small-button--rotulo" href="<?php echo esc_url( $link_epub ); ?>"><span>Descargar EPUB</span></a>
 			<?php endif; ?>
 		</div>
 	</div>

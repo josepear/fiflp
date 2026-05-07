@@ -15,6 +15,23 @@ $titulo   = trim( (string) get_field( 'titulo_seccion', $seccion_id ) );
 $fondo    = strtolower( trim( (string) get_field( 'fondo_color', $seccion_id ) ) );
 $columnas = (string) get_field( 'columnas_texto_desktop', $seccion_id );
 $tipografia_numero = strtolower( trim( (string) get_field( 'tipografia_numero_onepage', $seccion_id ) ) );
+$numero_color_relleno = sanitize_hex_color( (string) get_field( 'numero_color_relleno', $seccion_id ) );
+$numero_color_linea   = sanitize_hex_color( (string) get_field( 'numero_color_linea', $seccion_id ) );
+$numero_grosor_linea_raw   = get_field( 'numero_grosor_linea', $seccion_id );
+$numero_opacidad_relleno_raw = get_field( 'numero_opacidad_relleno', $seccion_id );
+$numero_opacidad_linea_raw   = get_field( 'numero_opacidad_linea', $seccion_id );
+$numero_escala_vh_raw        = get_field( 'numero_escala_vh', $seccion_id );
+$numero_offset_x_raw         = get_field( 'numero_offset_x', $seccion_id );
+$numero_top_vh_raw           = get_field( 'numero_top_vh', $seccion_id );
+$onepage_morph_end_pct_raw   = get_field( 'onepage_morph_end_pct', $seccion_id );
+
+$numero_grosor_linea     = (float) $numero_grosor_linea_raw;
+$numero_opacidad_relleno = (float) $numero_opacidad_relleno_raw;
+$numero_opacidad_linea   = (float) $numero_opacidad_linea_raw;
+$numero_escala_vh        = (float) $numero_escala_vh_raw;
+$numero_offset_x         = (float) $numero_offset_x_raw;
+$numero_top_vh           = (float) $numero_top_vh_raw;
+$onepage_morph_end_pct   = (float) $onepage_morph_end_pct_raw;
 $modulos  = get_field( 'modulos_onepage', $seccion_id );
 $items    = get_field( 'items_contenido', $seccion_id ); // Fallback legacy.
 
@@ -35,6 +52,47 @@ if ( ! in_array( $tipografia_numero, array( 'slanted', 'upright', 'backslanted' 
 	$tipografia_numero = 'slanted';
 }
 
+if ( '' === $numero_color_relleno ) {
+	$numero_color_relleno = '#1e1e1e';
+}
+
+if ( '' === $numero_color_linea ) {
+	$numero_color_linea = '#ccb958';
+}
+
+if ( $numero_grosor_linea <= 0 ) {
+	$numero_grosor_linea = 2;
+}
+$numero_grosor_linea = max( 1, min( 12, $numero_grosor_linea ) );
+
+if ( '' === (string) $numero_opacidad_relleno_raw ) {
+	$numero_opacidad_relleno = 1;
+}
+if ( '' === (string) $numero_opacidad_linea_raw ) {
+	$numero_opacidad_linea = 1;
+}
+$numero_opacidad_relleno = max( 0, min( 1, $numero_opacidad_relleno ) );
+$numero_opacidad_linea   = max( 0, min( 1, $numero_opacidad_linea ) );
+
+if ( $numero_escala_vh <= 0 ) {
+	$numero_escala_vh = 260;
+}
+$numero_escala_vh = max( 40, min( 400, $numero_escala_vh ) );
+
+if ( '' === (string) $numero_offset_x_raw ) {
+	$numero_offset_x = 36;
+}
+if ( '' === (string) $numero_top_vh_raw ) {
+	$numero_top_vh = 50;
+}
+$numero_offset_x = max( -40, min( 80, $numero_offset_x ) );
+$numero_top_vh   = max( 20, min( 80, $numero_top_vh ) );
+
+if ( '' === (string) $onepage_morph_end_pct_raw || $onepage_morph_end_pct <= 0 ) {
+	$onepage_morph_end_pct = 10;
+}
+$onepage_morph_end_pct = max( 2, min( 40, $onepage_morph_end_pct ) );
+
 $has_modulos = is_array( $modulos ) && ! empty( $modulos );
 $has_legacy  = is_array( $items ) && ! empty( $items );
 
@@ -44,17 +102,28 @@ if ( ! $has_modulos && ! $has_legacy ) {
 
 $onepage_row_index = function_exists( 'get_row_index' ) ? (int) get_row_index() : 0;
 $onepage_anchor_id = $onepage_row_index > 0 ? 'fiflp-onepage-row-' . $onepage_row_index : '';
+$outline_gradient_id = 'onepage-outline-gradient-' . $seccion_id . '-' . max( 1, $onepage_row_index );
 ?>
 
 <section class="bloque seccion-onepage seccion-onepage--fullscreen fade-in"<?php echo '' !== $onepage_anchor_id ? ' id="' . esc_attr( $onepage_anchor_id ) . '"' : ''; ?>>
-	<div class="seccion-onepage__shell seccion-onepage__cols-<?php echo esc_attr( $columnas ); ?> seccion-onepage__numero-font--<?php echo esc_attr( $tipografia_numero ); ?>" style="--onepage-bg: <?php echo esc_attr( $fondo ); ?>;" data-onepage-shell>
+	<div class="seccion-onepage__shell seccion-onepage__cols-<?php echo esc_attr( $columnas ); ?> seccion-onepage__numero-font--<?php echo esc_attr( $tipografia_numero ); ?>" style="--onepage-bg: <?php echo esc_attr( $fondo ); ?>; --onepage-number-solid-color: <?php echo esc_attr( $numero_color_relleno ); ?>; --onepage-number-outline-color: <?php echo esc_attr( $numero_color_linea ); ?>; --onepage-number-stroke-width: <?php echo esc_attr( $numero_grosor_linea ); ?>px; --onepage-number-solid-opacity: <?php echo esc_attr( (string) $numero_opacidad_relleno ); ?>; --onepage-number-outline-opacity: <?php echo esc_attr( (string) $numero_opacidad_linea ); ?>; --onepage-number-size-vh: <?php echo esc_attr( (string) $numero_escala_vh ); ?>; --onepage-number-offset-x: <?php echo esc_attr( (string) $numero_offset_x ); ?>%; --onepage-number-top-vh: <?php echo esc_attr( (string) $numero_top_vh ); ?>vh;" data-onepage-shell data-onepage-morph-end="<?php echo esc_attr( (string) ( $onepage_morph_end_pct / 100 ) ); ?>">
 		<aside class="seccion-onepage__indice" aria-label="Índice de sección">
 			<h2 class="seccion-onepage__titulo"><?php echo esc_html( $titulo ); ?></h2>
 		</aside>
 		<?php if ( '' !== $numero ) : ?>
 			<p class="seccion-onepage__numero-wrap" aria-hidden="true">
-				<span class="seccion-onepage__numero seccion-onepage__numero--solid"><?php echo esc_html( $numero ); ?></span>
-				<span class="seccion-onepage__numero seccion-onepage__numero--outline"><?php echo esc_html( $numero ); ?></span>
+				<svg class="seccion-onepage__numero seccion-onepage__numero--solid" viewBox="0 0 2400 2400" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
+					<text class="seccion-onepage__numero-text seccion-onepage__numero-text--solid" x="50%" y="64%" text-anchor="middle"><?php echo esc_html( $numero ); ?></text>
+				</svg>
+				<svg class="seccion-onepage__numero seccion-onepage__numero--outline" viewBox="0 0 2400 2400" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
+					<defs>
+						<linearGradient id="<?php echo esc_attr( $outline_gradient_id ); ?>" x1="0%" y1="0%" x2="100%" y2="100%">
+							<stop offset="0%" stop-color="<?php echo esc_attr( $numero_color_linea ); ?>" stop-opacity="1" />
+							<stop offset="100%" stop-color="<?php echo esc_attr( $numero_color_relleno ); ?>" stop-opacity="1" />
+						</linearGradient>
+					</defs>
+					<text class="seccion-onepage__numero-text seccion-onepage__numero-text--outline" x="50%" y="64%" text-anchor="middle" style="stroke: url(#<?php echo esc_attr( $outline_gradient_id ); ?>);"><?php echo esc_html( $numero ); ?></text>
+				</svg>
 			</p>
 		<?php endif; ?>
 

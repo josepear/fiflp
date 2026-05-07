@@ -681,16 +681,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const syncNumberState = () => {
                 const rect = shell.getBoundingClientRect();
-                const entered = Math.max(0, -rect.top);
-                const travel = Math.max(rect.height - window.innerHeight, 1);
-                const progress = Math.max(0, Math.min(1, entered / travel));
-                const morphStart = 0.18;
-                const morphEnd = 0.52;
+                const totalTrack = Math.max(window.innerHeight + rect.height, 1);
+                const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / totalTrack));
+                const morphStart = 0.00;
+                const morphEndSetting = Number.parseFloat(shell.getAttribute('data-onepage-morph-end') || '0.10');
+                const morphEnd = Math.max(0.02, Math.min(0.4, Number.isFinite(morphEndSetting) ? morphEndSetting : 0.10));
+                const revealStart = 0.00;
+                const revealEnd = 1.00;
+                const revealTrackPx = Math.max(window.innerHeight * 0.42, 220);
+                const revealRaw = (window.innerHeight - rect.top) / revealTrackPx;
                 const morphProgress = Math.max(0, Math.min(1, (progress - morphStart) / Math.max(morphEnd - morphStart, 0.001)));
+                const revealProgress = Math.max(0, Math.min(1, (revealRaw - revealStart) / Math.max(revealEnd - revealStart, 0.001)));
 
                 shell.style.setProperty('--onepage-morph-progress', morphProgress.toFixed(3));
-                shell.classList.toggle('is-title-visible', progress > 0.16);
-                shell.classList.toggle('is-content-visible', progress > 0.24);
+                shell.style.setProperty('--onepage-reveal-progress', revealProgress.toFixed(3));
+                shell.classList.add('is-title-visible');
+                shell.classList.toggle('is-content-visible', revealProgress > 0.01);
             };
 
             const firstItem = narrativeItems[0];
@@ -703,10 +709,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 shell.classList.add('is-title-visible');
                 shell.classList.add('is-content-visible');
                 shell.style.setProperty('--onepage-morph-progress', '1');
+                shell.style.setProperty('--onepage-reveal-progress', '1');
                 return;
             }
 
             shell.classList.add('seccion-onepage--js');
+            shell.style.setProperty('--onepage-reveal-progress', '0');
+            shell.style.setProperty('--onepage-morph-progress', '0');
             syncNumberState();
             window.addEventListener('scroll', syncNumberState, { passive: true });
             window.addEventListener('resize', syncNumberState);

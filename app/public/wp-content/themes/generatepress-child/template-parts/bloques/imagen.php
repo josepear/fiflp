@@ -17,6 +17,7 @@ $get_field = static function ( $name, $default = null ) use ( $args ) {
 $imagen  = $get_field( 'imagen', null );
 $caption = trim( (string) $get_field( 'caption', '' ) );
 $full    = $get_field( 'full', false );
+$sin_redondeo = (bool) $get_field( 'sin_redondeo', false );
 
 $titulo_editorial_imagen    = trim( (string) $get_field( 'titulo_editorial_imagen', '' ) );
 $variante_titulo_imagen     = trim( (string) $get_field( 'variante_titulo_imagen', '' ) );
@@ -80,6 +81,10 @@ $clases = array( 'bloque', 'imagen', 'fade-in' );
 
 if ( $full ) {
 	$clases[] = 'imagen-full';
+}
+
+if ( $sin_redondeo ) {
+	$clases[] = 'imagen--sin-redondeo';
 }
 
 $es_inverso_titulo  = in_array( $variante_titulo_imagen, array( 'linea_inversa', 'relleno_inverso' ), true );

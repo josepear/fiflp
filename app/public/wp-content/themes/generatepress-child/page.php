@@ -30,6 +30,8 @@ $current_children     = get_pages(
 $selected_prologo_item = null;
 $home_hero_data         = is_front_page() ? fiflp_get_home_hero_data( $current_page_id ) : array();
 $home_hero_has_content  = ! empty( $home_hero_data['imagen'] )
+	|| ! empty( $home_hero_data['video'] )
+	|| ! empty( $home_hero_data['color_fondo'] )
 	|| ! empty( $home_hero_data['logo_principal'] )
 	|| ! empty( $home_hero_data['titulo'] )
 	|| ! empty( $home_hero_data['texto'] )

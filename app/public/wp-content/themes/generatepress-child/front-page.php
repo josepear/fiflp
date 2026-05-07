@@ -8,6 +8,8 @@ get_header();
 $current_page_id    = (int) get_option( 'page_on_front' );
 $home_hero_data     = fiflp_get_home_hero_data( $current_page_id );
 $home_hero_has_data = ! empty( $home_hero_data['imagen'] )
+	|| ! empty( $home_hero_data['video'] )
+	|| ! empty( $home_hero_data['color_fondo'] )
 	|| ! empty( $home_hero_data['logo_principal'] )
 	|| ! empty( $home_hero_data['titulo'] )
 	|| ! empty( $home_hero_data['texto'] )

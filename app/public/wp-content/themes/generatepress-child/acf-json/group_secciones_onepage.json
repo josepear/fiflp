@@ -131,6 +131,196 @@
             "placeholder": ""
         },
         {
+            "key": "field_seccion_onepage_numero_color_relleno",
+            "label": "Color número (relleno)",
+            "name": "numero_color_relleno",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Color sólido del número gigante (01, 02...).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#1e1e1e",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_seccion_onepage_numero_color_linea",
+            "label": "Color número (línea)",
+            "name": "numero_color_linea",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Color del contorno del número cuando pasa a línea.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ccb958",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_seccion_onepage_numero_grosor_linea",
+            "label": "Grosor línea (px)",
+            "name": "numero_grosor_linea",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Grosor del contorno del número en píxeles.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 2,
+            "min": 1,
+            "max": 12,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_seccion_onepage_numero_opacidad_relleno",
+            "label": "Opacidad relleno",
+            "name": "numero_opacidad_relleno",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "De 0 a 1. Ejemplo: 0.9",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_seccion_onepage_numero_opacidad_linea",
+            "label": "Opacidad línea",
+            "name": "numero_opacidad_linea",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "De 0 a 1. Ejemplo: 1",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_seccion_onepage_numero_escala",
+            "label": "Escala número (vh)",
+            "name": "numero_escala_vh",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Tamaño del número en alto de pantalla. Ejemplo: 96",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 260,
+            "min": 40,
+            "max": 400,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "vh"
+        },
+        {
+            "key": "field_seccion_onepage_numero_offset_x",
+            "label": "Offset horizontal (%)",
+            "name": "numero_offset_x",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Desplazamiento horizontal del número. Positivo = más a la derecha.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 36,
+            "min": -40,
+            "max": 80,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%"
+        },
+        {
+            "key": "field_seccion_onepage_numero_top",
+            "label": "Posición vertical (vh)",
+            "name": "numero_top_vh",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Altura sticky del centro del número. Ejemplo: 50",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 50,
+            "min": 20,
+            "max": 80,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "vh"
+        },
+        {
+            "key": "field_seccion_onepage_morph_end",
+            "label": "Fin barrido (%)",
+            "name": "onepage_morph_end_pct",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Qué parte del scroll de la sección tarda en convertirse a línea. Más bajo = más rápido.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 10,
+            "min": 2,
+            "max": 40,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%"
+        },
+        {
             "key": "field_seccion_onepage_modulos",
             "label": "Módulos onepage",
             "name": "modulos_onepage",
@@ -233,6 +423,26 @@
                             "aria-label": "",
                             "type": "true_false",
                             "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
+                        },
+                        {
+                            "key": "field_onepage_mod_imagen_sin_redondeo",
+                            "label": "Sin redondeo",
+                            "name": "sin_redondeo",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Activa para quitar bordes redondeados en esta imagen.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {

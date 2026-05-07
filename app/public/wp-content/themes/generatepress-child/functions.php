@@ -619,6 +619,40 @@ function fiflp_onepage_body_class( $classes ) {
 }
 add_filter( 'body_class', 'fiflp_onepage_body_class', 15 );
 
+/**
+ * Marca el body cuando la portada renderiza Home Hero como vista exclusiva.
+ *
+ * @param string[] $classes Clases del body.
+ * @return string[]
+ */
+function fiflp_home_hero_body_class( $classes ) {
+	if ( ! is_front_page() ) {
+		return $classes;
+	}
+
+	$page_id = (int) get_option( 'page_on_front' );
+	$hero    = function_exists( 'fiflp_get_home_hero_data' ) ? fiflp_get_home_hero_data( $page_id ) : array();
+
+	$has_home_hero = ! empty( $hero['imagen'] )
+		|| ! empty( $hero['video'] )
+		|| ! empty( $hero['color_fondo'] )
+		|| ! empty( $hero['logo_principal'] )
+		|| ! empty( $hero['titulo'] )
+		|| ! empty( $hero['texto'] )
+		|| ! empty( $hero['boton_capitulos_texto'] )
+		|| ! empty( $hero['boton_capitulos_url'] )
+		|| ! empty( $hero['link_pdf'] )
+		|| ! empty( $hero['link_epub'] )
+		|| ! empty( $hero['logos'] );
+
+	if ( $has_home_hero ) {
+		$classes[] = 'fiflp-home-hero-active';
+	}
+
+	return $classes;
+}
+add_filter( 'body_class', 'fiflp_home_hero_body_class', 20 );
+
 function fiflp_render_editorial_block_layout( $layout ) {
 	$layout = (string) $layout;
 
@@ -651,6 +685,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 
 	$data = array(
 		'imagen'                => null,
+		'video'                => '',
+		'color_fondo'          => '',
 		'logo_principal'        => null,
 		'titulo'                => '',
 		'texto'                 => '',
@@ -668,6 +704,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 
 	$option_hero = array(
 		'imagen'                => get_field( 'home_hero_imagen_fondo', 'option' ),
+		'video'                 => (string) get_field( 'home_hero_video_fondo', 'option' ),
+		'color_fondo'           => (string) get_field( 'home_hero_color_fondo', 'option' ),
 		'logo_principal'        => get_field( 'home_hero_logo_principal', 'option' ),
 		'titulo'                => (string) get_field( 'home_hero_titulo', 'option' ),
 		'texto'                 => (string) get_field( 'home_hero_texto', 'option' ),
@@ -679,6 +717,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 	);
 
 	$has_option_content = ! empty( $option_hero['imagen'] )
+		|| '' !== trim( (string) $option_hero['video'] )
+		|| '' !== trim( (string) $option_hero['color_fondo'] )
 		|| ! empty( $option_hero['logo_principal'] )
 		|| '' !== trim( $option_hero['titulo'] )
 		|| '' !== trim( $option_hero['texto'] )
@@ -699,6 +739,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 
 	$legacy_page_hero = array(
 		'imagen'                => get_field( 'home_hero_imagen_fondo', $page_id ),
+		'video'                 => (string) get_field( 'home_hero_video_fondo', $page_id ),
+		'color_fondo'           => (string) get_field( 'home_hero_color_fondo', $page_id ),
 		'logo_principal'        => get_field( 'home_hero_logo_principal', $page_id ),
 		'titulo'                => (string) get_field( 'home_hero_titulo', $page_id ),
 		'texto'                 => (string) get_field( 'home_hero_texto', $page_id ),
@@ -710,6 +752,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 	);
 
 	$has_legacy_page_content = ! empty( $legacy_page_hero['imagen'] )
+		|| '' !== trim( (string) $legacy_page_hero['video'] )
+		|| '' !== trim( (string) $legacy_page_hero['color_fondo'] )
 		|| ! empty( $legacy_page_hero['logo_principal'] )
 		|| '' !== trim( $legacy_page_hero['titulo'] )
 		|| '' !== trim( $legacy_page_hero['texto'] )
@@ -736,6 +780,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 
 			$legacy_flexible_hero = array(
 				'imagen'                => $row['imagen_de_fondo'] ?? ( $row['imagen_fondo'] ?? null ),
+				'video'                 => isset( $row['video_fondo'] ) ? (string) $row['video_fondo'] : '',
+				'color_fondo'           => isset( $row['color_fondo'] ) ? (string) $row['color_fondo'] : '',
 				'logo_principal'        => $row['logo_principal'] ?? null,
 				'titulo'                => isset( $row['titulo'] ) ? (string) $row['titulo'] : '',
 				'texto'                 => isset( $row['texto'] ) ? (string) $row['texto'] : '',
@@ -747,6 +793,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 			);
 
 			$has_legacy_flexible_content = ! empty( $legacy_flexible_hero['imagen'] )
+				|| '' !== trim( (string) $legacy_flexible_hero['video'] )
+				|| '' !== trim( (string) $legacy_flexible_hero['color_fondo'] )
 				|| ! empty( $legacy_flexible_hero['logo_principal'] )
 				|| '' !== trim( $legacy_flexible_hero['titulo'] )
 				|| '' !== trim( $legacy_flexible_hero['texto'] )
@@ -1095,6 +1143,23 @@ add_action(
 							'preview_size' => 'medium',
 						),
 						array(
+							'key' => 'field_home_hero_portada_video_fondo',
+							'label' => 'Vídeo de fondo',
+							'name' => 'home_hero_video_fondo',
+							'type' => 'file',
+							'instructions' => 'Opcional. Si existe, se muestra como fondo del hero.',
+							'return_format' => 'url',
+							'mime_types' => 'mp4,webm,ogg',
+						),
+						array(
+							'key' => 'field_home_hero_portada_color_fondo',
+							'label' => 'Color de fondo',
+							'name' => 'home_hero_color_fondo',
+							'type' => 'color_picker',
+							'instructions' => 'Se usa cuando no hay imagen, o como base visual del hero.',
+							'default_value' => '#0f2d30',
+						),
+						array(
 							'key' => 'field_home_hero_portada_logo_principal',
 							'label' => 'Logo principal',
 							'name' => 'home_hero_logo_principal',
@@ -1187,6 +1252,18 @@ add_action(
 			);
 		}
 	}
+);
+
+/**
+ * Oculta temporalmente la página "Apariencia editorial" del menú admin
+ * sin eliminar sus campos ni datos.
+ */
+add_action(
+	'admin_menu',
+	function() {
+		remove_menu_page( 'fiflp-apariencia' );
+	},
+	999
 );
 
 function fiflp_get_editorial_theme_tokens() {
@@ -1390,6 +1467,11 @@ add_action(
 				background: #f3f3ee;
 				border: 1px solid #dcdcce;
 				border-radius: 18px;
+				box-sizing: border-box;
+				width: auto;
+				max-width: 100%;
+				margin-left: 160px;
+				margin-right: 0;
 			}
 
 			.fiflp-apariencia-preview__title {
@@ -1411,6 +1493,25 @@ add_action(
 				border: 1px solid var(--preview-border);
 				border-radius: 18px;
 				overflow: hidden;
+				width: 100%;
+				max-width: 100%;
+				box-sizing: border-box;
+			}
+
+			.folded .fiflp-apariencia-preview {
+				margin-left: 36px;
+			}
+
+			@media screen and (max-width: 960px) {
+				.fiflp-apariencia-preview {
+					margin-left: 36px;
+				}
+			}
+
+			@media screen and (max-width: 782px) {
+				.fiflp-apariencia-preview {
+					margin-left: 0;
+				}
 			}
 
 			.fiflp-apariencia-preview__header,
@@ -1439,6 +1540,7 @@ add_action(
 				gap: 0;
 				color: var(--preview-accent);
 				margin-bottom: 22px;
+				max-width: 100%;
 			}
 
 			.fiflp-apariencia-preview__rotulo-linea {
@@ -1452,6 +1554,10 @@ add_action(
 				font-size: 26px;
 				line-height: 0.9;
 				text-transform: uppercase;
+				max-width: 100%;
+				box-sizing: border-box;
+				white-space: normal;
+				overflow-wrap: anywhere;
 			}
 
 			.fiflp-apariencia-preview__rotulo-linea + .fiflp-apariencia-preview__rotulo-linea {
@@ -1476,6 +1582,80 @@ add_action(
 			.fiflp-apariencia-preview__copy {
 				font-size: 13px;
 				color: var(--preview-muted);
+			}
+
+			@media (max-width: 1200px) {
+				.fiflp-apariencia-preview {
+					padding: 18px;
+				}
+
+				.fiflp-apariencia-preview__header,
+				.fiflp-apariencia-preview__footer {
+					padding: 14px 16px;
+					gap: 10px;
+				}
+
+				.fiflp-apariencia-preview__body {
+					padding: 18px 16px 22px;
+				}
+
+				.fiflp-apariencia-preview__rotulo-linea {
+					font-size: 21px;
+					padding: 8px 14px;
+					width: 100%;
+					justify-content: flex-start;
+				}
+
+				.fiflp-apariencia-preview__rotulo-linea--small {
+					font-size: 17px;
+					width: auto;
+				}
+
+				.fiflp-apariencia-preview__rotulo-linea + .fiflp-apariencia-preview__rotulo-linea {
+					margin-left: 0;
+				}
+
+				.fiflp-apariencia-preview__text {
+					max-width: 100%;
+					font-size: 16px;
+					line-height: 1.55;
+				}
+
+				.fiflp-apariencia-preview__menu,
+				.fiflp-apariencia-preview__copy {
+					font-size: 12px;
+				}
+			}
+
+			/* Ajuste limpio: ambos rótulos en la misma línea de alineación */
+			.fiflp-apariencia-preview__body {
+				overflow: hidden !important;
+			}
+
+			.fiflp-apariencia-preview__rotulo {
+				display: inline-flex !important;
+				flex-direction: column !important;
+				align-items: flex-start !important;
+				max-width: min(100%, 760px) !important;
+			}
+
+			.fiflp-apariencia-preview__rotulo-linea {
+				width: auto !important;
+				max-width: 100% !important;
+				box-sizing: border-box !important;
+				justify-content: flex-start !important;
+				font-size: clamp(14px, 1.7vw, 26px) !important;
+				white-space: nowrap !important;
+				overflow: hidden !important;
+				text-overflow: ellipsis !important;
+			}
+
+			.fiflp-apariencia-preview__rotulo-linea--small {
+				margin-left: 0 !important;
+			}
+
+			.fiflp-apariencia-preview__rotulo-linea + .fiflp-apariencia-preview__rotulo-linea {
+				margin-left: 0 !important;
 			}
 		</style>
 		<div class="fiflp-apariencia-preview">
@@ -1563,7 +1743,14 @@ add_action(
 
 		$screen = get_current_screen();
 
-		if ( ! $screen || ! in_array( $screen->base, array( 'post', 'post-new' ), true ) ) {
+		if ( ! $screen ) {
+			return;
+		}
+
+		$is_post_editor = in_array( $screen->base, array( 'post', 'post-new' ), true );
+		$is_fiflp_options = false !== strpos( (string) $screen->id, 'fiflp-' );
+
+		if ( ! $is_post_editor && ! $is_fiflp_options ) {
 			return;
 		}
 		?>
@@ -1737,6 +1924,24 @@ add_action(
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row > td {
 				border-top: 0 !important;
 				border-bottom: 0 !important;
+			}
+
+			/* Botones del constructor ACF (compactos, no gigantes) */
+			/* TODOS los botones del constructor ACF (admin) en tamaño compacto */
+			.acf-postbox .button,
+			.acf-postbox .button-primary,
+			.acf-postbox .button-secondary,
+			.acf-postbox .acf-button,
+			.acf-postbox .acf-actions .button,
+			.acf-postbox .acf-actions .acf-button,
+			.acf-postbox .acf-icon.-plus,
+			.acf-postbox .acf-icon.-minus {
+				font-size: 13px !important;
+				line-height: 28px !important;
+				padding: 0 10px !important;
+				min-height: 30px !important;
+				height: auto !important;
+				border-radius: 3px !important;
 			}
 
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
