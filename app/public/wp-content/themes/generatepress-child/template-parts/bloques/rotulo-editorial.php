@@ -1,18 +1,27 @@
 <?php
-$supertitulo = trim( (string) get_sub_field( 'supertitulo' ) );
-$titulo      = trim( (string) get_sub_field( 'titulo' ) );
-$subtitulo   = trim( (string) get_sub_field( 'subtitulo' ) );
-$ancho_subtitulo = trim( (string) get_sub_field( 'ancho_subtitulo' ) );
-$alineacion_subtitulo = trim( (string) get_sub_field( 'alineacion_subtitulo' ) );
-$variante    = trim( (string) get_sub_field( 'variante' ) );
-$etiqueta    = trim( (string) get_sub_field( 'etiqueta_html' ) );
-$tamano      = trim( (string) get_sub_field( 'tamano' ) );
-$color_trazo = sanitize_hex_color( (string) get_sub_field( 'color_trazo' ) );
-$color_fondo = sanitize_hex_color( (string) get_sub_field( 'color_fondo' ) );
+$get_field = static function ( $name, $default = null ) use ( $args ) {
+	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
+		return fiflp_get_sub_field_compat( $name, $args ?? array(), $default );
+	}
 
-$interlineado_raw     = get_sub_field( 'interlineado' );
-$espaciado_letras_raw = get_sub_field( 'espaciado_letras' );
-$titulo_lineas_raw    = get_sub_field( 'titulo_lineas' );
+	$value = get_sub_field( $name );
+	return null !== $value ? $value : $default;
+};
+
+$supertitulo = trim( (string) $get_field( 'supertitulo', '' ) );
+$titulo      = trim( (string) $get_field( 'titulo', '' ) );
+$subtitulo   = trim( (string) $get_field( 'subtitulo', '' ) );
+$ancho_subtitulo = trim( (string) $get_field( 'ancho_subtitulo', '' ) );
+$alineacion_subtitulo = trim( (string) $get_field( 'alineacion_subtitulo', '' ) );
+$variante    = trim( (string) $get_field( 'variante', '' ) );
+$etiqueta    = trim( (string) $get_field( 'etiqueta_html', '' ) );
+$tamano      = trim( (string) $get_field( 'tamano', '' ) );
+$color_trazo = sanitize_hex_color( (string) $get_field( 'color_trazo', '' ) );
+$color_fondo = sanitize_hex_color( (string) $get_field( 'color_fondo', '' ) );
+
+$interlineado_raw     = $get_field( 'interlineado', null );
+$espaciado_letras_raw = $get_field( 'espaciado_letras', null );
+$titulo_lineas_raw    = $get_field( 'titulo_lineas', array() );
 
 $variantes_validas = array(
 	'linea',

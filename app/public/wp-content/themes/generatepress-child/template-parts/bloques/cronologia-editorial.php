@@ -1,5 +1,14 @@
 <?php
-$cronologia_id = (int) get_sub_field( 'cronologia' );
+$get_field = static function ( $name, $default = null ) use ( $args ) {
+	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
+		return fiflp_get_sub_field_compat( $name, $args ?? array(), $default );
+	}
+
+	$value = get_sub_field( $name );
+	return null !== $value ? $value : $default;
+};
+
+$cronologia_id = (int) $get_field( 'cronologia', 0 );
 $titulo        = '';
 $hitos         = array();
 
@@ -10,7 +19,7 @@ if ( $cronologia_id > 0 ) {
 
 // Compatibilidad temporal por si existe contenido del enfoque anterior en una página.
 if ( empty( $hitos ) || ! is_array( $hitos ) ) {
-	$hitos = get_sub_field( 'hitos' );
+	$hitos = $get_field( 'hitos', array() );
 }
 
 if ( empty( $hitos ) || ! is_array( $hitos ) ) {

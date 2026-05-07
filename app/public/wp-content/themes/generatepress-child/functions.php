@@ -490,6 +490,28 @@ if ( ! function_exists( 'fiflp_resolve_onepage_seccion_post_id' ) ) {
 
 if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 	/**
+	 * Indica si una sección onepage tiene contenido renderizable (nuevo flexible o legacy).
+	 *
+	 * @param int $seccion_id ID del CPT onepage.
+	 * @return bool
+	 */
+	function fiflp_onepage_section_has_renderable_content( $seccion_id ) {
+		$seccion_id = (int) $seccion_id;
+
+		if ( $seccion_id <= 0 || ! function_exists( 'get_field' ) ) {
+			return false;
+		}
+
+		$modulos = get_field( 'modulos_onepage', $seccion_id );
+		if ( is_array( $modulos ) && ! empty( $modulos ) ) {
+			return true;
+		}
+
+		$items = get_field( 'items_contenido', $seccion_id );
+		return is_array( $items ) && ! empty( $items );
+	}
+
+	/**
 	 * Recorre los bloques guardados y devuelve metadatos para el índice lateral onepage.
 	 * El ancla coincide con get_row_index() en plantilla (índice 1-based de la fila flexible).
 	 *
@@ -516,9 +538,7 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 				continue;
 			}
 
-			$items = get_field( 'items_contenido', $seccion_id );
-
-			if ( ! is_array( $items ) || empty( $items ) ) {
+			if ( ! fiflp_onepage_section_has_renderable_content( $seccion_id ) ) {
 				continue;
 			}
 
@@ -543,6 +563,32 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 		}
 
 		return $sections;
+	}
+}
+
+if ( ! function_exists( 'fiflp_get_sub_field_compat' ) ) {
+	/**
+	 * Devuelve un subcampo desde ACF normal o desde $args['module'] al renderizar desde onepage.
+	 *
+	 * @param string $field_name Nombre del subcampo.
+	 * @param array  $args       Args recibidos en get_template_part.
+	 * @param mixed  $default    Valor por defecto.
+	 * @return mixed
+	 */
+	function fiflp_get_sub_field_compat( $field_name, $args = array(), $default = null ) {
+		$field_name = (string) $field_name;
+		$args       = is_array( $args ) ? $args : array();
+
+		if ( isset( $args['module'] ) && is_array( $args['module'] ) && array_key_exists( $field_name, $args['module'] ) ) {
+			return $args['module'][ $field_name ];
+		}
+
+		if ( function_exists( 'get_sub_field' ) ) {
+			$value = get_sub_field( $field_name );
+			return null !== $value ? $value : $default;
+		}
+
+		return $default;
 	}
 }
 

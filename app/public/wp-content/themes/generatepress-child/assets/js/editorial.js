@@ -260,7 +260,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    document.querySelectorAll('[data-mobile-nav]').forEach(function (nav) {
+    /* Solo menu-lateral: onepage usa data-onepage-sidebar-* y no debe compartir este comportamiento. */
+    document.querySelectorAll('.menu-lateral[data-mobile-nav]').forEach(function (nav) {
+        if (document.body.classList.contains('fiflp-onepage')) {
+            return;
+        }
+
         const toggle = nav.querySelector('[data-mobile-nav-toggle]');
         const panel = nav.querySelector('[data-mobile-nav-panel]');
         const icon = nav.querySelector('.menu-lateral-mobile-toggle__icon');
@@ -654,14 +659,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         shells.forEach((shell) => {
             const items = Array.from(shell.querySelectorAll('[data-onepage-item]'));
-            if (!items.length) {
-                return;
-            }
+            const moduleItems = Array.from(shell.querySelectorAll('.seccion-onepage__modulo'));
+            const narrativeItems = items.length ? items : moduleItems;
 
             const photos = Array.from(shell.querySelectorAll('[data-onepage-photo]'));
 
             const setActiveItem = (target) => {
-                items.forEach((item) => {
+                narrativeItems.forEach((item) => {
                     item.classList.toggle('is-active', item === target);
                 });
 
@@ -677,18 +681,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const syncNumberState = () => {
                 const rect = shell.getBoundingClientRect();
-                const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / Math.max(rect.height, 1)));
-                shell.classList.toggle('is-scrolled', progress > 0.28);
+                const entered = Math.max(0, -rect.top);
+                const travel = Math.max(rect.height - window.innerHeight, 1);
+                const progress = Math.max(0, Math.min(1, entered / travel));
+                const morphStart = 0.18;
+                const morphEnd = 0.52;
+                const morphProgress = Math.max(0, Math.min(1, (progress - morphStart) / Math.max(morphEnd - morphStart, 0.001)));
+
+                shell.style.setProperty('--onepage-morph-progress', morphProgress.toFixed(3));
+                shell.classList.toggle('is-title-visible', progress > 0.16);
+                shell.classList.toggle('is-content-visible', progress > 0.24);
             };
 
-            const firstItem = items[0];
+            const firstItem = narrativeItems[0];
             if (firstItem) {
                 setActiveItem(firstItem);
             }
 
             if (isMobile || reduceMotion) {
                 shell.classList.remove('seccion-onepage--js');
-                shell.classList.remove('is-scrolled');
+                shell.classList.add('is-title-visible');
+                shell.classList.add('is-content-visible');
+                shell.style.setProperty('--onepage-morph-progress', '1');
                 return;
             }
 
@@ -717,7 +731,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     rootMargin: '-18% 0px -18% 0px'
                 });
 
-                items.forEach((item) => observer.observe(item));
+                narrativeItems.forEach((item) => observer.observe(item));
                 return;
             }
 
@@ -725,7 +739,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let candidate = null;
                 let distance = Number.POSITIVE_INFINITY;
 
-                items.forEach((item) => {
+                narrativeItems.forEach((item) => {
                     const rect = item.getBoundingClientRect();
                     const d = Math.abs((rect.top + rect.height * 0.5) - window.innerHeight * 0.5);
                     if (d < distance) {

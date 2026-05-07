@@ -52,6 +52,11 @@ if ( is_front_page() && $home_hero_has_content ) {
 
 <div class="layout-editorial<?php echo $has_onepage_nav ? ' layout-editorial--onepage' : ''; ?>"<?php echo $has_onepage_nav ? ' data-onepage-layout="1"' : ''; ?>>
 	<?php if ( $has_onepage_nav ) : ?>
+		<?php
+		/*
+		 * Onepage: solo índice de secciones (menu-onepage). No cargar menu-lateral.
+		 */
+		?>
 		<?php get_template_part( 'template-parts/menu-onepage', null, array( 'sections' => $onepage_sections ) ); ?>
 	<?php else : ?>
 		<?php get_template_part( 'template-parts/menu-lateral' ); ?>

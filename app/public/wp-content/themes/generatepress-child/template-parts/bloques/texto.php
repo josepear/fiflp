@@ -1,5 +1,6 @@
 <?php
-$contenido = get_sub_field( 'contenido' );
+$module_args = ( isset( $args ) && is_array( $args ) ) ? $args : array();
+$contenido   = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'contenido', $module_args ) : get_sub_field( 'contenido' );
 
 if ( ! $contenido ) {
 	return;

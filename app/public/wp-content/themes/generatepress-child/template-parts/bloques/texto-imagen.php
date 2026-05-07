@@ -12,8 +12,8 @@ if ( ! isset( $bloque_index ) ) {
 
 $bloque_index++;
 
-$contenido = get_sub_field( 'contenido' );
-$imagen    = get_sub_field( 'imagen' );
+$contenido = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'contenido', $args ?? array() ) : get_sub_field( 'contenido' );
+$imagen    = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'imagen', $args ?? array() ) : get_sub_field( 'imagen' );
 
 if ( ! $contenido && ! $imagen ) {
 	return;

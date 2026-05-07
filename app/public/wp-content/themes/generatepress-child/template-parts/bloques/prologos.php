@@ -1,5 +1,5 @@
 <?php
-$prologos = get_sub_field( 'prologos' );
+$prologos = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'prologos', $args ?? array() ) : get_sub_field( 'prologos' );
 
 if ( empty( $prologos ) || ! is_array( $prologos ) ) {
 	return;
@@ -11,12 +11,12 @@ if ( empty( $prologos ) || ! is_array( $prologos ) ) {
 		<?php
 		$nombre    = isset( $prologo['nombre'] ) ? trim( (string) $prologo['nombre'] ) : '';
 		$cargo     = isset( $prologo['cargo'] ) ? trim( (string) $prologo['cargo'] ) : '';
-		$contenido = $prologo['contenido'] ?? '';
+		$contenido = $prologo['contenido'] ?? ( $prologo['texto'] ?? '' );
 		$foto      = $prologo['foto'] ?? null;
 		$foto_url  = is_array( $foto ) ? ( $foto['url'] ?? '' ) : (string) $foto;
 		$foto_alt  = is_array( $foto ) ? ( $foto['alt'] ?? $nombre ) : $nombre;
 
-		if ( '' === $nombre && '' === $cargo && '' === $contenido && '' === $foto_url ) {
+		if ( '' === $nombre && '' === $cargo && '' === trim( wp_strip_all_tags( (string) $contenido ) ) && '' === $foto_url ) {
 			continue;
 		}
 		?>

@@ -103,12 +103,40 @@
             "placeholder": ""
         },
         {
-            "key": "field_seccion_onepage_items",
-            "label": "Items de contenido",
-            "name": "items_contenido",
+            "key": "field_seccion_onepage_tipografia_numero",
+            "label": "Tipografía número",
+            "name": "tipografia_numero_onepage",
             "aria-label": "",
-            "type": "repeater",
-            "instructions": "",
+            "type": "select",
+            "instructions": "Define la tipografía del número gigante (01, 02...).",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "upright": "Upright",
+                "slanted": "Slanted",
+                "backslanted": "Backslanted"
+            },
+            "default_value": "slanted",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_seccion_onepage_modulos",
+            "label": "Módulos onepage",
+            "name": "modulos_onepage",
+            "aria-label": "",
+            "type": "flexible_content",
+            "instructions": "Composición principal de la sección onepage. Reutiliza los módulos editoriales existentes.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -116,132 +144,551 @@
                 "class": "",
                 "id": ""
             },
-            "layout": "block",
-            "pagination": 0,
-            "min": 1,
-            "max": 0,
-            "collapsed": "field_seccion_onepage_item_texto",
-            "button_label": "Añadir item",
-            "rows_per_page": 20,
-            "sub_fields": [
-                {
-                    "key": "field_seccion_onepage_item_texto",
-                    "label": "Texto",
+            "layouts": {
+                "layout_onepage_texto": {
+                    "key": "layout_onepage_texto",
                     "name": "texto",
-                    "aria-label": "",
-                    "type": "wysiwyg",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "100",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "allow_in_bindings": 0,
-                    "tabs": "all",
-                    "toolbar": "full",
-                    "media_upload": 1,
-                    "delay": 0,
-                    "parent_repeater": "field_seccion_onepage_items"
+                    "label": "Texto",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_texto_contenido",
+                            "label": "Contenido",
+                            "name": "contenido",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 1,
+                            "delay": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 },
-                {
-                    "key": "field_seccion_onepage_item_sumario",
-                    "label": "Sumario (opcional)",
-                    "name": "sumario",
-                    "aria-label": "",
-                    "type": "textarea",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "50",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "maxlength": "",
-                    "allow_in_bindings": 0,
-                    "rows": 3,
-                    "placeholder": "",
-                    "new_lines": "",
-                    "parent_repeater": "field_seccion_onepage_items"
+                "layout_onepage_imagen": {
+                    "key": "layout_onepage_imagen",
+                    "name": "imagen",
+                    "label": "Imagen",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_imagen_imagen",
+                            "label": "Imagen",
+                            "name": "imagen",
+                            "aria-label": "",
+                            "type": "image",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "array",
+                            "library": "all",
+                            "preview_size": "medium",
+                            "min_width": 0,
+                            "min_height": 0,
+                            "min_size": 0,
+                            "max_width": 0,
+                            "max_height": 0,
+                            "max_size": 0,
+                            "mime_types": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_imagen_caption",
+                            "label": "Caption",
+                            "name": "caption",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_imagen_full",
+                            "label": "A sangre",
+                            "name": "full",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
+                        },
+                        {
+                            "key": "field_onepage_mod_imagen_titulo_editorial",
+                            "label": "Título editorial",
+                            "name": "titulo_editorial_imagen",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_imagen_variante",
+                            "label": "Variante título",
+                            "name": "variante_titulo_imagen",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Línea, relleno o invertidos.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "linea": "Línea",
+                                "relleno": "Relleno",
+                                "linea_inversa": "Línea invertida",
+                                "relleno_inverso": "Relleno invertido"
+                            },
+                            "default_value": "linea",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_imagen_color_titulo",
+                            "label": "Color título",
+                            "name": "color_titulo_imagen",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "#0f2d30"
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 },
-                {
-                    "key": "field_seccion_onepage_item_ladillo",
-                    "label": "Ladillo (opcional)",
-                    "name": "ladillo",
-                    "aria-label": "",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "50",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "maxlength": "",
-                    "allow_in_bindings": 0,
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "parent_repeater": "field_seccion_onepage_items"
+                "layout_onepage_texto_imagen": {
+                    "key": "layout_onepage_texto_imagen",
+                    "name": "texto_imagen",
+                    "label": "Texto + imagen",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_texto_imagen_contenido",
+                            "label": "Contenido",
+                            "name": "contenido",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "70",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 1,
+                            "delay": 0
+                        },
+                        {
+                            "key": "field_onepage_mod_texto_imagen_imagen",
+                            "label": "Imagen",
+                            "name": "imagen",
+                            "aria-label": "",
+                            "type": "image",
+                            "instructions": "El bloque original usa URL en render legacy; se adapta automáticamente.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "30",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "url",
+                            "library": "all",
+                            "preview_size": "medium",
+                            "min_width": 0,
+                            "min_height": 0,
+                            "min_size": 0,
+                            "max_width": 0,
+                            "max_height": 0,
+                            "max_size": 0,
+                            "mime_types": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 },
-                {
-                    "key": "field_seccion_onepage_item_foto",
-                    "label": "Foto vinculada (opcional)",
-                    "name": "foto_vinculada",
-                    "aria-label": "",
-                    "type": "image",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "50",
-                        "class": "",
-                        "id": ""
-                    },
-                    "return_format": "array",
-                    "library": "all",
-                    "min_width": 0,
-                    "min_height": 0,
-                    "min_size": 0,
-                    "max_width": 0,
-                    "max_height": 0,
-                    "max_size": 0,
-                    "mime_types": "",
-                    "allow_in_bindings": 0,
-                    "preview_size": "medium",
-                    "parent_repeater": "field_seccion_onepage_items"
+                "layout_onepage_rotulo_editorial": {
+                    "key": "layout_onepage_rotulo_editorial",
+                    "name": "rotulo_editorial",
+                    "label": "Rótulo editorial",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_rotulo_variante",
+                            "label": "Variante",
+                            "name": "variante",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Línea, relleno o invertidos.",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "30",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "linea": "Línea",
+                                "relleno": "Relleno",
+                                "linea_inversa": "Línea invertida",
+                                "relleno_inverso": "Relleno invertido"
+                            },
+                            "default_value": "linea",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_rotulo_titulo",
+                            "label": "Título",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_rotulo_supertitulo",
+                            "label": "Supertítulo",
+                            "name": "supertitulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_rotulo_subtitulo",
+                            "label": "Subtítulo",
+                            "name": "subtitulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 },
-                {
-                    "key": "field_seccion_onepage_item_posicion_foto",
-                    "label": "Posición de foto",
-                    "name": "posicion_foto",
-                    "aria-label": "",
-                    "type": "button_group",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "50",
-                        "class": "",
-                        "id": ""
-                    },
-                    "choices": {
-                        "izquierda_titulo": "Izquierda título",
-                        "derecha_contenido": "Derecha contenido"
-                    },
-                    "default_value": "derecha_contenido",
-                    "return_format": "value",
-                    "allow_null": 0,
-                    "layout": "horizontal",
-                    "parent_repeater": "field_seccion_onepage_items"
+                "layout_onepage_cronologia_editorial": {
+                    "key": "layout_onepage_cronologia_editorial",
+                    "name": "cronologia_editorial",
+                    "label": "Cronología editorial",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_cronologia_ref",
+                            "label": "Cronología",
+                            "name": "cronologia",
+                            "aria-label": "",
+                            "type": "post_object",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "post_type": [
+                                "fiflp_cronologia"
+                            ],
+                            "taxonomy": "",
+                            "return_format": "id",
+                            "multiple": 0,
+                            "allow_null": 1,
+                            "bidirectional": 0,
+                            "ui": 1,
+                            "bidirectional_target": []
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_onepage_prologos": {
+                    "key": "layout_onepage_prologos",
+                    "name": "prologos",
+                    "label": "Prólogos",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_prologos_items",
+                            "label": "Prólogos",
+                            "name": "prologos",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "layout": "block",
+                            "pagination": 0,
+                            "min": 1,
+                            "max": 0,
+                            "collapsed": "field_onepage_mod_prologo_nombre",
+                            "button_label": "Añadir prólogo",
+                            "rows_per_page": 20,
+                            "sub_fields": [
+                                {
+                                    "key": "field_onepage_mod_prologo_nombre",
+                                    "label": "Nombre",
+                                    "name": "nombre",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "50",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_onepage_mod_prologos_items"
+                                },
+                                {
+                                    "key": "field_onepage_mod_prologo_cargo",
+                                    "label": "Cargo",
+                                    "name": "cargo",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "50",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_onepage_mod_prologos_items"
+                                },
+                                {
+                                    "key": "field_onepage_mod_prologo_contenido",
+                                    "label": "Contenido",
+                                    "name": "contenido",
+                                    "aria-label": "",
+                                    "type": "wysiwyg",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "100",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "tabs": "all",
+                                    "toolbar": "full",
+                                    "media_upload": 1,
+                                    "delay": 0,
+                                    "parent_repeater": "field_onepage_mod_prologos_items"
+                                },
+                                {
+                                    "key": "field_onepage_mod_prologo_foto",
+                                    "label": "Foto",
+                                    "name": "foto",
+                                    "aria-label": "",
+                                    "type": "image",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "40",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "return_format": "array",
+                                    "library": "all",
+                                    "preview_size": "medium",
+                                    "min_width": 0,
+                                    "min_height": 0,
+                                    "min_size": 0,
+                                    "max_width": 0,
+                                    "max_height": 0,
+                                    "max_size": 0,
+                                    "mime_types": "",
+                                    "parent_repeater": "field_onepage_mod_prologos_items"
+                                }
+                            ]
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_onepage_capitulo": {
+                    "key": "layout_onepage_capitulo",
+                    "name": "capitulo",
+                    "label": "Capítulo",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_capitulo_titulo",
+                            "label": "Título",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_onepage_hero": {
+                    "key": "layout_onepage_hero",
+                    "name": "hero",
+                    "label": "Hero",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_hero_titulo",
+                            "label": "Título",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
-            ]
+            },
+            "button_label": "Añadir módulo",
+            "min": 1,
+            "max": 0
         }
     ],
     "location": [
@@ -263,5 +710,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1776000100
+    "modified": 1778180330
 }

@@ -829,6 +829,8 @@ body.fiflp-menu-open #page {
 
 .seccion-onepage__shell {
     --onepage-text-color: #111;
+    --onepage-morph-progress: 0;
+    position: relative;
     box-sizing: border-box;
     display: grid;
     grid-template-columns: var(--onepage-indice) minmax(0, 1fr);
@@ -855,6 +857,7 @@ body.fiflp-menu-open #page {
     align-self: start;
     max-width: 100%;
     min-width: 0;
+    z-index: 4;
 }
 
 .admin-bar .seccion-onepage__indice {
@@ -872,19 +875,62 @@ body.fiflp-menu-open #page {
     hyphens: auto;
 }
 
+.seccion-onepage__shell.seccion-onepage--js .seccion-onepage__titulo {
+    opacity: 0;
+    transform: translateY(20px) scale(1.08);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.seccion-onepage__shell.seccion-onepage--js.is-title-visible .seccion-onepage__titulo {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.seccion-onepage__shell.seccion-onepage--js .seccion-onepage__contenido-wrap {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.seccion-onepage__shell.seccion-onepage--js.is-content-visible .seccion-onepage__contenido-wrap {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .seccion-onepage__numero-wrap {
-    position: relative;
-    margin: 0 0 clamp(8px, 1.2vw, 16px);
-    min-height: 0.75em;
+    position: sticky;
+    top: 50svh;
+    transform: translateY(-50%);
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    margin: 0 clamp(8px, 2.4vw, 40px) 0 0;
+    min-height: 0;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
 }
 
 .seccion-onepage__numero {
     display: block;
     margin: 0;
     font-family: var(--fiflp-font-display-slanted);
-    font-size: clamp(42px, 9vw, 118px);
-    line-height: 0.88;
+    font-size: clamp(220px, 40vw, 760px);
+    line-height: 0.8;
     transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.seccion-onepage__shell.seccion-onepage__numero-font--upright .seccion-onepage__numero {
+    font-family: var(--fiflp-font-display);
+}
+
+.seccion-onepage__shell.seccion-onepage__numero-font--slanted .seccion-onepage__numero {
+    font-family: var(--fiflp-font-display-slanted);
+}
+
+.seccion-onepage__shell.seccion-onepage__numero-font--backslanted .seccion-onepage__numero {
+    font-family: var(--fiflp-font-display-backslanted);
 }
 
 .seccion-onepage__numero--outline {
@@ -892,25 +938,24 @@ body.fiflp-menu-open #page {
     inset: 0 auto auto 0;
     color: transparent;
     -webkit-text-stroke: 1.4px currentColor;
-    opacity: 0;
-    transform: translateY(8px);
+    opacity: var(--onepage-morph-progress);
+    transform: translateY(calc(8px * (1 - var(--onepage-morph-progress))));
 }
 
-.seccion-onepage__shell.is-scrolled .seccion-onepage__numero--solid {
-    opacity: 0;
-    transform: translateY(-8px);
-}
-
-.seccion-onepage__shell.is-scrolled .seccion-onepage__numero--outline {
-    opacity: 1;
-    transform: translateY(0);
+.seccion-onepage__numero--solid {
+    opacity: calc(1 - var(--onepage-morph-progress));
+    transform: translateY(calc(-8px * var(--onepage-morph-progress)));
 }
 
 .seccion-onepage__contenido-wrap {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    grid-column: 2;
+    grid-row: 1;
     gap: var(--onepage-gap);
     min-width: 0;
+    z-index: 3;
+    position: relative;
 }
 
 .seccion-onepage__contenido {
@@ -919,16 +964,52 @@ body.fiflp-menu-open #page {
     min-width: 0;
 }
 
-.seccion-onepage__cols-1 .seccion-onepage__contenido {
+.seccion-onepage__contenido--modulos {
+    gap: clamp(20px, 2.4vw, 34px);
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo {
+    min-width: 0;
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque {
+    margin: 0;
+    max-width: 100%;
+}
+
+/* Ítems del repetidor en columna única; el “2/3 columnas” es flujo tipográfico multicolona (texto que pasa de columna en columna y se equilibra). */
+.seccion-onepage__cols-1 .seccion-onepage__contenido,
+.seccion-onepage__cols-2 .seccion-onepage__contenido,
+.seccion-onepage__cols-3 .seccion-onepage__contenido {
     grid-template-columns: 1fr;
 }
 
-.seccion-onepage__cols-2 .seccion-onepage__contenido {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.seccion-onepage__cols-2 .seccion-onepage__texto {
+    column-count: 2;
+    column-gap: var(--onepage-gap);
+    column-fill: balance;
+    orphans: 3;
+    widows: 3;
 }
 
-.seccion-onepage__cols-3 .seccion-onepage__contenido {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+.seccion-onepage__cols-3 .seccion-onepage__texto {
+    column-count: 3;
+    column-gap: var(--onepage-gap);
+    column-fill: balance;
+    orphans: 3;
+    widows: 3;
+}
+
+.seccion-onepage__cols-2 .seccion-onepage__texto img,
+.seccion-onepage__cols-2 .seccion-onepage__texto figure,
+.seccion-onepage__cols-3 .seccion-onepage__texto img,
+.seccion-onepage__cols-3 .seccion-onepage__texto figure {
+    max-width: 100%;
+}
+
+.seccion-onepage__cols-2 .seccion-onepage__texto figure,
+.seccion-onepage__cols-3 .seccion-onepage__texto figure {
+    break-inside: avoid;
 }
 
 .seccion-onepage__item {
@@ -954,6 +1035,55 @@ body.fiflp-menu-open #page {
     line-height: 1.5;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+    opacity: 0.82;
+}
+
+/* Ficha persona (60×60 + nombre + cargo) */
+.seccion-onepage__persona {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 clamp(14px, 1.6vw, 20px);
+    max-width: 100%;
+    break-inside: avoid;
+}
+
+.seccion-onepage__persona-foto {
+    margin: 0;
+    padding: 0;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: max(var(--fiflp-image-radius, 18px), 4px);
+}
+
+.seccion-onepage__persona-foto img {
+    display: block;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.seccion-onepage__persona-nombre {
+    margin: 0;
+    font-family: var(--fiflp-font-display);
+    font-size: 15px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+}
+
+.seccion-onepage__persona-cargo {
+    margin: 0;
+    font-family: var(--fiflp-font-meta);
+    font-size: 12px;
+    line-height: 1.45;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     opacity: 0.82;
 }
 
@@ -1065,8 +1195,9 @@ body.fiflp-menu-open #page {
         grid-template-columns: var(--onepage-indice) minmax(0, 1fr);
     }
 
-    .seccion-onepage__cols-3 .seccion-onepage__contenido {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .seccion-onepage__cols-3 .seccion-onepage__texto {
+        column-count: 2;
+        column-fill: balance;
     }
 
     .admin-bar .seccion-onepage__indice {
@@ -1093,6 +1224,7 @@ body.fiflp-menu-open #page {
         grid-template-columns: 1fr;
         gap: var(--onepage-gap);
         min-height: 100svh;
+        overflow: hidden;
     }
 
     .seccion-onepage__indice {
@@ -1115,8 +1247,31 @@ body.fiflp-menu-open #page {
         grid-template-columns: 1fr;
     }
 
+    .seccion-onepage__contenido-wrap,
+    .seccion-onepage__contenido--modulos {
+        grid-template-columns: 1fr !important;
+    }
+
+    .seccion-onepage__contenido-wrap {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .seccion-onepage__cols-2 .seccion-onepage__texto,
+    .seccion-onepage__cols-3 .seccion-onepage__texto {
+        column-count: 1;
+        column-gap: 0;
+    }
+
     .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__contenido-wrap:has(.seccion-onepage__foto-stage .seccion-onepage__foto-stage-item) {
         grid-template-columns: 1fr;
+    }
+
+    .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__titulo,
+    .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__contenido-wrap {
+        opacity: 1;
+        transform: none;
+        transition: none;
     }
 
     .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__item {
@@ -1134,7 +1289,18 @@ body.fiflp-menu-open #page {
     }
 
     .seccion-onepage__numero {
-        font-size: clamp(36px, 14vw, 88px);
+        font-size: clamp(90px, 26vw, 220px);
+        line-height: 0.84;
+        opacity: 0.28;
+    }
+
+    .seccion-onepage__numero-wrap {
+        position: absolute;
+        right: -6vw;
+        top: 52%;
+        transform: translateY(-50%);
+        margin: 0;
+        z-index: 1;
     }
 
     .seccion-onepage__titulo {
@@ -1154,8 +1320,7 @@ body.fiflp-menu-open #page {
 @media (prefers-reduced-motion: reduce) {
     .seccion-onepage__numero,
     .seccion-onepage__numero--outline,
-    .seccion-onepage__shell.is-scrolled .seccion-onepage__numero--solid,
-    .seccion-onepage__shell.is-scrolled .seccion-onepage__numero--outline,
+    .seccion-onepage__numero--solid,
     .seccion-onepage__item,
     .seccion-onepage__foto-stage-item {
         transition: none !important;
@@ -1578,6 +1743,57 @@ body {
    LAYOUT ONEPAGE (índice lateral colapsable)
    ========================= */
 
+/* Onepage: el menú editorial clásico no debe mostrarse ni reservar columna (por si apareciera en DOM). */
+body.fiflp-onepage .menu-lateral {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+}
+
+/*
+ * Onepage — lienzo a sangre (GeneratePress + envoltorios de contenido).
+ * Solo body.fiflp-onepage; no afecta al resto del sitio.
+ */
+body.fiflp-onepage #page,
+body.fiflp-onepage #content.site-content,
+body.fiflp-onepage #content,
+body.fiflp-onepage .site-content,
+body.fiflp-onepage .content-area,
+body.fiflp-onepage #primary,
+body.fiflp-onepage .site-main,
+body.fiflp-onepage main.site-main,
+body.fiflp-onepage main#primary,
+body.fiflp-onepage article,
+body.fiflp-onepage .inside-article,
+body.fiflp-onepage .entry-content,
+body.fiflp-onepage .layout-editorial__content,
+body.fiflp-onepage #content.site-content .grid-container,
+body.fiflp-onepage #primary .grid-container,
+body.fiflp-onepage .site-main .grid-container,
+body.fiflp-onepage.one-container .site-content {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box;
+}
+
+body.fiflp-onepage #page {
+    overflow-x: clip;
+}
+
 body.fiflp-onepage {
     --onepage-menu-width-open: clamp(200px, 18vw, 260px);
     --onepage-menu-width-closed: 0px;
@@ -1592,8 +1808,18 @@ body.fiflp-onepage.onepage-menu-closed {
     --fiflp-onepage-sidebar-w: var(--onepage-menu-width-closed);
 }
 
+/* Grid onepage = sidebar onepage + main (no columna 228px de menu-lateral). */
 body.fiflp-onepage .layout-editorial--onepage {
     position: relative;
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-inline: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: clamp(36px, 5vw, 72px) !important;
+    padding-bottom: 0 !important;
     grid-template-columns: minmax(0, auto) minmax(0, 1fr);
     column-gap: clamp(28px, 3.6vw, 56px);
     align-items: start;
