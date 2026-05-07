@@ -190,11 +190,12 @@
 }
 
 .post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields::before {
-	opacity: 0;
+	content: none !important;
+	opacity: 0 !important;
 	pointer-events: none;
 }
 
-.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields::before {
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater tr.acf-row.-collapsed > td.acf-fields:not(:focus-within)::before {
 	content: attr(data-collapsed-title);
 	display: block;
 	position: absolute;

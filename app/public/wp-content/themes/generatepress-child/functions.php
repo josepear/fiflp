@@ -464,6 +464,115 @@ if ( ! function_exists( 'fiflp_collect_prologo_items_from_blocks' ) ) {
 	}
 }
 
+if ( ! function_exists( 'fiflp_resolve_onepage_seccion_post_id' ) ) {
+	/**
+	 * Resuelve el ID del CPT de sección onepage desde el valor ACF del bloque.
+	 *
+	 * @param mixed $ref Valor del subcampo seccion_onepage.
+	 * @return int
+	 */
+	function fiflp_resolve_onepage_seccion_post_id( $ref ) {
+		if ( is_numeric( $ref ) ) {
+			return (int) $ref;
+		}
+
+		if ( is_array( $ref ) ) {
+			return (int) ( $ref['ID'] ?? $ref['id'] ?? 0 );
+		}
+
+		if ( $ref instanceof WP_Post ) {
+			return (int) $ref->ID;
+		}
+
+		return 0;
+	}
+}
+
+if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
+	/**
+	 * Recorre los bloques guardados y devuelve metadatos para el índice lateral onepage.
+	 * El ancla coincide con get_row_index() en plantilla (índice 1-based de la fila flexible).
+	 *
+	 * @param array $bloques Valor del campo flexible 'bloques'.
+	 * @return array<int, array{id:int, anchor:string, numero:string, titulo:string, label:string, row_index:int}>
+	 */
+	function fiflp_collect_onepage_nav_sections( $bloques ) {
+		$sections = array();
+
+		if ( ! is_array( $bloques ) || ! function_exists( 'get_field' ) ) {
+			return $sections;
+		}
+
+		foreach ( $bloques as $index => $bloque ) {
+			$layout = isset( $bloque['acf_fc_layout'] ) ? (string) $bloque['acf_fc_layout'] : '';
+
+			if ( 'seccion_onepage' !== $layout ) {
+				continue;
+			}
+
+			$seccion_id = fiflp_resolve_onepage_seccion_post_id( $bloque['seccion_onepage'] ?? null );
+
+			if ( $seccion_id <= 0 ) {
+				continue;
+			}
+
+			$items = get_field( 'items_contenido', $seccion_id );
+
+			if ( ! is_array( $items ) || empty( $items ) ) {
+				continue;
+			}
+
+			$numero = trim( (string) get_field( 'numero_seccion', $seccion_id ) );
+			$titulo = trim( (string) get_field( 'titulo_seccion', $seccion_id ) );
+
+			if ( '' === $titulo ) {
+				$titulo = get_the_title( $seccion_id );
+			}
+
+			$row_index = (int) $index + 1;
+			$label     = '' !== $numero ? $numero . '. ' . $titulo : $titulo;
+
+			$sections[] = array(
+				'id'         => $seccion_id,
+				'anchor'     => 'fiflp-onepage-row-' . $row_index,
+				'numero'     => $numero,
+				'titulo'     => $titulo,
+				'label'      => $label,
+				'row_index'  => $row_index,
+			);
+		}
+
+		return $sections;
+	}
+}
+
+/**
+ * Marca el body cuando la página incluye navegación onepage (para CSS scoped).
+ *
+ * @param string[] $classes Clases del body.
+ * @return string[]
+ */
+function fiflp_onepage_body_class( $classes ) {
+	if ( ! is_singular( 'page' ) || ! function_exists( 'get_field' ) ) {
+		return $classes;
+	}
+
+	$page_id = (int) get_queried_object_id();
+
+	if ( $page_id <= 0 ) {
+		return $classes;
+	}
+
+	$bloques = get_field( 'bloques', $page_id );
+
+	if ( ! empty( fiflp_collect_onepage_nav_sections( is_array( $bloques ) ? $bloques : array() ) ) ) {
+		$classes[] = 'fiflp-onepage';
+	}
+
+	return $classes;
+}
+add_filter( 'body_class', 'fiflp_onepage_body_class', 15 );
+
 function fiflp_render_editorial_block_layout( $layout ) {
 	$layout = (string) $layout;
 
@@ -852,6 +961,29 @@ add_action(
 				'show_in_menu'       => true,
 				'menu_position'      => 62,
 				'menu_icon'          => 'dashicons-clock',
+				'supports'           => array( 'title' ),
+				'publicly_queryable' => false,
+				'has_archive'        => false,
+				'rewrite'            => false,
+				'show_in_rest'       => false,
+			)
+		);
+
+		register_post_type(
+			'fiflp_onepage_sec',
+			array(
+				'labels' => array(
+					'name'          => 'Secciones Onepage',
+					'singular_name' => 'Sección Onepage',
+					'add_new_item'  => 'Añadir sección onepage',
+					'edit_item'     => 'Editar sección onepage',
+					'menu_name'     => 'Secciones Onepage',
+				),
+				'public'             => false,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'menu_position'      => 63,
+				'menu_icon'          => 'dashicons-index-card',
 				'supports'           => array( 'title' ),
 				'publicly_queryable' => false,
 				'has_archive'        => false,

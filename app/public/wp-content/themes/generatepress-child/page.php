@@ -13,6 +13,10 @@ $parent_page_id       = wp_get_post_parent_id( $current_page_id );
 $selected_prologo     = isset( $_GET['prologo'] ) ? max( 0, absint( wp_unslash( $_GET['prologo'] ) ) ) : 0;
 $has_prologos_layout  = false;
 $bloques_data         = function_exists( 'get_field' ) ? get_field( 'bloques', $current_page_id ) : array();
+$onepage_sections     = function_exists( 'fiflp_collect_onepage_nav_sections' )
+	? fiflp_collect_onepage_nav_sections( is_array( $bloques_data ) ? $bloques_data : array() )
+	: array();
+$has_onepage_nav      = ! empty( $onepage_sections );
 $prologo_items        = fiflp_collect_prologo_items_from_blocks( $bloques_data );
 $current_children     = get_pages(
 	array(
@@ -46,8 +50,12 @@ if ( is_front_page() && $home_hero_has_content ) {
 }
 ?>
 
-<div class="layout-editorial">
-	<?php get_template_part( 'template-parts/menu-lateral' ); ?>
+<div class="layout-editorial<?php echo $has_onepage_nav ? ' layout-editorial--onepage' : ''; ?>"<?php echo $has_onepage_nav ? ' data-onepage-layout="1"' : ''; ?>>
+	<?php if ( $has_onepage_nav ) : ?>
+		<?php get_template_part( 'template-parts/menu-onepage', null, array( 'sections' => $onepage_sections ) ); ?>
+	<?php else : ?>
+		<?php get_template_part( 'template-parts/menu-lateral' ); ?>
+	<?php endif; ?>
 
 	<main class="editorial">
 		<?php if ( have_posts() ) : ?>

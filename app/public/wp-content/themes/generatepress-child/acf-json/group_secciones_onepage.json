@@ -1,0 +1,267 @@
+{
+    "key": "group_secciones_onepage",
+    "title": "Secciones Onepage",
+    "fields": [
+        {
+            "key": "field_seccion_onepage_numero",
+            "label": "Número de sección",
+            "name": "numero_seccion",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Ejemplo: 01, 02, 03",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "20",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "6",
+            "allow_in_bindings": 0,
+            "placeholder": "01",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_seccion_onepage_titulo",
+            "label": "Título de sección",
+            "name": "titulo_seccion",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "80",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_seccion_onepage_fondo_color",
+            "label": "Color de fondo",
+            "name": "fondo_color",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Paleta cerrada editorial.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "#ea4142": "Rojo (#ea4142)",
+                "#fde25f": "Amarillo (#fde25f)",
+                "#072728": "Verde oscuro (#072728)",
+                "#e9e9e9": "Gris claro (#e9e9e9)",
+                "#73c3b6": "Verde agua (#73c3b6)"
+            },
+            "default_value": "#e9e9e9",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_seccion_onepage_columnas",
+            "label": "Columnas de texto (desktop)",
+            "name": "columnas_texto_desktop",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "En móvil siempre se fuerza 1 columna.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3"
+            },
+            "default_value": "2",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_seccion_onepage_items",
+            "label": "Items de contenido",
+            "name": "items_contenido",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 1,
+            "max": 0,
+            "collapsed": "field_seccion_onepage_item_texto",
+            "button_label": "Añadir item",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_seccion_onepage_item_texto",
+                    "label": "Texto",
+                    "name": "texto",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "allow_in_bindings": 0,
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 1,
+                    "delay": 0,
+                    "parent_repeater": "field_seccion_onepage_items"
+                },
+                {
+                    "key": "field_seccion_onepage_item_sumario",
+                    "label": "Sumario (opcional)",
+                    "name": "sumario",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "rows": 3,
+                    "placeholder": "",
+                    "new_lines": "",
+                    "parent_repeater": "field_seccion_onepage_items"
+                },
+                {
+                    "key": "field_seccion_onepage_item_ladillo",
+                    "label": "Ladillo (opcional)",
+                    "name": "ladillo",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_seccion_onepage_items"
+                },
+                {
+                    "key": "field_seccion_onepage_item_foto",
+                    "label": "Foto vinculada (opcional)",
+                    "name": "foto_vinculada",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "library": "all",
+                    "min_width": 0,
+                    "min_height": 0,
+                    "min_size": 0,
+                    "max_width": 0,
+                    "max_height": 0,
+                    "max_size": 0,
+                    "mime_types": "",
+                    "allow_in_bindings": 0,
+                    "preview_size": "medium",
+                    "parent_repeater": "field_seccion_onepage_items"
+                },
+                {
+                    "key": "field_seccion_onepage_item_posicion_foto",
+                    "label": "Posición de foto",
+                    "name": "posicion_foto",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "izquierda_titulo": "Izquierda título",
+                        "derecha_contenido": "Derecha contenido"
+                    },
+                    "default_value": "derecha_contenido",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal",
+                    "parent_repeater": "field_seccion_onepage_items"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fiflp_onepage_sec"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1776000100
+}

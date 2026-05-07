@@ -459,6 +459,291 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    const initOnepageLayoutNav = () => {
+        const layout = document.querySelector('[data-onepage-layout]');
+
+        if (!layout) {
+            return;
+        }
+
+        const toggle = document.querySelector('[data-onepage-sidebar-toggle]');
+        const overlay = document.querySelector('[data-onepage-sidebar-overlay]');
+        const navLinks = document.querySelectorAll('[data-onepage-nav-link]');
+        const mqCompact = window.matchMedia('(max-width: 1024px)');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!toggle) {
+            return;
+        }
+
+        const storageKey = 'fiflpOnepageMenu';
+
+        const isCompact = () => mqCompact.matches;
+
+        const readDesktopPreference = () => {
+            try {
+                return sessionStorage.getItem(storageKey);
+            } catch (err) {
+                return null;
+            }
+        };
+
+        const persistDesktop = (open) => {
+            if (isCompact()) {
+                return;
+            }
+
+            try {
+                sessionStorage.setItem(storageKey, open ? 'open' : 'closed');
+            } catch (err) {
+                /* ignore */
+            }
+        };
+
+        const applyState = (open) => {
+            document.body.classList.toggle('onepage-menu-open', open);
+            document.body.classList.toggle('onepage-menu-closed', !open);
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            persistDesktop(open);
+        };
+
+        const initialOpen = () => {
+            if (isCompact()) {
+                return false;
+            }
+
+            const stored = readDesktopPreference();
+
+            if (stored === 'closed') {
+                return false;
+            }
+
+            if (stored === 'open') {
+                return true;
+            }
+
+            return true;
+        };
+
+        let lastCompact = isCompact();
+
+        applyState(initialOpen());
+
+        toggle.addEventListener('click', () => {
+            const next = !document.body.classList.contains('onepage-menu-open');
+            applyState(next);
+        });
+
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                if (isCompact()) {
+                    applyState(false);
+                }
+            });
+        }
+
+        navLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                const href = link.getAttribute('href') || '';
+
+                if (href.charAt(0) !== '#') {
+                    return;
+                }
+
+                const id = href.slice(1);
+                const target = document.getElementById(id);
+
+                if (!target) {
+                    return;
+                }
+
+                event.preventDefault();
+                target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, '', href);
+                }
+
+                if (isCompact()) {
+                    applyState(false);
+                }
+            });
+        });
+
+        const sections = document.querySelectorAll('section.seccion-onepage[id^="fiflp-onepage-row-"]');
+
+        if (sections.length && navLinks.length && 'IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    const visible = entries
+                        .filter((entry) => entry.isIntersecting)
+                        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+                    const winner = visible[0];
+
+                    if (!winner || !winner.target.id) {
+                        return;
+                    }
+
+                    const hash = '#' + winner.target.id;
+
+                    navLinks.forEach((a) => {
+                        const on = a.getAttribute('href') === hash;
+                        a.classList.toggle('is-active', on);
+
+                        if (on) {
+                            a.setAttribute('aria-current', 'true');
+                        } else {
+                            a.removeAttribute('aria-current');
+                        }
+                    });
+                },
+                {
+                    rootMargin: '-38% 0px -42% 0px',
+                    threshold: [0, 0.12, 0.25, 0.4, 0.55, 0.75, 1],
+                }
+            );
+
+            sections.forEach((section) => observer.observe(section));
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape') {
+                return;
+            }
+
+            if (!document.body.classList.contains('onepage-menu-open')) {
+                return;
+            }
+
+            if (isCompact()) {
+                applyState(false);
+            }
+        });
+
+        window.addEventListener(
+            'resize',
+            () => {
+                const compact = isCompact();
+
+                if (compact === lastCompact) {
+                    return;
+                }
+
+                lastCompact = compact;
+
+                if (compact) {
+                    applyState(false);
+                } else {
+                    const stored = readDesktopPreference();
+                    applyState(stored !== 'closed');
+                }
+            },
+            { passive: true }
+        );
+    };
+
+    const initOnepageNarrative = () => {
+        const shells = document.querySelectorAll('[data-onepage-shell]');
+
+        if (!shells.length) {
+            return;
+        }
+
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        shells.forEach((shell) => {
+            const items = Array.from(shell.querySelectorAll('[data-onepage-item]'));
+            if (!items.length) {
+                return;
+            }
+
+            const photos = Array.from(shell.querySelectorAll('[data-onepage-photo]'));
+
+            const setActiveItem = (target) => {
+                items.forEach((item) => {
+                    item.classList.toggle('is-active', item === target);
+                });
+
+                const photoIndex = target ? target.getAttribute('data-onepage-photo-index') : '';
+                if (!photoIndex) {
+                    return;
+                }
+
+                photos.forEach((photo) => {
+                    photo.classList.toggle('is-active', photo.getAttribute('data-onepage-photo') === photoIndex);
+                });
+            };
+
+            const syncNumberState = () => {
+                const rect = shell.getBoundingClientRect();
+                const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / Math.max(rect.height, 1)));
+                shell.classList.toggle('is-scrolled', progress > 0.28);
+            };
+
+            const firstItem = items[0];
+            if (firstItem) {
+                setActiveItem(firstItem);
+            }
+
+            if (isMobile || reduceMotion) {
+                shell.classList.remove('seccion-onepage--js');
+                shell.classList.remove('is-scrolled');
+                return;
+            }
+
+            shell.classList.add('seccion-onepage--js');
+            syncNumberState();
+            window.addEventListener('scroll', syncNumberState, { passive: true });
+            window.addEventListener('resize', syncNumberState);
+
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    let bestEntry = null;
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) {
+                            return;
+                        }
+                        if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
+                            bestEntry = entry;
+                        }
+                    });
+
+                    if (bestEntry && bestEntry.target) {
+                        setActiveItem(bestEntry.target);
+                    }
+                }, {
+                    threshold: [0.35, 0.55, 0.75],
+                    rootMargin: '-18% 0px -18% 0px'
+                });
+
+                items.forEach((item) => observer.observe(item));
+                return;
+            }
+
+            const onScroll = () => {
+                let candidate = null;
+                let distance = Number.POSITIVE_INFINITY;
+
+                items.forEach((item) => {
+                    const rect = item.getBoundingClientRect();
+                    const d = Math.abs((rect.top + rect.height * 0.5) - window.innerHeight * 0.5);
+                    if (d < distance) {
+                        distance = d;
+                        candidate = item;
+                    }
+                });
+
+                if (candidate) {
+                    setActiveItem(candidate);
+                }
+            };
+
+            onScroll();
+            window.addEventListener('scroll', onScroll, { passive: true });
+        });
+    };
+
     scheduleRotuloFit();
 
     if (document.fonts && typeof document.fonts.ready === 'object') {
@@ -466,6 +751,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.addEventListener('resize', scheduleRotuloFit, { passive: true });
+    initOnepageLayoutNav();
+    initOnepageNarrative();
 
     // =========================
     // LIGHTBOX
