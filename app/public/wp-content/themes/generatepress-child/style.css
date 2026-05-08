@@ -934,23 +934,29 @@ body.fiflp-menu-open #page {
 .seccion-onepage__numero-wrap {
     position: sticky !important;
     top: var(--onepage-number-top-vh, 50vh) !important;
-    transform: translate(var(--onepage-number-offset-x, 36%), -50%);
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
     align-self: start;
     margin: 0;
+    width: 0;
+    height: 0;
     min-height: 0;
-    z-index: 1;
+    overflow: visible;
+    z-index: -1;
     pointer-events: none;
     user-select: none;
 }
 
 .seccion-onepage__numero {
+    position: absolute;
+    right: 0;
+    top: 0;
     display: block;
     width: clamp(1200px, calc(var(--onepage-number-size-vh, 260) * 1svh), 5200px);
     height: auto;
     margin: 0;
+    transform: translate(var(--onepage-number-offset-x, 36%), -50%);
     transition: opacity 0.2s linear, transform 0.2s linear;
     will-change: opacity, transform;
 }
@@ -976,17 +982,13 @@ body.fiflp-menu-open #page {
 }
 
 .seccion-onepage__numero--outline {
-    position: absolute;
-    inset: 0 auto auto 0;
     opacity: var(--onepage-number-outline-opacity, 1);
     clip-path: inset(calc((1 - var(--onepage-morph-progress)) * 100%) 0 0 0);
-    transform: none;
 }
 
 .seccion-onepage__numero--solid {
     opacity: var(--onepage-number-solid-opacity, 1);
     clip-path: inset(0 0 calc(var(--onepage-morph-progress) * 100%) 0);
-    transform: none;
 }
 
 body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
@@ -1358,13 +1360,13 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     .seccion-onepage__numero {
         width: clamp(300px, 74svh, 900px);
         opacity: 0.24;
+        transform: translate(var(--onepage-number-offset-x, 36%), -50%);
     }
 
     .seccion-onepage__numero-wrap {
         position: sticky !important;
         top: var(--onepage-number-top-vh, 50vh);
         right: auto;
-        transform: translate(var(--onepage-number-offset-x, 36%), -50%);
         margin: 0;
         z-index: 1;
     }
@@ -3900,11 +3902,6 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 
 .editorial > .bloque:last-child {
     margin-bottom: 0 !important;
-}
-
-/* Ajuste puntual de sticky para pruebas: solo row-3 */
-#fiflp-onepage-row-3 .seccion-onepage__shell {
-    padding-bottom: calc(45vh + var(--onepage-pad-x)) !important;
 }
 
 main.editorial {
