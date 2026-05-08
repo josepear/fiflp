@@ -2033,32 +2033,32 @@ add_action(
 				border-radius: 0 !important;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
+			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
 				display: grid;
 				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 				gap: 10px 12px;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field {
+			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field {
 				float: none !important;
 				clear: none !important;
 				width: auto !important;
 				margin: 0 !important;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="texto"] {
+			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="texto"] {
 				grid-column: 1 / -1;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="tipografia"] {
+			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="tipografia"] {
 				grid-column: 1;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
+			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
 				grid-column: 2;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-button-group {
+			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-button-group {
 				display: grid;
 				grid-auto-flow: column;
 				grid-auto-columns: minmax(0, 1fr);
@@ -2067,7 +2067,7 @@ add_action(
 				overflow: hidden;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-button-group label {
+			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-button-group label {
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -2082,52 +2082,63 @@ add_action(
 			}
 
 			/* Onepage rótulo: tipografía + variante en la misma línea, ancho completo y botones cuadrados */
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
 				display: grid;
 				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 				gap: 10px 12px;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field {
 				float: none !important;
 				clear: none !important;
 				width: auto !important;
 				margin: 0 !important;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="texto"] {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="texto"] {
 				grid-column: 1 / -1;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="tipografia"] {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="tipografia"] {
 				grid-column: 1;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
 				grid-column: 2;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group {
 				display: grid;
 				grid-auto-flow: column;
 				grid-auto-columns: minmax(0, 1fr);
 				width: 100%;
 				border-radius: 0 !important;
 				overflow: hidden;
+				box-sizing: border-box;
 			}
 
-			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group label {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group label {
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				padding: 0 8px !important;
+				padding: 0 4px !important;
 				min-height: 30px !important;
 				line-height: 1.2 !important;
 				height: auto !important;
-				font-size: 13px !important;
+				font-size: 11px !important;
 				border-radius: 0 !important;
 				white-space: nowrap;
 				text-align: center;
+				box-sizing: border-box;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				min-width: 0;
+			}
+
+			/* Variante tiene 4 opciones y nombres más largos: compactamos un poco más */
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-field[data-name="variante"] .acf-button-group label {
+				font-size: 10px !important;
+				padding: 0 3px !important;
 			}
 
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-plus {

@@ -2815,6 +2815,18 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     max-width: min(100%, 1080px);
 }
 
+.rotulo-editorial--align-left {
+    align-self: flex-start;
+}
+
+.rotulo-editorial--align-center {
+    align-self: center;
+}
+
+.rotulo-editorial--align-right {
+    align-self: flex-end;
+}
+
 .rotulo-editorial-lineas {
     display: flex;
     flex-direction: column;
@@ -2899,11 +2911,21 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     z-index: 2;
 }
 
+.rotulo-editorial__franja--superior.is-inversa {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
 .rotulo-editorial__franja--principal {
     margin-left: 28px;
     padding: var(--rotulo-principal-pad-y) var(--rotulo-principal-pad-x) calc(var(--rotulo-principal-pad-y) - 1px) var(--rotulo-principal-pad-x);
     min-width: min(100%, var(--rotulo-principal-min-width));
     z-index: 1;
+}
+
+.rotulo-editorial__franja--principal.is-inversa {
+    margin-left: 0;
+    margin-right: 28px;
 }
 
 .rotulo-editorial__franja--principal::before {
@@ -2942,6 +2964,10 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     color: var(--rotulo-bg);
 }
 
+.rotulo-editorial__franja.is-relleno .rotulo-editorial__texto {
+    color: var(--rotulo-bg);
+}
+
 .rotulo-editorial__texto {
     display: block;
     margin: 0;
@@ -2977,6 +3003,14 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     --rotulo-superior-pad-x: 24px;
     --rotulo-principal-pad-y: 9px;
     --rotulo-principal-pad-x: 19px;
+}
+
+.rotulo-editorial--tamano-m {
+    --rotulo-font-size: clamp(2.05rem, 4.15vw, 4.35rem);
+    --rotulo-superior-pad-y: 11px;
+    --rotulo-superior-pad-x: 27px;
+    --rotulo-principal-pad-y: 12px;
+    --rotulo-principal-pad-x: 24px;
 }
 
 .rotulo-editorial--tamano-xs {
@@ -3031,10 +3065,23 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     max-width: none;
     text-align: left;
     font-family: var(--fiflp-font-meta);
-    font-size: 1.08rem;
-    line-height: 1.6;
+    font-size: var(--rotulo-subtitulo-size, 1.08rem);
+    line-height: var(--rotulo-subtitulo-line-height, 1.6);
     font-weight: 400;
-    color: rgba(15, 45, 48, 0.82);
+    color: var(--rotulo-subtitulo-color, rgba(15, 45, 48, 0.82));
+    letter-spacing: var(--rotulo-subtitulo-letter-spacing, 0);
+}
+
+.rotulo-editorial--tamano-subtitulo-s {
+    --rotulo-subtitulo-size: 0.96rem;
+}
+
+.rotulo-editorial--tamano-subtitulo-m {
+    --rotulo-subtitulo-size: 1.08rem;
+}
+
+.rotulo-editorial--tamano-subtitulo-l {
+    --rotulo-subtitulo-size: 1.22rem;
 }
 
 .rotulo-editorial--subtitulo-align-left .rotulo-editorial__subtitulo {

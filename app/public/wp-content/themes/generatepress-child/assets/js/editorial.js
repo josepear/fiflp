@@ -33,9 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            const computedText = window.getComputedStyle(text);
             const computedFranja = window.getComputedStyle(franja);
-            const baseFontSize = parseFloat(text.dataset.baseFontSize || computedText.fontSize);
             const paddingLeft = parseFloat(computedFranja.paddingLeft) || 0;
             const paddingRight = parseFloat(computedFranja.paddingRight) || 0;
             const slantFactor = franja.classList.contains('rotulo-editorial__franja--superior') ? 1.22 : 1.08;
@@ -47,12 +45,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 Math.floor(window.innerWidth * 0.92)
             );
 
-            if (!baseFontSize || !maxTrackWidth) {
+            if (!maxTrackWidth) {
                 return;
             }
 
-            text.dataset.baseFontSize = String(baseFontSize);
-            text.style.fontSize = baseFontSize + 'px';
+            text.style.fontSize = '';
             franja.style.width = '';
 
             const desiredWidth = Math.min(
@@ -64,28 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 franja.style.width = desiredWidth + 'px';
             }
 
-            const availableWidth = Math.max(0, franja.clientWidth - paddingLeft - paddingRight - slantAllowance);
-
-            const currentWidth = text.scrollWidth;
-
-            if (!currentWidth || currentWidth <= availableWidth) {
-                return;
-            }
-
-            const ratio = availableWidth / currentWidth;
-            const minFontSize = Math.max(18, baseFontSize * 0.42);
-            const fittedFontSize = Math.max(minFontSize, Math.floor(baseFontSize * ratio * 100) / 100);
-
-            text.style.fontSize = fittedFontSize + 'px';
-
-            if (text.scrollWidth > availableWidth && fittedFontSize > minFontSize) {
-                let trialSize = fittedFontSize;
-
-                while (text.scrollWidth > availableWidth && trialSize > minFontSize) {
-                    trialSize -= 0.5;
-                    text.style.fontSize = trialSize + 'px';
-                }
-            }
         });
 
         document.querySelectorAll('.rotulo-editorial').forEach(function (rotulo) {
@@ -694,11 +669,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const syncNumberState = () => {
                 const rect = shell.getBoundingClientRect();
-                const totalTrack = Math.max(window.innerHeight + rect.height, 1);
+                const minNarrativeTrack = window.innerHeight * 2.4;
+                const totalTrack = Math.max(window.innerHeight + rect.height, minNarrativeTrack, 1);
                 const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / totalTrack));
                 const morphStart = 0.00;
                 const morphEndSetting = Number.parseFloat(shell.getAttribute('data-onepage-morph-end') || '0.10');
-                const morphEnd = Math.max(0.02, Math.min(0.4, Number.isFinite(morphEndSetting) ? morphEndSetting : 0.10));
+                const morphEnd = Math.max(0.02, Math.min(1.2, Number.isFinite(morphEndSetting) ? morphEndSetting : 0.10));
                 const revealStart = 0.00;
                 const revealEnd = 1.00;
                 const revealTrackPx = Math.max(window.innerHeight * 0.42, 220);

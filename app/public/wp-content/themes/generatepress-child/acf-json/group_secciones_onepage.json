@@ -643,11 +643,11 @@
                     "sub_fields": [
                         {
                             "key": "field_onepage_mod_rotulo_titulo_lineas",
-                            "label": "Título (líneas)",
+                            "label": "Bloques de rótulo",
                             "name": "titulo_lineas",
                             "aria-label": "",
                             "type": "repeater",
-                            "instructions": "Opcional. Si añades líneas, se usan en lugar del título único.",
+                            "instructions": "Cada fila define un rótulo completo (titular SVG + subtítulo).",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -657,20 +657,20 @@
                             },
                             "layout": "block",
                             "pagination": 0,
-                            "min": 0,
-                            "max": 2,
+                            "min": 1,
+                            "max": "",
                             "collapsed": "field_onepage_mod_rotulo_titulo_lineas_texto",
-                            "button_label": "Añadir línea",
+                            "button_label": "Añadir bloque de rótulo",
                             "rows_per_page": 20,
                             "sub_fields": [
                                 {
-                                    "key": "field_onepage_mod_rotulo_titulo_lineas_texto",
-                                    "label": "Texto",
-                                    "name": "texto",
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_titulo",
+                                    "label": "Título",
+                                    "name": "titulo",
                                     "aria-label": "",
                                     "type": "text",
                                     "instructions": "",
-                                    "required": 1,
+                                    "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
                                         "width": "50",
@@ -678,148 +678,345 @@
                                         "id": ""
                                     },
                                     "default_value": "",
-                                    "maxlength": "34",
+                                    "maxlength": "",
                                     "placeholder": "",
                                     "prepend": "",
                                     "append": "",
                                     "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
                                 },
                                 {
-                                    "key": "field_onepage_mod_rotulo_titulo_lineas_tipografia",
-                                    "label": "Tipografía",
-                                    "name": "tipografia",
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_variante_titulo",
+                                    "label": "Variante título",
+                                    "name": "variante_titulo",
                                     "aria-label": "",
                                     "type": "button_group",
                                     "instructions": "",
-                                    "required": 1,
+                                    "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
-                                        "width": "25",
-                                        "class": "",
-                                        "id": ""
-                                    },
-                                    "choices": {
-                                        "backslanted": "Backslanted",
-                                        "slanted": "Slanted"
-                                    },
-                                    "default_value": "backslanted",
-                                    "return_format": "value",
-                                    "allow_null": 0,
-                                    "layout": "horizontal",
-                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
-                                },
-                                {
-                                    "key": "field_onepage_mod_rotulo_titulo_lineas_variante",
-                                    "label": "Variante",
-                                    "name": "variante",
-                                    "aria-label": "",
-                                    "type": "button_group",
-                                    "instructions": "",
-                                    "required": 1,
-                                    "conditional_logic": 0,
-                                    "wrapper": {
-                                        "width": "25",
+                                        "width": "50",
                                         "class": "",
                                         "id": ""
                                     },
                                     "choices": {
                                         "linea": "Línea",
+                                        "linea_inversa": "Línea Inversa",
                                         "relleno": "Relleno",
-                                        "linea_in": "Línea In",
-                                        "relleno_in": "Relleno In"
+                                        "relleno_inverso": "Relleno Inverso"
                                     },
                                     "default_value": "linea",
                                     "return_format": "value",
                                     "allow_null": 0,
                                     "layout": "horizontal",
                                     "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_supertitulo",
+                                    "label": "Supertítulo",
+                                    "name": "supertitulo",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "50",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_variante_supertitulo",
+                                    "label": "Variante supertítulo",
+                                    "name": "variante_supertitulo",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "50",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "linea": "Línea",
+                                        "linea_inversa": "Línea Inversa",
+                                        "relleno": "Relleno",
+                                        "relleno_inverso": "Relleno Inverso"
+                                    },
+                                    "default_value": "linea",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_tamano",
+                                    "label": "Tamaño titular SVG",
+                                    "name": "tamano",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "s": "S",
+                                        "m": "M",
+                                        "l": "L",
+                                        "xl": "XL"
+                                    },
+                                    "default_value": "m",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_color_trazo",
+                                    "label": "Color trazo",
+                                    "name": "color_trazo",
+                                    "aria-label": "",
+                                    "type": "color_picker",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "enable_opacity": 0,
+                                    "return_format": "string",
+                                    "custom_palette_source": "",
+                                    "palette_colors": "",
+                                    "show_color_wheel": true,
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_color_fondo",
+                                    "label": "Color relleno/fondo",
+                                    "name": "color_fondo",
+                                    "aria-label": "",
+                                    "type": "color_picker",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "enable_opacity": 0,
+                                    "return_format": "string",
+                                    "custom_palette_source": "",
+                                    "palette_colors": "",
+                                    "show_color_wheel": true,
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_alineacion_rotulo",
+                                    "label": "Alineación rótulo",
+                                    "name": "alineacion_rotulo",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "left": "Izquierda",
+                                        "center": "Centro",
+                                        "right": "Derecha"
+                                    },
+                                    "default_value": "left",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_subtitulo",
+                                    "label": "Subtítulo",
+                                    "name": "subtitulo",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "100",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_tamano_subtitulo",
+                                    "label": "Tamaño subtítulo",
+                                    "name": "tamano_subtitulo",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "s": "S",
+                                        "m": "M",
+                                        "l": "L"
+                                    },
+                                    "default_value": "m",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_color_subtitulo",
+                                    "label": "Color subtítulo",
+                                    "name": "color_subtitulo",
+                                    "aria-label": "",
+                                    "type": "color_picker",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "enable_opacity": 0,
+                                    "return_format": "string",
+                                    "custom_palette_source": "",
+                                    "palette_colors": "",
+                                    "show_color_wheel": true,
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_ancho_subtitulo",
+                                    "label": "Ancho subtítulo",
+                                    "name": "ancho_subtitulo",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "igual_rotulo": "=",
+                                        "estrecho": "◧",
+                                        "ancho": "◫"
+                                    },
+                                    "default_value": "igual_rotulo",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_alineacion_subtitulo",
+                                    "label": "Alineación subtítulo",
+                                    "name": "alineacion_subtitulo",
+                                    "aria-label": "",
+                                    "type": "button_group",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "left": "⟵",
+                                        "center": "⟷",
+                                        "right": "⟶"
+                                    },
+                                    "default_value": "left",
+                                    "return_format": "value",
+                                    "allow_null": 0,
+                                    "layout": "horizontal",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_interlineado_subtitulo",
+                                    "label": "Interlineado subtítulo",
+                                    "name": "interlineado_subtitulo",
+                                    "aria-label": "",
+                                    "type": "number",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "min": 1,
+                                    "max": 2.2,
+                                    "placeholder": "",
+                                    "step": 0.01,
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_espaciado_subtitulo",
+                                    "label": "Espaciado letras subtítulo",
+                                    "name": "espaciado_letras_subtitulo",
+                                    "aria-label": "",
+                                    "type": "number",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "min": -0.05,
+                                    "max": 0.2,
+                                    "placeholder": "",
+                                    "step": 0.001,
+                                    "prepend": "",
+                                    "append": "em",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
                                 }
                             ]
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_titulo",
-                            "label": "Título",
-                            "name": "titulo",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
-                            "required": 1,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "maxlength": "",
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_supertitulo",
-                            "label": "Supertítulo",
-                            "name": "supertitulo",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "maxlength": "",
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_subtitulo",
-                            "label": "Subtítulo",
-                            "name": "subtitulo",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "100",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "maxlength": "",
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_tamano",
-                            "label": "Tamaño",
-                            "name": "tamano",
-                            "aria-label": "",
-                            "type": "button_group",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "30",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "s": "S",
-                                "m": "M",
-                                "l": "L",
-                                "xl": "XL"
-                            },
-                            "default_value": "m",
-                            "return_format": "value",
-                            "allow_null": 0,
-                            "layout": "horizontal"
                         },
                         {
                             "key": "field_onepage_mod_rotulo_fuente_rotulo",
@@ -853,6 +1050,31 @@
                             "save_options": 0
                         },
                         {
+                            "key": "field_onepage_mod_rotulo_variante",
+                            "label": "Variante",
+                            "name": "variante",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "38",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "linea": "Línea",
+                                "linea_inversa": "Línea Inversa",
+                                "relleno": "Relleno",
+                                "relleno_inverso": "Relleno Inverso"
+                            },
+                            "default_value": "linea",
+                            "return_format": "value",
+                            "allow_null": 0,
+                            "layout": "horizontal"
+                        },
+                        {
                             "key": "field_onepage_mod_rotulo_etiqueta_html",
                             "label": "Etiqueta HTML",
                             "name": "etiqueta_html",
@@ -883,97 +1105,6 @@
                             "placeholder": "",
                             "create_options": 0,
                             "save_options": 0
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_ancho_subtitulo",
-                            "label": "Ancho del subtítulo",
-                            "name": "ancho_subtitulo",
-                            "aria-label": "",
-                            "type": "button_group",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "38",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "igual_rotulo": "=",
-                                "estrecho": "◧",
-                                "ancho": "◫"
-                            },
-                            "default_value": "igual_rotulo",
-                            "return_format": "value",
-                            "allow_null": 0,
-                            "layout": "horizontal"
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_alineacion_subtitulo",
-                            "label": "Alineación del subtítulo",
-                            "name": "alineacion_subtitulo",
-                            "aria-label": "",
-                            "type": "button_group",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "24",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "left": "⟵",
-                                "center": "⟷",
-                                "right": "⟶",
-                                "justify": "☰"
-                            },
-                            "default_value": "left",
-                            "return_format": "value",
-                            "allow_null": 0,
-                            "layout": "horizontal"
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_color_trazo",
-                            "label": "Color del trazo",
-                            "name": "color_trazo",
-                            "aria-label": "",
-                            "type": "color_picker",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "25",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "#0f2d30",
-                            "enable_opacity": 0,
-                            "return_format": "string",
-                            "custom_palette_source": "",
-                            "palette_colors": "",
-                            "show_color_wheel": true
-                        },
-                        {
-                            "key": "field_onepage_mod_rotulo_color_fondo",
-                            "label": "Color de fondo",
-                            "name": "color_fondo",
-                            "aria-label": "",
-                            "type": "color_picker",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "25",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "#fcfcf8",
-                            "enable_opacity": 0,
-                            "return_format": "string",
-                            "custom_palette_source": "",
-                            "palette_colors": "",
-                            "show_color_wheel": true
                         },
                         {
                             "key": "field_onepage_mod_rotulo_interlineado",

@@ -728,6 +728,98 @@
                             ]
                         },
                         {
+                            "key": "field_rotulo_editorial_titulo",
+                            "label": "Título",
+                            "name": "titulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_rotulo_editorial_variante_titulo",
+                            "label": "Variante título",
+                            "name": "variante_titulo",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "linea": "Línea",
+                                "linea_inversa": "Línea Inversa",
+                                "relleno": "Relleno",
+                                "relleno_inverso": "Relleno Inverso"
+                            },
+                            "default_value": "",
+                            "return_format": "value",
+                            "allow_null": 1,
+                            "layout": "horizontal"
+                        },
+                        {
+                            "key": "field_rotulo_editorial_supertitulo",
+                            "label": "Supertítulo",
+                            "name": "supertitulo",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_rotulo_editorial_variante_supertitulo",
+                            "label": "Variante supertítulo",
+                            "name": "variante_supertitulo",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "linea": "Línea",
+                                "linea_inversa": "Línea Inversa",
+                                "relleno": "Relleno",
+                                "relleno_inverso": "Relleno Inverso"
+                            },
+                            "default_value": "",
+                            "return_format": "value",
+                            "allow_null": 1,
+                            "layout": "horizontal"
+                        },
+                        {
                             "key": "field_rotulo_editorial_subtitulo",
                             "label": "Subtítulo",
                             "name": "subtitulo",
@@ -747,6 +839,95 @@
                             "placeholder": "",
                             "prepend": "",
                             "append": ""
+                        },
+                        {
+                            "key": "field_rotulo_editorial_tamano_subtitulo",
+                            "label": "Tamaño subtítulo",
+                            "name": "tamano_subtitulo",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "s": "S",
+                                "m": "M",
+                                "l": "L"
+                            },
+                            "default_value": "",
+                            "return_format": "value",
+                            "allow_null": 1,
+                            "layout": "horizontal"
+                        },
+                        {
+                            "key": "field_rotulo_editorial_color_subtitulo",
+                            "label": "Color subtítulo",
+                            "name": "color_subtitulo",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "enable_opacity": 0,
+                            "return_format": "string",
+                            "custom_palette_source": "",
+                            "palette_colors": "",
+                            "show_color_wheel": true
+                        },
+                        {
+                            "key": "field_rotulo_editorial_interlineado_subtitulo",
+                            "label": "Interlineado subtítulo",
+                            "name": "interlineado_subtitulo",
+                            "aria-label": "",
+                            "type": "number",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "min": 1,
+                            "max": 2.2,
+                            "placeholder": "",
+                            "step": 0.01,
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_rotulo_editorial_espaciado_letras_subtitulo",
+                            "label": "Espaciado letras subtítulo",
+                            "name": "espaciado_letras_subtitulo",
+                            "aria-label": "",
+                            "type": "number",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "min": -0.05,
+                            "max": 0.2,
+                            "placeholder": "",
+                            "step": 0.001,
+                            "prepend": "",
+                            "append": "em"
                         },
                         {
                             "key": "field_rotulo_editorial_ancho_subtitulo",
@@ -906,6 +1087,30 @@
                                 "xl": "XL"
                             },
                             "default_value": "m",
+                            "return_format": "value",
+                            "allow_null": 0,
+                            "layout": "horizontal"
+                        },
+                        {
+                            "key": "field_rotulo_editorial_alineacion_rotulo",
+                            "label": "Alineación rótulo",
+                            "name": "alineacion_rotulo",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "left": "Izquierda",
+                                "center": "Centro",
+                                "right": "Derecha"
+                            },
+                            "default_value": "left",
                             "return_format": "value",
                             "allow_null": 0,
                             "layout": "horizontal"

@@ -101,7 +101,7 @@ $numero_top_vh   = max( 0, min( 120, $numero_top_vh ) );
 if ( '' === (string) $onepage_morph_end_pct_raw || $onepage_morph_end_pct <= 0 ) {
 	$onepage_morph_end_pct = 10;
 }
-$onepage_morph_end_pct = max( 2, min( 90, $onepage_morph_end_pct ) );
+$onepage_morph_end_pct = max( 2, min( 120, $onepage_morph_end_pct ) );
 
 $has_modulos = is_array( $modulos ) && ! empty( $modulos );
 $has_legacy  = is_array( $items ) && ! empty( $items );
