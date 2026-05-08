@@ -55,9 +55,14 @@
 	background: #c71818 !important; /* abierto */
 }
 
-/* En este módulo no usamos el icono pequeño interno del asa */
-.post-type-fiflp_cronologia .acf-field[data-key="field_cronologia_editorial_hitos"] .acf-repeater .acf-row-handle .acf-icon {
+/* En este módulo ocultamos iconos del asa de ordenar/colapsar, pero NO el de borrar fila */
+.post-type-fiflp_cronologia .acf-field[data-key="field_cronologia_editorial_hitos"] .acf-repeater .acf-row-handle:not(.remove) .acf-icon {
 	display: none !important;
+}
+
+/* Mantener visible el botón "menos" para borrar hito */
+.post-type-fiflp_cronologia .acf-field[data-key="field_cronologia_editorial_hitos"] .acf-repeater .acf-row-handle.remove .acf-icon.-minus {
+	display: inline-flex !important;
 }
 
 /* Hover: el número desaparece y aparece la flecha del botón */
