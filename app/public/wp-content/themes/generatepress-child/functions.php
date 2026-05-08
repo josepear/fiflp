@@ -2017,6 +2017,22 @@ add_action(
 				border-radius: 3px !important;
 			}
 
+			/* Regla global: button_group ACF con tamaño compacto uniforme y esquinas cuadradas */
+			.acf-postbox .acf-button-group {
+				display: flex;
+				flex-wrap: wrap;
+				border-radius: 0 !important;
+			}
+
+			.acf-postbox .acf-button-group label {
+				padding: 0 10px !important;
+				min-height: 30px !important;
+				line-height: 28px !important;
+				height: auto !important;
+				font-size: 13px !important;
+				border-radius: 0 !important;
+			}
+
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
 				display: grid;
 				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2040,6 +2056,78 @@ add_action(
 
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
 				grid-column: 2;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-button-group {
+				display: grid;
+				grid-auto-flow: column;
+				grid-auto-columns: minmax(0, 1fr);
+				width: 100%;
+				border-radius: 0 !important;
+				overflow: hidden;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-button-group label {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 8px !important;
+				min-height: 30px !important;
+				line-height: 1.2 !important;
+				height: auto !important;
+				font-size: 13px !important;
+				border-radius: 0 !important;
+				white-space: nowrap;
+				text-align: center;
+			}
+
+			/* Onepage rótulo: tipografía + variante en la misma línea, ancho completo y botones cuadrados */
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+				gap: 10px 12px;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field {
+				float: none !important;
+				clear: none !important;
+				width: auto !important;
+				margin: 0 !important;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="texto"] {
+				grid-column: 1 / -1;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="tipografia"] {
+				grid-column: 1;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
+				grid-column: 2;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group {
+				display: grid;
+				grid-auto-flow: column;
+				grid-auto-columns: minmax(0, 1fr);
+				width: 100%;
+				border-radius: 0 !important;
+				overflow: hidden;
+			}
+
+			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group label {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 8px !important;
+				min-height: 30px !important;
+				line-height: 1.2 !important;
+				height: auto !important;
+				font-size: 13px !important;
+				border-radius: 0 !important;
+				white-space: nowrap;
+				text-align: center;
 			}
 
 			.layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-row-handle .acf-icon.-plus {
