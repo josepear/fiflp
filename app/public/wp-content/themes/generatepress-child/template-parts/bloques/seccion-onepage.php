@@ -142,8 +142,10 @@ if ( '#072728' === $fondo ) {
 		<div class="seccion-onepage__contenido-wrap">
 			<?php if ( $has_modulos ) : ?>
 				<div class="seccion-onepage__contenido seccion-onepage__contenido--modulos" role="list">
+					<?php $module_index = 0; ?>
 					<?php foreach ( $modulos as $modulo ) : ?>
 						<?php
+						$module_index++;
 						$layout = isset( $modulo['acf_fc_layout'] ) ? (string) $modulo['acf_fc_layout'] : '';
 						if ( '' === $layout ) {
 							continue;
@@ -154,8 +156,17 @@ if ( '#072728' === $fondo ) {
 						if ( ! locate_template( $template_path . '.php', false, false ) ) {
 							continue;
 						}
+
+						$modulo_anchor_attr = '';
+						if ( 'cronologia_editorial' === $layout ) {
+							$mostrar_en_submenu = isset( $modulo['mostrar_en_submenu'] ) ? (bool) $modulo['mostrar_en_submenu'] : false;
+							if ( $mostrar_en_submenu && function_exists( 'fiflp_onepage_module_anchor' ) ) {
+								$modulo_anchor = fiflp_onepage_module_anchor( $onepage_row_index, $module_index );
+								$modulo_anchor_attr = ' id="' . esc_attr( $modulo_anchor ) . '" data-onepage-subitem="1"';
+							}
+						}
 						?>
-						<div class="seccion-onepage__modulo seccion-onepage__modulo--<?php echo esc_attr( $template_slug ); ?>" role="listitem">
+						<div class="seccion-onepage__modulo seccion-onepage__modulo--<?php echo esc_attr( $template_slug ); ?>" role="listitem"<?php echo $modulo_anchor_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 							<?php get_template_part( $template_path, null, array( 'module' => $modulo, 'onepage' => true, 'onepage_section_id' => $seccion_id ) ); ?>
 						</div>
 					<?php endforeach; ?>

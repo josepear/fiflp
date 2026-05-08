@@ -913,6 +913,56 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_cronologia_submenu_toggle",
+                            "label": "Mostrar en submenú",
+                            "name": "mostrar_en_submenu",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Si está activo, aparece como subitem de esta sección en el índice lateral.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "40",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "allow_in_bindings": 0,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No",
+                            "ui": 1
+                        },
+                        {
+                            "key": "field_onepage_mod_cronologia_submenu_titulo",
+                            "label": "Título del submenú",
+                            "name": "titulo_submenu",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "Opcional. Si lo dejas vacío, usa el título de cronología.",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_onepage_mod_cronologia_submenu_toggle",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "60",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "Cronología 1926-2026",
+                            "prepend": "",
+                            "append": ""
                         }
                     ],
                     "min": "",

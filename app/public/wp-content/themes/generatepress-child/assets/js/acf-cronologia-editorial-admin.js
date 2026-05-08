@@ -63,6 +63,7 @@
 				wrapMetaRow($td.children('.fiflp-crono-hito-grupo-imagen').first());
 			}
 			setCollapsedTitle($td);
+
 		});
 
 		// Evita arrastre accidental al hacer click: para ordenar hay que mantener pulsado y mover.

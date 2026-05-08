@@ -552,6 +552,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 const href = link.getAttribute('href') || '';
 
                 if (href.charAt(0) !== '#') {
+                    if (isCompact()) {
+                        applyState(false);
+                    }
                     return;
                 }
 
@@ -559,6 +562,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 const target = document.getElementById(id);
 
                 if (!target) {
+                    if (isCompact()) {
+                        applyState(false);
+                    }
                     return;
                 }
 

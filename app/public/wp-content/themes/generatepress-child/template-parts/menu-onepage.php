@@ -41,6 +41,7 @@ $panel_id = 'fiflp-onepage-nav-panel';
 						}
 						$anchor = isset( $sec['anchor'] ) ? (string) $sec['anchor'] : '';
 						$label  = isset( $sec['label'] ) ? (string) $sec['label'] : '';
+						$subitems = isset( $sec['subitems'] ) && is_array( $sec['subitems'] ) ? $sec['subitems'] : array();
 
 						if ( '' === $anchor || '' === $label ) {
 							continue;
@@ -48,6 +49,25 @@ $panel_id = 'fiflp-onepage-nav-panel';
 						?>
 						<li>
 							<a href="#<?php echo esc_attr( $anchor ); ?>" data-onepage-nav-link><?php echo esc_html( $label ); ?></a>
+							<?php if ( ! empty( $subitems ) ) : ?>
+								<ol class="fiflp-onepage-sidebar__sublist">
+									<?php foreach ( $subitems as $sub ) : ?>
+										<?php
+										if ( ! is_array( $sub ) ) {
+											continue;
+										}
+										$sub_anchor = isset( $sub['anchor'] ) ? (string) $sub['anchor'] : '';
+										$sub_label  = isset( $sub['label'] ) ? (string) $sub['label'] : '';
+										if ( '' === $sub_anchor || '' === $sub_label ) {
+											continue;
+										}
+										?>
+										<li>
+											<a href="#<?php echo esc_attr( $sub_anchor ); ?>" data-onepage-nav-link data-onepage-sub-nav-link><?php echo esc_html( $sub_label ); ?></a>
+										</li>
+									<?php endforeach; ?>
+								</ol>
+							<?php endif; ?>
 						</li>
 					<?php endforeach; ?>
 				</ol>

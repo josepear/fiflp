@@ -490,6 +490,50 @@ if ( ! function_exists( 'fiflp_resolve_onepage_seccion_post_id' ) ) {
 
 if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 	/**
+	 * Devuelve un anchor estable para un módulo dentro de una sección onepage.
+	 *
+	 * @param int $row_index Índice 1-based de la fila del flexible "bloques".
+	 * @param int $module_index Índice 1-based del módulo dentro de "modulos_onepage".
+	 * @return string
+	 */
+	function fiflp_onepage_module_anchor( $row_index, $module_index ) {
+		$row_index    = max( 1, (int) $row_index );
+		$module_index = max( 1, (int) $module_index );
+
+		return 'fiflp-onepage-row-' . $row_index . '-mod-' . $module_index;
+	}
+
+	/**
+	 * Obtiene etiqueta de submenú para módulo cronología onepage.
+	 *
+	 * @param array $modulo Módulo ACF.
+	 * @return string
+	 */
+	function fiflp_onepage_cronologia_submenu_label( $modulo ) {
+		if ( ! is_array( $modulo ) ) {
+			return '';
+		}
+
+		$titulo_submenu = trim( (string) ( $modulo['titulo_submenu'] ?? '' ) );
+		if ( '' !== $titulo_submenu ) {
+			return $titulo_submenu;
+		}
+
+		$titulo_cronologia = trim( (string) ( $modulo['titulo_cronologia'] ?? '' ) );
+		if ( '' !== $titulo_cronologia ) {
+			return str_replace( array( "\r\n", "\r", "\n" ), ' ', $titulo_cronologia );
+		}
+
+		$cronologia_ref = $modulo['cronologia'] ?? 0;
+		$cronologia_id  = is_numeric( $cronologia_ref ) ? (int) $cronologia_ref : 0;
+		if ( $cronologia_id > 0 ) {
+			return trim( (string) get_the_title( $cronologia_id ) );
+		}
+
+		return '';
+	}
+
+	/**
 	 * Indica si una sección onepage tiene contenido renderizable (nuevo flexible o legacy).
 	 *
 	 * @param int $seccion_id ID del CPT onepage.
@@ -516,7 +560,7 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 	 * El ancla coincide con get_row_index() en plantilla (índice 1-based de la fila flexible).
 	 *
 	 * @param array $bloques Valor del campo flexible 'bloques'.
-	 * @return array<int, array{id:int, anchor:string, numero:string, titulo:string, label:string, row_index:int}>
+	 * @return array<int, array{id:int, anchor:string, numero:string, titulo:string, label:string, row_index:int, subitems:array<int,array{anchor:string,label:string}>}>
 	 */
 	function fiflp_collect_onepage_nav_sections( $bloques ) {
 		$sections = array();
@@ -551,6 +595,34 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 
 			$row_index = (int) $index + 1;
 			$label     = '' !== $numero ? $numero . '. ' . $titulo : $titulo;
+			$subitems  = array();
+
+			$modulos = get_field( 'modulos_onepage', $seccion_id );
+			if ( is_array( $modulos ) && ! empty( $modulos ) ) {
+				$module_index = 0;
+				foreach ( $modulos as $modulo ) {
+					$module_index++;
+					$layout = isset( $modulo['acf_fc_layout'] ) ? (string) $modulo['acf_fc_layout'] : '';
+					if ( 'cronologia_editorial' !== $layout ) {
+						continue;
+					}
+
+					$mostrar = isset( $modulo['mostrar_en_submenu'] ) ? (bool) $modulo['mostrar_en_submenu'] : false;
+					if ( ! $mostrar ) {
+						continue;
+					}
+
+					$sub_label = fiflp_onepage_cronologia_submenu_label( $modulo );
+					if ( '' === $sub_label ) {
+						continue;
+					}
+
+					$subitems[] = array(
+						'anchor' => fiflp_onepage_module_anchor( $row_index, $module_index ),
+						'label'  => $sub_label,
+					);
+				}
+			}
 
 			$sections[] = array(
 				'id'         => $seccion_id,
@@ -559,6 +631,7 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 				'titulo'     => $titulo,
 				'label'      => $label,
 				'row_index'  => $row_index,
+				'subitems'   => $subitems,
 			);
 		}
 
