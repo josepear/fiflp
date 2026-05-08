@@ -10,11 +10,21 @@ $get_field = static function ( $name, $default = null ) use ( $args ) {
 
 $cronologia_id = (int) $get_field( 'cronologia', 0 );
 $titulo        = '';
+$titulo_modulo = trim( (string) $get_field( 'titulo_cronologia', '' ) );
+$ancho_texto   = strtolower( trim( (string) $get_field( 'ancho_texto_cronologia', 'normal' ) ) );
 $hitos         = array();
+
+if ( ! in_array( $ancho_texto, array( 'estrecho', 'normal', 'ancho' ), true ) ) {
+	$ancho_texto = 'normal';
+}
 
 if ( $cronologia_id > 0 ) {
 	$titulo = get_the_title( $cronologia_id );
 	$hitos  = get_field( 'hitos', $cronologia_id );
+}
+
+if ( '' !== $titulo_modulo ) {
+	$titulo = $titulo_modulo;
 }
 
 // Compatibilidad temporal por si existe contenido del enfoque anterior en una página.
@@ -27,10 +37,10 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 }
 ?>
 
-<section class="bloque cronologia-editorial fade-in">
+<section class="bloque cronologia-editorial cronologia-editorial--texto-<?php echo esc_attr( $ancho_texto ); ?> fade-in">
 	<?php if ( '' !== trim( (string) $titulo ) ) : ?>
 		<header class="cronologia-editorial__header">
-			<h2 class="cronologia-editorial__titulo"><?php echo esc_html( $titulo ); ?></h2>
+			<h2 class="cronologia-editorial__titulo"><?php echo wp_kses_post( nl2br( esc_html( $titulo ) ) ); ?></h2>
 		</header>
 	<?php endif; ?>
 

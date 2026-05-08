@@ -1032,6 +1032,55 @@
                             "bidirectional": 0,
                             "ui": 1,
                             "bidirectional_target": []
+                        },
+                        {
+                            "key": "field_cronologia_editorial_titulo_modulo",
+                            "label": "Título de cronología (opcional)",
+                            "name": "titulo_cronologia",
+                            "aria-label": "",
+                            "type": "textarea",
+                            "instructions": "Si lo rellenas, sustituye el título por defecto. Puedes usar varias líneas.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "rows": 2,
+                            "placeholder": "CRONOLOGÍA\n1926-2026",
+                            "new_lines": "br",
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cronologia_editorial_ancho_texto",
+                            "label": "Ancho del texto",
+                            "name": "ancho_texto_cronologia",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Solo afecta al ancho del texto de los hitos, no a la línea ni a los nodos.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "estrecho": "Estrecho",
+                                "normal": "Normal",
+                                "ancho": "Ancho"
+                            },
+                            "default_value": "normal",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
                         }
                     ],
                     "min": "",

@@ -1404,6 +1404,19 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     --cron-media-col: 400px;
     --cron-axis-col: 20px;
     --cron-gap: 0px;
+    --cron-text-max: 100%;
+}
+
+.bloque.cronologia-editorial.cronologia-editorial--texto-estrecho {
+    --cron-text-max: 76%;
+}
+
+.bloque.cronologia-editorial.cronologia-editorial--texto-normal {
+    --cron-text-max: 100%;
+}
+
+.bloque.cronologia-editorial.cronologia-editorial--texto-ancho {
+    --cron-text-max: 118%;
 }
 
 .cronologia-editorial__header {
@@ -1445,6 +1458,8 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     grid-column: 1;
     margin-top: 5px;
     padding: 0 0 72px 0;
+    max-width: var(--cron-text-max);
+    margin-left: auto;
     text-align: right;
 }
 
