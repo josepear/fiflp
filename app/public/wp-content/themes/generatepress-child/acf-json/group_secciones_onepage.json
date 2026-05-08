@@ -45,6 +45,62 @@
             "append": ""
         },
         {
+            "key": "field_seccion_onepage_titulo_alineacion",
+            "label": "Alineación del título",
+            "name": "titulo_alineacion",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "20",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Izquierda",
+                "right": "Derecha"
+            },
+            "default_value": "left",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_seccion_onepage_titulo_tamano",
+            "label": "Tamaño del título",
+            "name": "titulo_tamano",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "20",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "s": "S",
+                "m": "M",
+                "l": "L",
+                "xl": "XL"
+            },
+            "default_value": "m",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
             "key": "field_seccion_onepage_fondo_color",
             "label": "Color de fondo",
             "name": "fondo_color",
@@ -314,7 +370,7 @@
             },
             "default_value": 10,
             "min": 2,
-            "max": 40,
+            "max": 90,
             "step": 1,
             "placeholder": "",
             "prepend": "",
@@ -585,6 +641,107 @@
                     "label": "Rótulo editorial",
                     "display": "block",
                     "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_rotulo_titulo_lineas",
+                            "label": "Título (líneas)",
+                            "name": "titulo_lineas",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "Opcional. Si añades líneas, se usan en lugar del título único.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "layout": "block",
+                            "pagination": 0,
+                            "min": 0,
+                            "max": 2,
+                            "collapsed": "field_onepage_mod_rotulo_titulo_lineas_texto",
+                            "button_label": "Añadir línea",
+                            "rows_per_page": 20,
+                            "sub_fields": [
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_texto",
+                                    "label": "Texto",
+                                    "name": "texto",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 1,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "50",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_tipografia",
+                                    "label": "Tipografía",
+                                    "name": "tipografia",
+                                    "aria-label": "",
+                                    "type": "select",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "backslanted": "Backslanted",
+                                        "slanted": "Slanted"
+                                    },
+                                    "default_value": "backslanted",
+                                    "return_format": "value",
+                                    "multiple": 0,
+                                    "allow_null": 0,
+                                    "ui": 0,
+                                    "ajax": 0,
+                                    "placeholder": "",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_variante",
+                                    "label": "Variante",
+                                    "name": "variante",
+                                    "aria-label": "",
+                                    "type": "select",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "linea": "Línea",
+                                        "relleno": "Relleno",
+                                        "linea_in": "Línea In",
+                                        "relleno_in": "Relleno In"
+                                    },
+                                    "default_value": "linea",
+                                    "return_format": "value",
+                                    "multiple": 0,
+                                    "allow_null": 0,
+                                    "ui": 0,
+                                    "ajax": 0,
+                                    "placeholder": "",
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                }
+                            ]
+                        },
                         {
                             "key": "field_onepage_mod_rotulo_variante",
                             "label": "Variante",

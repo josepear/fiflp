@@ -12,6 +12,8 @@ if ( $seccion_id <= 0 ) {
 
 $numero   = trim( (string) get_field( 'numero_seccion', $seccion_id ) );
 $titulo   = trim( (string) get_field( 'titulo_seccion', $seccion_id ) );
+$titulo_alineacion = strtolower( trim( (string) get_field( 'titulo_alineacion', $seccion_id ) ) );
+$titulo_tamano = strtolower( trim( (string) get_field( 'titulo_tamano', $seccion_id ) ) );
 $fondo    = strtolower( trim( (string) get_field( 'fondo_color', $seccion_id ) ) );
 $columnas = (string) get_field( 'columnas_texto_desktop', $seccion_id );
 $tipografia_numero = strtolower( trim( (string) get_field( 'tipografia_numero_onepage', $seccion_id ) ) );
@@ -46,6 +48,14 @@ if ( ! in_array( $fondo, $palette, true ) ) {
 
 if ( ! in_array( $columnas, array( '1', '2', '3' ), true ) ) {
 	$columnas = '2';
+}
+
+if ( ! in_array( $titulo_alineacion, array( 'left', 'right' ), true ) ) {
+	$titulo_alineacion = 'left';
+}
+
+if ( ! in_array( $titulo_tamano, array( 's', 'm', 'l', 'xl' ), true ) ) {
+	$titulo_tamano = 'm';
 }
 
 if ( ! in_array( $tipografia_numero, array( 'slanted', 'upright', 'backslanted' ), true ) ) {
@@ -86,12 +96,12 @@ if ( '' === (string) $numero_top_vh_raw ) {
 	$numero_top_vh = 50;
 }
 $numero_offset_x = max( -40, min( 80, $numero_offset_x ) );
-$numero_top_vh   = max( 20, min( 80, $numero_top_vh ) );
+$numero_top_vh   = max( 0, min( 120, $numero_top_vh ) );
 
 if ( '' === (string) $onepage_morph_end_pct_raw || $onepage_morph_end_pct <= 0 ) {
 	$onepage_morph_end_pct = 10;
 }
-$onepage_morph_end_pct = max( 2, min( 40, $onepage_morph_end_pct ) );
+$onepage_morph_end_pct = max( 2, min( 90, $onepage_morph_end_pct ) );
 
 $has_modulos = is_array( $modulos ) && ! empty( $modulos );
 $has_legacy  = is_array( $items ) && ! empty( $items );
@@ -102,13 +112,21 @@ if ( ! $has_modulos && ! $has_legacy ) {
 
 $onepage_row_index = function_exists( 'get_row_index' ) ? (int) get_row_index() : 0;
 $onepage_anchor_id = $onepage_row_index > 0 ? 'fiflp-onepage-row-' . $onepage_row_index : '';
-$outline_gradient_id = 'onepage-outline-gradient-' . $seccion_id . '-' . max( 1, $onepage_row_index );
+$shell_classes = array(
+	'seccion-onepage__shell',
+	'seccion-onepage__cols-' . $columnas,
+	'seccion-onepage__numero-font--' . $tipografia_numero,
+);
+
+if ( '#072728' === $fondo ) {
+	$shell_classes[] = 'seccion-onepage__shell--dark-bg';
+}
 ?>
 
 <section class="bloque seccion-onepage seccion-onepage--fullscreen fade-in"<?php echo '' !== $onepage_anchor_id ? ' id="' . esc_attr( $onepage_anchor_id ) . '"' : ''; ?>>
-	<div class="seccion-onepage__shell seccion-onepage__cols-<?php echo esc_attr( $columnas ); ?> seccion-onepage__numero-font--<?php echo esc_attr( $tipografia_numero ); ?>" style="--onepage-bg: <?php echo esc_attr( $fondo ); ?>; --onepage-number-solid-color: <?php echo esc_attr( $numero_color_relleno ); ?>; --onepage-number-outline-color: <?php echo esc_attr( $numero_color_linea ); ?>; --onepage-number-stroke-width: <?php echo esc_attr( $numero_grosor_linea ); ?>px; --onepage-number-solid-opacity: <?php echo esc_attr( (string) $numero_opacidad_relleno ); ?>; --onepage-number-outline-opacity: <?php echo esc_attr( (string) $numero_opacidad_linea ); ?>; --onepage-number-size-vh: <?php echo esc_attr( (string) $numero_escala_vh ); ?>; --onepage-number-offset-x: <?php echo esc_attr( (string) $numero_offset_x ); ?>%; --onepage-number-top-vh: <?php echo esc_attr( (string) $numero_top_vh ); ?>vh;" data-onepage-shell data-onepage-morph-end="<?php echo esc_attr( (string) ( $onepage_morph_end_pct / 100 ) ); ?>">
+	<div class="<?php echo esc_attr( implode( ' ', $shell_classes ) ); ?>" style="--onepage-bg: <?php echo esc_attr( $fondo ); ?>; --onepage-number-solid-color: <?php echo esc_attr( $numero_color_relleno ); ?>; --onepage-number-outline-color: <?php echo esc_attr( $numero_color_linea ); ?>; --onepage-number-stroke-width: <?php echo esc_attr( $numero_grosor_linea ); ?>px; --onepage-number-solid-opacity: <?php echo esc_attr( (string) $numero_opacidad_relleno ); ?>; --onepage-number-outline-opacity: <?php echo esc_attr( (string) $numero_opacidad_linea ); ?>; --onepage-number-size-vh: <?php echo esc_attr( (string) $numero_escala_vh ); ?>; --onepage-number-offset-x: <?php echo esc_attr( (string) $numero_offset_x ); ?>%; --onepage-number-top-vh: <?php echo esc_attr( (string) $numero_top_vh ); ?>vh;" data-onepage-shell data-onepage-morph-end="<?php echo esc_attr( (string) ( $onepage_morph_end_pct / 100 ) ); ?>">
 		<aside class="seccion-onepage__indice" aria-label="Índice de sección">
-			<h2 class="seccion-onepage__titulo"><?php echo esc_html( $titulo ); ?></h2>
+			<h2 class="seccion-onepage__titulo seccion-onepage__titulo--<?php echo esc_attr( $titulo_alineacion ); ?> seccion-onepage__titulo--tam-<?php echo esc_attr( $titulo_tamano ); ?>"><?php echo esc_html( $titulo ); ?></h2>
 		</aside>
 		<?php if ( '' !== $numero ) : ?>
 			<p class="seccion-onepage__numero-wrap" aria-hidden="true">
@@ -116,13 +134,7 @@ $outline_gradient_id = 'onepage-outline-gradient-' . $seccion_id . '-' . max( 1,
 					<text class="seccion-onepage__numero-text seccion-onepage__numero-text--solid" x="50%" y="64%" text-anchor="middle"><?php echo esc_html( $numero ); ?></text>
 				</svg>
 				<svg class="seccion-onepage__numero seccion-onepage__numero--outline" viewBox="0 0 2400 2400" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
-					<defs>
-						<linearGradient id="<?php echo esc_attr( $outline_gradient_id ); ?>" x1="0%" y1="0%" x2="100%" y2="100%">
-							<stop offset="0%" stop-color="<?php echo esc_attr( $numero_color_linea ); ?>" stop-opacity="1" />
-							<stop offset="100%" stop-color="<?php echo esc_attr( $numero_color_relleno ); ?>" stop-opacity="1" />
-						</linearGradient>
-					</defs>
-					<text class="seccion-onepage__numero-text seccion-onepage__numero-text--outline" x="50%" y="64%" text-anchor="middle" style="stroke: url(#<?php echo esc_attr( $outline_gradient_id ); ?>);"><?php echo esc_html( $numero ); ?></text>
+					<text class="seccion-onepage__numero-text seccion-onepage__numero-text--outline" x="50%" y="64%" text-anchor="middle"><?php echo esc_html( $numero ); ?></text>
 				</svg>
 			</p>
 		<?php endif; ?>

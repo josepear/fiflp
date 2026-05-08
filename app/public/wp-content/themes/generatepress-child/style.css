@@ -857,7 +857,7 @@ body.fiflp-menu-open #page {
     overflow: visible;
 }
 
-.seccion-onepage__shell[style*="#072728"] {
+.seccion-onepage__shell.seccion-onepage__shell--dark-bg {
     --onepage-text-color: #f4f4f0;
 }
 
@@ -883,6 +883,30 @@ body.fiflp-menu-open #page {
     text-transform: uppercase;
     overflow-wrap: anywhere;
     hyphens: auto;
+}
+
+.seccion-onepage__titulo--left {
+    text-align: left;
+}
+
+.seccion-onepage__titulo--right {
+    text-align: right;
+}
+
+.seccion-onepage__titulo--tam-s {
+    font-size: clamp(20px, 2.6vw, 36px);
+}
+
+.seccion-onepage__titulo--tam-m {
+    font-size: clamp(26px, 3.6vw, 52px);
+}
+
+.seccion-onepage__titulo--tam-l {
+    font-size: clamp(32px, 4.4vw, 64px);
+}
+
+.seccion-onepage__titulo--tam-xl {
+    font-size: clamp(38px, 5.2vw, 78px);
 }
 
 .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__titulo {
@@ -965,6 +989,10 @@ body.fiflp-menu-open #page {
     transform: none;
 }
 
+body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
+    opacity: calc(var(--onepage-number-solid-opacity, 1) * 0.3);
+}
+
 .seccion-onepage__numero-text--solid {
     fill: var(--onepage-number-solid-color);
     stroke: none;
@@ -1006,6 +1034,13 @@ body.fiflp-menu-open #page {
 .seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque {
     margin: 0;
     max-width: 100%;
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.fade-in,
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.fade-in.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
 }
 
 /* Ítems del repetidor en columna única; el “2/3 columnas” es flujo tipográfico multicolona (texto que pasa de columna en columna y se equilibra). */
@@ -1326,10 +1361,10 @@ body.fiflp-menu-open #page {
     }
 
     .seccion-onepage__numero-wrap {
-        position: absolute;
-        right: -6vw;
-        top: 52%;
-        transform: translateY(-50%);
+        position: sticky !important;
+        top: var(--onepage-number-top-vh, 50vh);
+        right: auto;
+        transform: translate(var(--onepage-number-offset-x, 36%), -50%);
         margin: 0;
         z-index: 1;
     }
@@ -3865,6 +3900,11 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 
 .editorial > .bloque:last-child {
     margin-bottom: 0 !important;
+}
+
+/* Ajuste puntual de sticky para pruebas: solo row-3 */
+#fiflp-onepage-row-3 .seccion-onepage__shell {
+    padding-bottom: calc(45vh + var(--onepage-pad-x)) !important;
 }
 
 main.editorial {

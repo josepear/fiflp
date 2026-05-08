@@ -158,6 +158,57 @@
     min-width: 0;
 }
 
+/* Prólogos (onepage + clásico): foto izquierda, nombre derecha, cargo debajo del nombre */
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields,
+.post-type-fiflp_onepage_sec .layout[data-layout="prologos"] .acf-field[data-key="field_onepage_mod_prologos_items"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields {
+    display: grid !important;
+    grid-template-columns: 150px minmax(0, 1fr);
+    grid-template-areas:
+        "foto nombre"
+        "foto cargo"
+        "contenido contenido";
+    column-gap: 14px;
+    row-gap: 10px;
+    align-items: start;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="foto"],
+.post-type-fiflp_onepage_sec .layout[data-layout="prologos"] .acf-field[data-key="field_onepage_mod_prologos_items"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="foto"] {
+    grid-area: foto;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="nombre"],
+.post-type-fiflp_onepage_sec .layout[data-layout="prologos"] .acf-field[data-key="field_onepage_mod_prologos_items"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="nombre"] {
+    grid-area: nombre;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="cargo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="prologos"] .acf-field[data-key="field_onepage_mod_prologos_items"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="cargo"] {
+    grid-area: cargo;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="contenido"],
+.post-type-fiflp_onepage_sec .layout[data-layout="prologos"] .acf-field[data-key="field_onepage_mod_prologos_items"] .acf-repeater tr.acf-row:not(.-collapsed) > td.acf-fields > .acf-field[data-name="contenido"] {
+    grid-area: contenido;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-field[data-name="foto"] .acf-image-uploader .image-wrap,
+.post-type-fiflp_onepage_sec .layout[data-layout="prologos"] .acf-field[data-key="field_onepage_mod_prologos_items"] .acf-repeater .acf-field[data-name="foto"] .acf-image-uploader .image-wrap {
+    width: 150px !important;
+    height: 150px !important;
+    min-width: 150px !important;
+    min-height: 150px !important;
+    max-width: 150px !important;
+    max-height: 150px !important;
+}
+
+.post-type-page .layout[data-layout="prologos"] .acf-field[data-key="field_prologos_prologos"] .acf-repeater .acf-field[data-name="foto"] .acf-image-uploader .image-wrap img,
+.post-type-fiflp_onepage_sec .layout[data-layout="prologos"] .acf-field[data-key="field_onepage_mod_prologos_items"] .acf-repeater .acf-field[data-name="foto"] .acf-image-uploader .image-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
 .post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-texto,
 .post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen {
     flex: 1 1 0;
@@ -242,10 +293,11 @@
 }
 
 .post-type-page .layout[data-layout="prologos"] .fiflp-prologo-item-grupo-imagen .acf-field[data-name="foto"] img {
-    max-height: 200px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
+    width: 150px;
+    height: 150px;
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: cover;
 }
 
 /* Plegado */

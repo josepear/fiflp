@@ -658,6 +658,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         shells.forEach((shell) => {
+            if (shell.dataset.onepageNarrativeInit === '1') {
+                if (typeof shell._fiflpSyncNumberState === 'function') {
+                    shell._fiflpSyncNumberState();
+                }
+                return;
+            }
+
             const items = Array.from(shell.querySelectorAll('[data-onepage-item]'));
             const moduleItems = Array.from(shell.querySelectorAll('.seccion-onepage__modulo'));
             const narrativeItems = items.length ? items : moduleItems;
@@ -698,6 +705,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 shell.classList.add('is-title-visible');
                 shell.classList.toggle('is-content-visible', revealProgress > 0.01);
             };
+            shell._fiflpSyncNumberState = syncNumberState;
 
             const firstItem = narrativeItems[0];
             if (firstItem) {
@@ -714,6 +722,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             shell.classList.add('seccion-onepage--js');
+            shell.dataset.onepageNarrativeInit = '1';
             shell.style.setProperty('--onepage-reveal-progress', '0');
             shell.style.setProperty('--onepage-morph-progress', '0');
             syncNumberState();
@@ -767,6 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     };
 
+
     scheduleRotuloFit();
 
     if (document.fonts && typeof document.fonts.ready === 'object') {
@@ -776,6 +786,10 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener('resize', scheduleRotuloFit, { passive: true });
     initOnepageLayoutNav();
     initOnepageNarrative();
+    window.addEventListener('load', initOnepageNarrative, { once: true });
+    window.addEventListener('pageshow', initOnepageNarrative);
+    requestAnimationFrame(() => requestAnimationFrame(initOnepageNarrative));
+    window.setTimeout(initOnepageNarrative, 180);
 
     // =========================
     // LIGHTBOX
