@@ -17,6 +17,11 @@ $titulo                 = $using_direct_data ? (string) ( $hero_data['titulo'] ?
 $texto                  = $using_direct_data ? (string) ( $hero_data['texto'] ?? '' ) : (string) get_sub_field( 'texto' );
 $boton_capitulos_texto  = $using_direct_data ? trim( (string) ( $hero_data['boton_capitulos_texto'] ?? '' ) ) : trim( (string) get_sub_field( 'boton_capitulos_texto' ) );
 $boton_capitulos_url    = $using_direct_data ? trim( (string) ( $hero_data['boton_capitulos_url'] ?? '' ) ) : trim( (string) get_sub_field( 'boton_capitulos_url' ) );
+$boton_capitulos_url_libre = $using_direct_data ? trim( (string) ( $hero_data['boton_capitulos_url_libre'] ?? '' ) ) : trim( (string) get_sub_field( 'boton_capitulos_url_libre' ) );
+$rotulo_titulo_lineas   = $using_direct_data ? ( $hero_data['rotulo_titulo_lineas'] ?? array() ) : get_sub_field( 'rotulo_titulo_lineas' );
+$rotulo_etiqueta_html   = $using_direct_data ? trim( (string) ( $hero_data['rotulo_etiqueta_html'] ?? '' ) ) : trim( (string) get_sub_field( 'rotulo_etiqueta_html' ) );
+$rotulo_interlineado    = $using_direct_data ? ( $hero_data['rotulo_interlineado'] ?? null ) : get_sub_field( 'rotulo_interlineado' );
+$rotulo_espaciado_letras = $using_direct_data ? ( $hero_data['rotulo_espaciado_letras'] ?? null ) : get_sub_field( 'rotulo_espaciado_letras' );
 $link_pdf               = $using_direct_data ? ( $hero_data['link_pdf'] ?? '' ) : get_sub_field( 'link_pdf' );
 $link_epub              = $using_direct_data ? ( $hero_data['link_epub'] ?? '' ) : get_sub_field( 'link_epub' );
 $logos                  = $using_direct_data ? ( $hero_data['logos'] ?? array() ) : get_sub_field( 'logos' );
@@ -27,6 +32,10 @@ if ( '' === $boton_capitulos_url ) {
 	$boton_capitulos_url = '/prologos/';
 }
 
+if ( '' !== $boton_capitulos_url_libre ) {
+	$boton_capitulos_url = $boton_capitulos_url_libre;
+}
+
 if ( '' === $boton_capitulos_texto ) {
 	$boton_capitulos_texto = 'IR A LOS CAPÍTULOS';
 }
@@ -35,6 +44,7 @@ if ( '' === $boton_capitulos_texto ) {
 $boton_capitulos_visible = ! empty( $boton_capitulos_texto ) && ! empty( $boton_capitulos_url );
 $pdf_visible   = ! empty( $link_pdf );
 $epub_visible  = ! empty( $link_epub );
+$rotulo_activo = is_array( $rotulo_titulo_lineas ) && ! empty( $rotulo_titulo_lineas );
 
 // Si no hay datos mínimos, no renderiza.
 $color_fondo = sanitize_hex_color( $color_fondo );
@@ -77,8 +87,23 @@ $bg_style = ! empty( $bg_rules ) ? 'style="' . esc_attr( implode( '; ', $bg_rule
 			</div>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $titulo ) ) : ?>
-			<h1 class="home-hero-title home-hero__reveal home-hero__reveal--title"><?php echo esc_html( $titulo ); ?></h1>
+		<?php if ( ! empty( $titulo ) || $rotulo_activo ) : ?>
+			<?php if ( $rotulo_activo ) : ?>
+				<div class="home-hero-title home-hero-title--rotulo home-hero__reveal home-hero__reveal--title">
+					<?php
+					$hero_rotulo_module = array(
+						'titulo' => $titulo,
+						'titulo_lineas' => $rotulo_titulo_lineas,
+						'etiqueta_html' => '' !== $rotulo_etiqueta_html ? $rotulo_etiqueta_html : 'h1',
+						'interlineado' => $rotulo_interlineado,
+						'espaciado_letras' => $rotulo_espaciado_letras,
+					);
+					get_template_part( 'template-parts/bloques/rotulo-editorial', null, array( 'module' => $hero_rotulo_module ) );
+					?>
+				</div>
+			<?php else : ?>
+				<h1 class="home-hero-title home-hero__reveal home-hero__reveal--title"><?php echo esc_html( $titulo ); ?></h1>
+			<?php endif; ?>
 		<?php endif; ?>
 
 		<?php if ( ! empty( $texto ) ) : ?>
@@ -86,15 +111,15 @@ $bg_style = ! empty( $bg_rules ) ? 'style="' . esc_attr( implode( '; ', $bg_rule
 		<?php endif; ?>
 
 		<?php if ( $boton_capitulos_visible ) : ?>
-			<a class="home-hero__button home-hero__button--rotulo home-hero__reveal home-hero__reveal--button" href="<?php echo esc_url( $boton_capitulos_url ); ?>"><span><?php echo esc_html( $boton_capitulos_texto ); ?></span></a>
+			<a class="home-hero__button home-hero__reveal home-hero__reveal--button" href="<?php echo esc_url( $boton_capitulos_url ); ?>"><span><?php echo esc_html( $boton_capitulos_texto ); ?></span></a>
 		<?php endif; ?>
 
 		<div class="home-hero__subactions home-hero__reveal home-hero__reveal--subactions">
 			<?php if ( $pdf_visible ) : ?>
-				<a class="home-hero__small-button home-hero__small-button--rotulo" href="<?php echo esc_url( $link_pdf ); ?>"><span>Descargar PDF</span></a>
+				<a class="home-hero__small-button" href="<?php echo esc_url( $link_pdf ); ?>"><span>Descargar PDF</span></a>
 			<?php endif; ?>
 			<?php if ( $epub_visible ) : ?>
-				<a class="home-hero__small-button home-hero__small-button--rotulo" href="<?php echo esc_url( $link_epub ); ?>"><span>Descargar EPUB</span></a>
+				<a class="home-hero__small-button" href="<?php echo esc_url( $link_epub ); ?>"><span>Descargar EPUB</span></a>
 			<?php endif; ?>
 		</div>
 	</div>

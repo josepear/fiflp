@@ -828,6 +828,28 @@
                                     "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
                                 },
                                 {
+                                    "key": "field_onepage_mod_rotulo_titulo_lineas_color_texto",
+                                    "label": "Color texto",
+                                    "name": "color_texto",
+                                    "aria-label": "",
+                                    "type": "color_picker",
+                                    "instructions": "Opcional. Color del texto del titular SVG (independiente del trazo/relleno).",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "25",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "enable_opacity": 0,
+                                    "return_format": "string",
+                                    "custom_palette_source": "",
+                                    "palette_colors": "",
+                                    "show_color_wheel": true,
+                                    "parent_repeater": "field_onepage_mod_rotulo_titulo_lineas"
+                                },
+                                {
                                     "key": "field_onepage_mod_rotulo_titulo_lineas_alineacion_rotulo",
                                     "label": "Alineación rótulo",
                                     "name": "alineacion_rotulo",
@@ -1122,7 +1144,7 @@
                             },
                             "default_value": 0.86,
                             "min": 0.6,
-                            "max": 1.4,
+                            "max": 2,
                             "allow_in_bindings": 0,
                             "placeholder": "",
                             "step": 0.01,
@@ -1468,6 +1490,117 @@
                             "placeholder": "",
                             "prepend": "",
                             "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_onepage_separador": {
+                    "key": "layout_onepage_separador",
+                    "name": "separador",
+                    "label": "Separador",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_separador_alto",
+                            "label": "Alto del separador (px)",
+                            "name": "alto",
+                            "aria-label": "",
+                            "type": "number",
+                            "instructions": "Espacio vertical del separador.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "30",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": 80,
+                            "min": 0,
+                            "max": 600,
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "step": 1,
+                            "prepend": "",
+                            "append": "px"
+                        },
+                        {
+                            "key": "field_onepage_mod_separador_mostrar_linea",
+                            "label": "Mostrar línea",
+                            "name": "mostrar_linea",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "20",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "allow_in_bindings": 0,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No",
+                            "ui": 1
+                        },
+                        {
+                            "key": "field_onepage_mod_separador_color_linea",
+                            "label": "Color de línea",
+                            "name": "color_linea",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_onepage_mod_separador_mostrar_linea",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "#0f2d30",
+                            "enable_opacity": 0,
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_onepage_mod_separador_grosor_linea",
+                            "label": "Grosor de línea",
+                            "name": "grosor_linea",
+                            "aria-label": "",
+                            "type": "number",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_onepage_mod_separador_mostrar_linea",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": 1,
+                            "min": 1,
+                            "max": 12,
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "step": 1,
+                            "prepend": "",
+                            "append": "px"
                         }
                     ],
                     "min": "",

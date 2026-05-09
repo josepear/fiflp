@@ -765,6 +765,11 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		'texto'                 => '',
 		'boton_capitulos_texto' => '',
 		'boton_capitulos_url'   => '',
+		'boton_capitulos_url_libre' => '',
+		'rotulo_titulo_lineas'  => array(),
+		'rotulo_etiqueta_html'  => 'h1',
+		'rotulo_interlineado'   => 0.86,
+		'rotulo_espaciado_letras' => 0.01,
 		'link_pdf'              => '',
 		'link_epub'             => '',
 		'logos'                 => array(),
@@ -784,6 +789,11 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		'texto'                 => (string) get_field( 'home_hero_texto', 'option' ),
 		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', 'option' ),
 		'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( get_field( 'home_hero_boton_capitulos_url', 'option' ) ),
+		'boton_capitulos_url_libre' => trim( (string) get_field( 'home_hero_boton_capitulos_url_libre', 'option' ) ),
+		'rotulo_titulo_lineas'  => get_field( 'home_hero_rotulo_titulo_lineas', 'option' ),
+		'rotulo_etiqueta_html'  => (string) get_field( 'home_hero_rotulo_etiqueta_html', 'option' ),
+		'rotulo_interlineado'   => get_field( 'home_hero_rotulo_interlineado', 'option' ),
+		'rotulo_espaciado_letras' => get_field( 'home_hero_rotulo_espaciado_letras', 'option' ),
 		'link_pdf'              => get_field( 'home_hero_link_pdf', 'option' ),
 		'link_epub'             => get_field( 'home_hero_link_epub', 'option' ),
 		'logos'                 => get_field( 'home_hero_logos', 'option' ),
@@ -797,6 +807,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		|| '' !== trim( $option_hero['texto'] )
 		|| '' !== trim( $option_hero['boton_capitulos_texto'] )
 		|| '' !== trim( $option_hero['boton_capitulos_url'] )
+		|| '' !== trim( $option_hero['boton_capitulos_url_libre'] )
+		|| ( is_array( $option_hero['rotulo_titulo_lineas'] ) && ! empty( $option_hero['rotulo_titulo_lineas'] ) )
 		|| ! empty( $option_hero['link_pdf'] )
 		|| ! empty( $option_hero['link_epub'] )
 		|| ! empty( $option_hero['logos'] );
@@ -819,6 +831,11 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		'texto'                 => (string) get_field( 'home_hero_texto', $page_id ),
 		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', $page_id ),
 		'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( get_field( 'home_hero_boton_capitulos_url', $page_id ) ),
+		'boton_capitulos_url_libre' => trim( (string) get_field( 'home_hero_boton_capitulos_url_libre', $page_id ) ),
+		'rotulo_titulo_lineas'  => get_field( 'home_hero_rotulo_titulo_lineas', $page_id ),
+		'rotulo_etiqueta_html'  => (string) get_field( 'home_hero_rotulo_etiqueta_html', $page_id ),
+		'rotulo_interlineado'   => get_field( 'home_hero_rotulo_interlineado', $page_id ),
+		'rotulo_espaciado_letras' => get_field( 'home_hero_rotulo_espaciado_letras', $page_id ),
 		'link_pdf'              => get_field( 'home_hero_link_pdf', $page_id ),
 		'link_epub'             => get_field( 'home_hero_link_epub', $page_id ),
 		'logos'                 => get_field( 'home_hero_logos', $page_id ),
@@ -832,6 +849,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 		|| '' !== trim( $legacy_page_hero['texto'] )
 		|| '' !== trim( $legacy_page_hero['boton_capitulos_texto'] )
 		|| '' !== trim( $legacy_page_hero['boton_capitulos_url'] )
+		|| '' !== trim( $legacy_page_hero['boton_capitulos_url_libre'] )
+		|| ( is_array( $legacy_page_hero['rotulo_titulo_lineas'] ) && ! empty( $legacy_page_hero['rotulo_titulo_lineas'] ) )
 		|| ! empty( $legacy_page_hero['link_pdf'] )
 		|| ! empty( $legacy_page_hero['link_epub'] )
 		|| ! empty( $legacy_page_hero['logos'] );
@@ -860,6 +879,11 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 				'texto'                 => isset( $row['texto'] ) ? (string) $row['texto'] : '',
 				'boton_capitulos_texto' => isset( $row['boton_capitulos_texto'] ) ? (string) $row['boton_capitulos_texto'] : '',
 				'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( $row['boton_capitulos_url'] ?? '' ),
+				'boton_capitulos_url_libre' => isset( $row['boton_capitulos_url_libre'] ) ? trim( (string) $row['boton_capitulos_url_libre'] ) : '',
+				'rotulo_titulo_lineas'  => $row['rotulo_titulo_lineas'] ?? array(),
+				'rotulo_etiqueta_html'  => isset( $row['rotulo_etiqueta_html'] ) ? (string) $row['rotulo_etiqueta_html'] : 'h1',
+				'rotulo_interlineado'   => $row['rotulo_interlineado'] ?? 0.86,
+				'rotulo_espaciado_letras' => $row['rotulo_espaciado_letras'] ?? 0.01,
 				'link_pdf'              => $row['link_pdf'] ?? '',
 				'link_epub'             => $row['link_epub'] ?? '',
 				'logos'                 => isset( $row['logos'] ) && is_array( $row['logos'] ) ? $row['logos'] : array(),
@@ -873,6 +897,8 @@ function fiflp_get_home_hero_data( $page_id = 0 ) {
 				|| '' !== trim( $legacy_flexible_hero['texto'] )
 				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_texto'] )
 				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_url'] )
+				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_url_libre'] )
+				|| ( is_array( $legacy_flexible_hero['rotulo_titulo_lineas'] ) && ! empty( $legacy_flexible_hero['rotulo_titulo_lineas'] ) )
 				|| ! empty( $legacy_flexible_hero['link_pdf'] )
 				|| ! empty( $legacy_flexible_hero['link_epub'] )
 				|| ! empty( $legacy_flexible_hero['logos'] );
@@ -1247,6 +1273,173 @@ add_action(
 							'type' => 'text',
 						),
 						array(
+							'key' => 'field_home_hero_portada_rotulo_titulo_lineas',
+							'label' => 'Rótulo editorial del título',
+							'name' => 'home_hero_rotulo_titulo_lineas',
+							'type' => 'repeater',
+							'instructions' => 'Si añades filas, sustituye el título simple por rótulo editorial.',
+							'layout' => 'block',
+							'button_label' => 'Añadir línea de rótulo',
+							'sub_fields' => array(
+								array(
+									'key' => 'field_home_hero_rotulo_linea_titulo',
+									'label' => 'Título',
+									'name' => 'titulo',
+									'type' => 'text',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_supertitulo',
+									'label' => 'Supertítulo',
+									'name' => 'supertitulo',
+									'type' => 'text',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_variante_titulo',
+									'label' => 'Variante título',
+									'name' => 'variante_titulo',
+									'type' => 'button_group',
+									'choices' => array( 'linea' => 'Línea', 'relleno' => 'Relleno', 'linea_inversa' => 'Línea In', 'relleno_inverso' => 'Relleno In' ),
+									'default_value' => 'linea',
+									'layout' => 'horizontal',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_variante_supertitulo',
+									'label' => 'Variante supertítulo',
+									'name' => 'variante_supertitulo',
+									'type' => 'button_group',
+									'choices' => array( 'linea' => 'Línea', 'relleno' => 'Relleno', 'linea_inversa' => 'Línea In', 'relleno_inverso' => 'Relleno In' ),
+									'default_value' => 'linea',
+									'layout' => 'horizontal',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_tamano',
+									'label' => 'Tamaño',
+									'name' => 'tamano',
+									'type' => 'button_group',
+									'choices' => array( 's' => 'S', 'm' => 'M', 'l' => 'L', 'xl' => 'XL' ),
+									'default_value' => 'm',
+									'layout' => 'horizontal',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_color_trazo',
+									'label' => 'Color del trazo',
+									'name' => 'color_trazo',
+									'type' => 'color_picker',
+									'default_value' => '#0f2d30',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_color_fondo',
+									'label' => 'Color de fondo',
+									'name' => 'color_fondo',
+									'type' => 'color_picker',
+									'default_value' => '#fcfcf8',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_color_texto',
+									'label' => 'Color del texto',
+									'name' => 'color_texto',
+									'type' => 'color_picker',
+									'instructions' => 'Opcional. Cambia solo el texto del rótulo.',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_alineacion_rotulo',
+									'label' => 'Alineación del rótulo',
+									'name' => 'alineacion_rotulo',
+									'type' => 'button_group',
+									'choices' => array( 'left' => '←', 'center' => '↔', 'right' => '→' ),
+									'default_value' => 'left',
+									'layout' => 'horizontal',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_subtitulo',
+									'label' => 'Subtítulo',
+									'name' => 'subtitulo',
+									'type' => 'text',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_tamano_subtitulo',
+									'label' => 'Tamaño subtítulo',
+									'name' => 'tamano_subtitulo',
+									'type' => 'button_group',
+									'choices' => array( 's' => 'S', 'm' => 'M', 'l' => 'L' ),
+									'default_value' => 'm',
+									'layout' => 'horizontal',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_color_subtitulo',
+									'label' => 'Color subtítulo',
+									'name' => 'color_subtitulo',
+									'type' => 'color_picker',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_alineacion_subtitulo',
+									'label' => 'Alineación subtítulo',
+									'name' => 'alineacion_subtitulo',
+									'type' => 'button_group',
+									'choices' => array( 'left' => '←', 'center' => '↔', 'right' => '→' ),
+									'default_value' => 'left',
+									'layout' => 'horizontal',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_ancho_subtitulo',
+									'label' => 'Ancho subtítulo',
+									'name' => 'ancho_subtitulo',
+									'type' => 'button_group',
+									'choices' => array( 'igual_rotulo' => '=', 'estrecho' => '▭', 'ancho' => '▯' ),
+									'default_value' => 'igual_rotulo',
+									'layout' => 'horizontal',
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_interlineado_subtitulo',
+									'label' => 'Interlineado subtítulo',
+									'name' => 'interlineado_subtitulo',
+									'type' => 'number',
+									'default_value' => 1.6,
+									'step' => 0.05,
+									'min' => 1,
+									'max' => 2.2,
+								),
+								array(
+									'key' => 'field_home_hero_rotulo_linea_espaciado_letras_subtitulo',
+									'label' => 'Espaciado letras subtítulo',
+									'name' => 'espaciado_letras_subtitulo',
+									'type' => 'number',
+									'default_value' => 0,
+									'step' => 0.005,
+									'min' => -0.05,
+									'max' => 0.2,
+								),
+							),
+						),
+						array(
+							'key' => 'field_home_hero_rotulo_etiqueta_html',
+							'label' => 'Etiqueta HTML del rótulo',
+							'name' => 'home_hero_rotulo_etiqueta_html',
+							'type' => 'select',
+							'choices' => array( 'h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4' ),
+							'default_value' => 'h1',
+						),
+						array(
+							'key' => 'field_home_hero_rotulo_interlineado',
+							'label' => 'Interlineado del rótulo',
+							'name' => 'home_hero_rotulo_interlineado',
+							'type' => 'number',
+							'default_value' => 0.86,
+							'step' => 0.01,
+							'min' => 0.6,
+							'max' => 2,
+						),
+						array(
+							'key' => 'field_home_hero_rotulo_espaciado_letras',
+							'label' => 'Espaciado de letras del rótulo',
+							'name' => 'home_hero_rotulo_espaciado_letras',
+							'type' => 'number',
+							'default_value' => 0.01,
+							'step' => 0.005,
+							'min' => -0.05,
+							'max' => 0.2,
+						),
+						array(
 							'key' => 'field_home_hero_portada_texto',
 							'label' => 'Texto',
 							'name' => 'home_hero_texto',
@@ -1273,6 +1466,13 @@ add_action(
 							'allow_archives' => 0,
 							'multiple' => 0,
 							'allow_null' => 1,
+						),
+						array(
+							'key' => 'field_home_hero_portada_boton_url_libre',
+							'label' => 'URL libre botón capítulos',
+							'name' => 'home_hero_boton_capitulos_url_libre',
+							'type' => 'url',
+							'instructions' => 'Opcional. Si lo rellenas, esta URL tiene prioridad sobre la página seleccionada.',
 						),
 						array(
 							'key' => 'field_home_hero_portada_link_pdf',
@@ -2019,18 +2219,30 @@ add_action(
 
 			/* Regla global: button_group ACF con tamaño compacto uniforme y esquinas cuadradas */
 			.acf-postbox .acf-button-group {
-				display: flex;
-				flex-wrap: wrap;
+				display: grid;
+				grid-auto-flow: column;
+				grid-auto-columns: minmax(0, 1fr);
+				width: 100%;
 				border-radius: 0 !important;
+				overflow: hidden;
+				box-sizing: border-box;
 			}
 
 			.acf-postbox .acf-button-group label {
+				display: flex;
+				align-items: center;
+				justify-content: center;
 				padding: 0 10px !important;
 				min-height: 30px !important;
-				line-height: 28px !important;
+				line-height: 1.2 !important;
 				height: auto !important;
 				font-size: 13px !important;
 				border-radius: 0 !important;
+				white-space: nowrap;
+				text-align: center;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				min-width: 0;
 			}
 
 			.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
@@ -2084,7 +2296,7 @@ add_action(
 			/* Onepage rótulo: tipografía + variante en la misma línea, ancho completo y botones cuadrados */
 			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
 				display: grid;
-				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+				grid-template-columns: repeat(3, minmax(0, 1fr));
 				gap: 10px 12px;
 			}
 
@@ -2103,8 +2315,24 @@ add_action(
 				grid-column: 1;
 			}
 
-			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="tamano"] {
 				grid-column: 2;
+			}
+
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
+				grid-column: 3;
+			}
+
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="color_trazo"] {
+				grid-column: 1;
+			}
+
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="color_fondo"] {
+				grid-column: 2;
+			}
+
+			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="color_texto"] {
+				grid-column: 3;
 			}
 
 			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group {

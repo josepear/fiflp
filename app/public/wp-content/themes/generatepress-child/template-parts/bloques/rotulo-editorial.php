@@ -8,11 +8,40 @@ $get_field = static function ( $name, $default = null ) use ( $args ) {
 	return null !== $value ? $value : $default;
 };
 
+$normalize_color = static function ( $raw, $default = '' ) {
+	if ( is_array( $raw ) ) {
+		if ( isset( $raw['color'] ) ) {
+			$raw = (string) $raw['color'];
+		} elseif ( isset( $raw['value'] ) ) {
+			$raw = (string) $raw['value'];
+		} else {
+			$raw = '';
+		}
+	}
+
+	$raw = trim( (string) $raw );
+	if ( '' === $raw ) {
+		return $default;
+	}
+
+	$hex = sanitize_hex_color( $raw );
+	if ( $hex ) {
+		return $hex;
+	}
+
+	if ( 1 === preg_match( '/^rgba?\\([0-9\\s.,%]+\\)$/i', $raw ) ) {
+		return $raw;
+	}
+
+	return $default;
+};
+
 $supertitulo = trim( (string) $get_field( 'supertitulo', '' ) );
 $titulo      = trim( (string) $get_field( 'titulo', '' ) );
 $subtitulo   = trim( (string) $get_field( 'subtitulo', '' ) );
 $tamano_subtitulo = strtolower( trim( (string) $get_field( 'tamano_subtitulo', '' ) ) );
-$color_subtitulo = sanitize_hex_color( (string) $get_field( 'color_subtitulo', '' ) );
+$color_subtitulo = $normalize_color( $get_field( 'color_subtitulo', '' ), '' );
+$color_texto = $normalize_color( $get_field( 'color_texto', '' ), '' );
 $interlineado_subtitulo_raw = $get_field( 'interlineado_subtitulo', null );
 $espaciado_letras_subtitulo_raw = $get_field( 'espaciado_letras_subtitulo', null );
 $variante_supertitulo = trim( (string) $get_field( 'variante_supertitulo', '' ) );
@@ -23,8 +52,8 @@ $variante    = trim( (string) $get_field( 'variante', '' ) );
 $etiqueta    = trim( (string) $get_field( 'etiqueta_html', '' ) );
 $tamano      = trim( (string) $get_field( 'tamano', '' ) );
 $alineacion_rotulo = strtolower( trim( (string) $get_field( 'alineacion_rotulo', '' ) ) );
-$color_trazo = sanitize_hex_color( (string) $get_field( 'color_trazo', '' ) );
-$color_fondo = sanitize_hex_color( (string) $get_field( 'color_fondo', '' ) );
+$color_trazo = $normalize_color( $get_field( 'color_trazo', '' ), '' );
+$color_fondo = $normalize_color( $get_field( 'color_fondo', '' ), '' );
 
 $interlineado_raw     = $get_field( 'interlineado', null );
 $espaciado_letras_raw = $get_field( 'espaciado_letras', null );
@@ -138,7 +167,7 @@ if ( ! $color_fondo ) {
 }
 
 $interlineado = is_numeric( $interlineado_raw ) ? (float) $interlineado_raw : 0.86;
-$interlineado = max( 0.6, min( 1.4, $interlineado ) );
+$interlineado = max( 0.6, min( 2, $interlineado ) );
 
 $espaciado_letras = is_numeric( $espaciado_letras_raw ) ? (float) $espaciado_letras_raw : 0.01;
 $espaciado_letras = max( -0.05, min( 0.2, $espaciado_letras ) );
@@ -192,6 +221,9 @@ $style_rules         = array(
 if ( $color_subtitulo ) {
 	$style_rules[] = '--rotulo-subtitulo-color:' . $color_subtitulo;
 }
+if ( $color_texto ) {
+	$style_rules[] = '--rotulo-text-color:' . $color_texto;
+}
 
 $titulo_lineas = array();
 $bloques_rotulo = array();
@@ -216,11 +248,12 @@ if ( is_array( $titulo_lineas_raw ) ) {
 			$row_ancho_sub  = isset( $linea_raw['ancho_subtitulo'] ) ? trim( (string) $linea_raw['ancho_subtitulo'] ) : $ancho_subtitulo;
 			$row_align_sub  = isset( $linea_raw['alineacion_subtitulo'] ) ? trim( (string) $linea_raw['alineacion_subtitulo'] ) : $alineacion_subtitulo;
 			$row_tam_sub    = isset( $linea_raw['tamano_subtitulo'] ) ? strtolower( trim( (string) $linea_raw['tamano_subtitulo'] ) ) : $tamano_subtitulo;
-			$row_color_sub  = sanitize_hex_color( (string) ( $linea_raw['color_subtitulo'] ?? '' ) );
+			$row_color_sub  = $normalize_color( $linea_raw['color_subtitulo'] ?? '', '' );
+			$row_color_text = $normalize_color( $linea_raw['color_texto'] ?? '', '' );
 			$row_inter_sub  = isset( $linea_raw['interlineado_subtitulo'] ) && is_numeric( $linea_raw['interlineado_subtitulo'] ) ? (float) $linea_raw['interlineado_subtitulo'] : $interlineado_subtitulo;
 			$row_esp_sub    = isset( $linea_raw['espaciado_letras_subtitulo'] ) && is_numeric( $linea_raw['espaciado_letras_subtitulo'] ) ? (float) $linea_raw['espaciado_letras_subtitulo'] : $espaciado_letras_subtitulo;
-			$row_color_trazo = sanitize_hex_color( (string) ( $linea_raw['color_trazo'] ?? '' ) );
-			$row_color_fondo = sanitize_hex_color( (string) ( $linea_raw['color_fondo'] ?? '' ) );
+			$row_color_trazo = $normalize_color( $linea_raw['color_trazo'] ?? '', '' );
+			$row_color_fondo = $normalize_color( $linea_raw['color_fondo'] ?? '', '' );
 			$row_align_rotulo = isset( $linea_raw['alineacion_rotulo'] ) ? strtolower( trim( (string) $linea_raw['alineacion_rotulo'] ) ) : $alineacion_rotulo;
 
 			if ( ! in_array( $row_var_titulo, $variantes_validas, true ) ) {
@@ -258,6 +291,7 @@ if ( is_array( $titulo_lineas_raw ) ) {
 				'alineacion_subtitulo' => $row_align_sub,
 				'tamano_subtitulo' => $row_tam_sub,
 				'color_subtitulo' => $row_color_sub,
+				'color_texto' => $row_color_text,
 				'interlineado_subtitulo' => $row_inter_sub,
 				'espaciado_letras_subtitulo' => $row_esp_sub,
 				'color_trazo' => $row_color_trazo ?: $color_trazo,
@@ -317,6 +351,9 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 				if ( $row['color_subtitulo'] ) {
 					$row_style[] = '--rotulo-subtitulo-color:' . $row['color_subtitulo'];
 				}
+				if ( ! empty( $row['color_texto'] ) ) {
+					$row_style[] = '--rotulo-text-color:' . $row['color_texto'];
+				}
 				$row_clases = array(
 					'rotulo-editorial',
 					'rotulo-editorial--' . $row['variante_titulo'],
@@ -333,20 +370,20 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 				$row_marco_upper = $row_es_relleno_super ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
 				?>
 				<div class="<?php echo esc_attr( implode( ' ', $row_clases ) ); ?>" style="<?php echo esc_attr( implode( '; ', $row_style ) ); ?>">
-					<?php if ( '' !== $row['supertitulo'] ) : ?>
-						<div class="rotulo-editorial__franja rotulo-editorial__franja--superior<?php echo $row_es_inverso_super ? ' is-inversa' : ''; ?><?php echo $row_es_relleno_super ? ' is-relleno' : ''; ?>">
-							<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-								<polygon class="<?php echo esc_attr( $row_marco_upper ); ?>" points="<?php echo esc_attr( $row_puntos_superior ); ?>"></polygon>
-							</svg>
-							<span class="rotulo-editorial__union"><span class="rotulo-editorial__texto rotulo-editorial__texto--superior"><?php echo esc_html( $row['supertitulo'] ); ?></span></span>
-						</div>
-					<?php endif; ?>
 					<?php if ( '' !== $row['titulo'] ) : ?>
 						<div class="rotulo-editorial__franja rotulo-editorial__franja--principal<?php echo $row_es_inverso ? ' is-inversa' : ''; ?><?php echo $row_es_relleno ? ' is-relleno' : ''; ?>">
 							<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $row_viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
 								<polygon class="<?php echo esc_attr( $row_marco_lower ); ?>" points="<?php echo esc_attr( $row_puntos_principal ); ?>"></polygon>
 							</svg>
 							<<?php echo esc_attr( $etiqueta ); ?> class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $row['titulo'] ); ?></<?php echo esc_attr( $etiqueta ); ?>>
+						</div>
+					<?php endif; ?>
+					<?php if ( '' !== $row['supertitulo'] ) : ?>
+						<div class="rotulo-editorial__franja rotulo-editorial__franja--superior<?php echo $row_es_inverso_super ? ' is-inversa' : ''; ?><?php echo $row_es_relleno_super ? ' is-relleno' : ''; ?>">
+							<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+								<polygon class="<?php echo esc_attr( $row_marco_upper ); ?>" points="<?php echo esc_attr( $row_puntos_superior ); ?>"></polygon>
+							</svg>
+							<span class="rotulo-editorial__union"><span class="rotulo-editorial__texto rotulo-editorial__texto--superior"><?php echo esc_html( $row['supertitulo'] ); ?></span></span>
 						</div>
 					<?php endif; ?>
 					<?php if ( '' !== $row['subtitulo'] ) : ?>
@@ -384,6 +421,14 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 		</div>
 	<?php else : ?>
 		<div class="<?php echo esc_attr( implode( ' ', $clases_rotulo ) ); ?>" style="<?php echo esc_attr( implode( '; ', $style_rules ) ); ?>">
+			<?php if ( '' !== $titulo ) : ?>
+				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal<?php echo $es_inverso ? ' is-inversa' : ''; ?><?php echo $es_relleno ? ' is-relleno' : ''; ?>">
+					<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+						<polygon class="<?php echo esc_attr( $clase_marco_lower ); ?>" points="<?php echo esc_attr( $puntos_principal ); ?>"></polygon>
+					</svg>
+					<<?php echo esc_attr( $etiqueta ); ?> class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo ); ?></<?php echo esc_attr( $etiqueta ); ?>>
+				</div>
+			<?php endif; ?>
 			<?php if ( '' !== $supertitulo ) : ?>
 				<div class="rotulo-editorial__franja rotulo-editorial__franja--superior<?php echo $es_inverso_superior ? ' is-inversa' : ''; ?><?php echo $es_relleno_superior ? ' is-relleno' : ''; ?>">
 					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -392,15 +437,6 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 					<span class="rotulo-editorial__union">
 						<span class="rotulo-editorial__texto rotulo-editorial__texto--superior"><?php echo esc_html( $supertitulo ); ?></span>
 					</span>
-				</div>
-			<?php endif; ?>
-
-			<?php if ( '' !== $titulo ) : ?>
-				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal<?php echo $es_inverso ? ' is-inversa' : ''; ?><?php echo $es_relleno ? ' is-relleno' : ''; ?>">
-					<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-						<polygon class="<?php echo esc_attr( $clase_marco_lower ); ?>" points="<?php echo esc_attr( $puntos_principal ); ?>"></polygon>
-					</svg>
-					<<?php echo esc_attr( $etiqueta ); ?> class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo ); ?></<?php echo esc_attr( $etiqueta ); ?>>
 				</div>
 			<?php endif; ?>
 

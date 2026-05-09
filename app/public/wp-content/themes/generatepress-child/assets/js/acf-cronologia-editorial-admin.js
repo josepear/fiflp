@@ -48,7 +48,7 @@
 			}
 			if (!$td.children('.fiflp-crono-hito-grupo-texto').length) {
 				var namesText = ['fecha_titulo', 'texto', 'texto_posicion'];
-				var namesImg = ['imagen', 'caption', 'imagen_posicion', 'imagen_sangre'];
+				var namesImg = ['imagen', 'caption', 'imagen_2', 'caption_2', 'imagen_posicion', 'imagen_sangre'];
 				var $gText = $('<div class="fiflp-crono-hito-grupo-texto" />');
 				var $gImg = $('<div class="fiflp-crono-hito-grupo-imagen" />');
 				namesText.forEach(function (n) {

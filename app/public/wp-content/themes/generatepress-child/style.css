@@ -1538,6 +1538,16 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     overflow: hidden;
 }
 
+.cronologia-editorial__media-stack {
+    display: grid;
+    gap: 16px;
+}
+
+.cronologia-editorial__media-stack--cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+}
+
 .cronologia-editorial__media .lightbox-trigger img,
 .cronologia-editorial__media img {
     width: 100%;
@@ -2794,6 +2804,7 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 .rotulo-editorial {
     --rotulo-color: #0f2d30;
     --rotulo-bg: #fcfcf8;
+    --rotulo-text-color: var(--rotulo-color);
     --rotulo-border: 3px;
     --rotulo-gap: 0px;
     --rotulo-overlap: 3px;
@@ -2897,7 +2908,7 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 
 .rotulo-editorial__marco-shape {
     fill: none;
-    stroke: currentColor;
+    stroke: var(--rotulo-color);
     stroke-width: 3;
     vector-effect: non-scaling-stroke;
     stroke-linejoin: miter;
@@ -2956,16 +2967,16 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 }
 
 .rotulo-editorial__marco-shape--relleno {
-    fill: currentColor;
+    fill: var(--rotulo-bg);
 }
 
 .rotulo-editorial--relleno .rotulo-editorial__texto,
 .rotulo-editorial--relleno_inverso .rotulo-editorial__texto {
-    color: var(--rotulo-bg);
+    color: var(--rotulo-text-color);
 }
 
 .rotulo-editorial__franja.is-relleno .rotulo-editorial__texto {
-    color: var(--rotulo-bg);
+    color: var(--rotulo-text-color);
 }
 
 .rotulo-editorial__texto {
@@ -2983,6 +2994,7 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     hyphens: none;
     letter-spacing: var(--rotulo-letter-spacing);
     transform-origin: left center;
+    color: var(--rotulo-text-color);
 }
 
 .rotulo-editorial__texto--superior {
@@ -4248,6 +4260,57 @@ body.fiflp-home-hero-active .site-content {
     overflow: hidden;
 }
 
+.home-hero-title--rotulo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.home-hero-title--rotulo > .bloque.rotulo-editorial-bloque {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.home-hero-title--rotulo .rotulo-editorial {
+    max-width: 100%;
+}
+
+.home-hero-title--rotulo .rotulo-editorial-lineas {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-hero-title--rotulo .rotulo-editorial-lineas > .rotulo-editorial {
+    align-self: center !important;
+}
+
+.home-hero-title--rotulo .rotulo-editorial {
+    align-items: center;
+}
+
+.home-hero-title--rotulo .rotulo-editorial__franja--superior,
+.home-hero-title--rotulo .rotulo-editorial__franja--principal,
+.home-hero-title--rotulo .rotulo-editorial-lineas .rotulo-editorial--linea .rotulo-editorial__franja--principal,
+.home-hero-title--rotulo .rotulo-editorial-lineas .rotulo-editorial--relleno .rotulo-editorial__franja--principal,
+.home-hero-title--rotulo .rotulo-editorial-lineas .rotulo-editorial--linea_inversa .rotulo-editorial__franja--principal,
+.home-hero-title--rotulo .rotulo-editorial-lineas .rotulo-editorial--relleno_inverso .rotulo-editorial__franja--principal,
+.home-hero-title--rotulo .rotulo-editorial--linea_inversa .rotulo-editorial__franja--superior,
+.home-hero-title--rotulo .rotulo-editorial--relleno_inverso .rotulo-editorial__franja--superior,
+.home-hero-title--rotulo .rotulo-editorial--linea_inversa .rotulo-editorial__franja--principal,
+.home-hero-title--rotulo .rotulo-editorial--relleno_inverso .rotulo-editorial__franja--principal {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.home-hero-title--rotulo .rotulo-editorial__subtitulo,
+.home-hero-title--rotulo .rotulo-editorial--linea_inversa .rotulo-editorial__subtitulo,
+.home-hero-title--rotulo .rotulo-editorial--relleno_inverso .rotulo-editorial__subtitulo {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: center;
+}
+
 .home-hero__button--rotulo::before,
 .home-hero__small-button--rotulo::before {
     content: "";
@@ -4394,4 +4457,22 @@ body.fiflp-home-hero-active .site-content {
     .home-hero__reveal {
         opacity: 1;
     }
+}
+
+.bloque.separador {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: var(--separador-alto, 80px);
+    margin: 0;
+}
+
+.bloque.separador .separador__linea {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    display: block;
+    border-top: var(--separador-grosor, 1px) solid var(--separador-color, #0f2d30);
+    transform: translateY(-50%);
 }

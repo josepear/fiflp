@@ -140,6 +140,54 @@
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 },
                 {
+                    "key": "field_cronologia_editorial_hito_imagen_2",
+                    "label": "Imagen 2",
+                    "name": "imagen_2",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Opcional. Segunda imagen para este hito.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "allow_in_bindings": 0,
+                    "preview_size": "medium",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_caption_2",
+                    "label": "Caption 2",
+                    "name": "caption_2",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-caption",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "new_lines": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "rows": 2,
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
                     "key": "field_cronologia_editorial_hito_imagen_posicion",
                     "label": "Posición de imagen",
                     "name": "imagen_posicion",
@@ -210,5 +258,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1744045200
+    "modified": 1778208000
 }

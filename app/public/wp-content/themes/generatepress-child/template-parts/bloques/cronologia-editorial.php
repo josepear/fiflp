@@ -51,23 +51,48 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			$texto        = isset( $hito['texto'] ) ? (string) $hito['texto'] : '';
 			$imagen       = $hito['imagen'] ?? null;
 			$caption      = isset( $hito['caption'] ) ? trim( (string) $hito['caption'] ) : '';
+			$imagen_2     = $hito['imagen_2'] ?? null;
+			$caption_2    = isset( $hito['caption_2'] ) ? trim( (string) $hito['caption_2'] ) : '';
 			$img_pos      = isset( $hito['imagen_posicion'] ) ? (string) $hito['imagen_posicion'] : 'izquierda';
 			$txt_pos      = isset( $hito['texto_posicion'] ) ? (string) $hito['texto_posicion'] : 'derecha';
 			$img_bleed    = isset( $hito['imagen_sangre'] ) ? (string) $hito['imagen_sangre'] : 'none';
 
-			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) ) {
+			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) ) {
 				continue;
 			}
 
-			$imagen_url = '';
-			$imagen_alt = '';
+			$extract_media = static function ( $raw_image, $raw_caption ) {
+				$url = '';
+				$alt = '';
 
-			if ( is_array( $imagen ) ) {
-				$imagen_url = (string) ( $imagen['sizes']['large'] ?? $imagen['url'] ?? '' );
-				$imagen_alt = (string) ( $imagen['alt'] ?? '' );
-			} elseif ( is_string( $imagen ) ) {
-				$imagen_url = trim( $imagen );
-			}
+				if ( is_array( $raw_image ) ) {
+					$url = (string) ( $raw_image['sizes']['large'] ?? $raw_image['url'] ?? '' );
+					$alt = (string) ( $raw_image['alt'] ?? '' );
+				} elseif ( is_string( $raw_image ) ) {
+					$url = trim( $raw_image );
+				}
+
+				if ( '' === $url ) {
+					return null;
+				}
+
+				return array(
+					'url'     => $url,
+					'alt'     => $alt,
+					'caption' => trim( (string) $raw_caption ),
+				);
+			};
+
+			$medias = array_values(
+				array_filter(
+					array(
+						$extract_media( $imagen, $caption ),
+						$extract_media( $imagen_2, $caption_2 ),
+					)
+				)
+			);
+
+			$has_media = ! empty( $medias );
 
 			if ( ! in_array( $img_pos, array( 'izquierda', 'derecha' ), true ) ) {
 				$img_pos = 'izquierda';
@@ -87,7 +112,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 				'cronologia-editorial__item--txt-' . $txt_pos,
 			);
 
-			if ( '' !== $imagen_url ) {
+			if ( $has_media ) {
 				$item_classes[] = 'has-image';
 				$item_classes[] = 'cronologia-editorial__item--img-' . $img_pos;
 			}
@@ -105,11 +130,15 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 							</div>
 						<?php endif; ?>
 
-						<?php if ( '' !== $imagen_url ) : ?>
+						<?php if ( $has_media ) : ?>
 							<figure class="cronologia-editorial__media cronologia-editorial__media--bleed-<?php echo esc_attr( $img_bleed ); ?>">
-								<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
-									<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
-								</a>
+								<div class="cronologia-editorial__media-stack <?php echo count( $medias ) > 1 ? 'cronologia-editorial__media-stack--cols-2' : 'cronologia-editorial__media-stack--cols-1'; ?>">
+									<?php foreach ( $medias as $media ) : ?>
+										<a href="<?php echo esc_url( $media['url'] ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $media['caption'] ); ?>">
+											<img src="<?php echo esc_url( $media['url'] ); ?>" alt="<?php echo esc_attr( $media['alt'] ); ?>">
+										</a>
+									<?php endforeach; ?>
+								</div>
 							</figure>
 						<?php endif; ?>
 					</div>

@@ -855,7 +855,7 @@
                                 },
                                 "default_value": 0.86,
                                 "min": 0.6,
-                                "max": 1.4,
+                                "max": 2,
                                 "allow_in_bindings": 0,
                                 "placeholder": "",
                                 "step": 0.01,
