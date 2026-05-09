@@ -5,10 +5,16 @@
 /* Dos columnas del módulo: izquierda líneas, derecha configuración */
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-columns: minmax(0, 1fr);
 	gap: 0 14px;
 	align-items: start;
 	align-content: start;
+}
+
+/* Nuevo criterio: ocultar "Título por líneas" en rótulo editorial normal. */
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo_lineas"],
+.post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] {
+	display: none !important;
 }
 
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field {
@@ -24,7 +30,7 @@
 }
 
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group {
-	grid-column: 2;
+	grid-column: 1;
 	grid-row: 1;
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));

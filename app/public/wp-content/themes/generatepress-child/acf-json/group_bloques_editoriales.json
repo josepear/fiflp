@@ -317,16 +317,16 @@
                         },
                         {
                             "key": "field_imagen_color_titulo_imagen",
-                            "label": "Color del título",
+                            "label": "Color legado (fallback)",
                             "name": "color_titulo_imagen",
                             "aria-label": "",
                             "type": "color_picker",
-                            "instructions": "Selector visual nativo de WordPress con entrada manual HEX.",
+                            "instructions": "Compatibilidad con contenido anterior.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "25",
-                                "class": "",
+                                "width": "0",
+                                "class": "acf-hidden",
                                 "id": ""
                             },
                             "default_value": "#0f2d30",
@@ -335,6 +335,60 @@
                             "custom_palette_source": "",
                             "palette_colors": "#0f2d30,#fcfcf8,#111111,#666666",
                             "show_color_wheel": true
+                        },
+                        {
+                            "key": "field_imagen_color_borde_titulo_imagen",
+                            "label": "Color borde",
+                            "name": "color_borde_titulo_imagen",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "Color del trazo del SVG.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "33",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "#0f2d30",
+                            "enable_opacity": 0,
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_imagen_color_solido_titulo_imagen",
+                            "label": "Color sólido",
+                            "name": "color_solido_titulo_imagen",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "Color de relleno del SVG.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "33",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "#0f2d30",
+                            "enable_opacity": 0,
+                            "return_format": "string"
+                        },
+                        {
+                            "key": "field_imagen_color_letra_titulo_imagen",
+                            "label": "Color letra",
+                            "name": "color_letra_titulo_imagen",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "Color del texto del rótulo.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "34",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "#fcfcf8",
+                            "enable_opacity": 0,
+                            "return_format": "string"
                         },
                         {
                             "key": "field_imagen_disposicion_titulo_imagen",

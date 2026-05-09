@@ -57,7 +57,8 @@ $color_fondo = $normalize_color( $get_field( 'color_fondo', '' ), '' );
 
 $interlineado_raw     = $get_field( 'interlineado', null );
 $espaciado_letras_raw = $get_field( 'espaciado_letras', null );
-$titulo_lineas_raw    = $get_field( 'titulo_lineas', array() );
+$is_onepage_context = ! empty( $args['onepage'] );
+$titulo_lineas_raw  = $is_onepage_context ? $get_field( 'titulo_lineas', array() ) : array(); // En normal desactivado; en onepage sigue activo.
 
 $variantes_validas = array(
 	'linea',
@@ -188,6 +189,7 @@ $es_relleno_superior = in_array( $variante_supertitulo, array( 'relleno', 'relle
 $clases_rotulo       = array(
 	'rotulo-editorial',
 	'rotulo-editorial--' . $variante_titulo,
+	'rotulo-editorial--superior-' . $variante_supertitulo,
 	'rotulo-editorial--tamano-' . $tamano,
 	'rotulo-editorial--align-' . $alineacion_rotulo,
 	'rotulo-editorial--tamano-subtitulo-' . $tamano_subtitulo,
@@ -206,8 +208,8 @@ if ( $titulo_length >= 26 ) {
 }
 
 $puntos_superior     = $es_inverso_superior ? '2,2 88,2 98,98 12,98' : '12,2 98,2 88,98 2,98';
-$viewbox_principal   = $es_inverso ? '0 0 106 100' : '-6 0 106 100';
-$puntos_principal    = $es_inverso ? '7,2 106,2 100,98 1,98' : '-6,2 93,2 99,98 0,98';
+$viewbox_principal   = $es_inverso ? '-6 0 106 100' : '0 0 106 100';
+$puntos_principal    = $es_inverso ? '-6,2 93,2 99,98 0,98' : '7,2 106,2 100,98 1,98';
 $clase_marco_lower   = $es_relleno ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
 $clase_marco_upper   = $es_relleno_superior ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
 $style_rules         = array(
@@ -357,6 +359,7 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 				$row_clases = array(
 					'rotulo-editorial',
 					'rotulo-editorial--' . $row['variante_titulo'],
+					'rotulo-editorial--superior-' . $row['variante_supertitulo'],
 					'rotulo-editorial--tamano-' . $row['tamano'],
 					'rotulo-editorial--align-' . $row['alineacion_rotulo'],
 					'rotulo-editorial--tamano-subtitulo-' . $row['tamano_subtitulo'],
@@ -364,8 +367,8 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 					'rotulo-editorial--subtitulo-align-' . $row['alineacion_subtitulo'],
 				);
 				$row_puntos_superior = $row_es_inverso_super ? '2,2 88,2 98,98 12,98' : '12,2 98,2 88,98 2,98';
-				$row_viewbox_principal = $row_es_inverso ? '0 0 106 100' : '-6 0 106 100';
-				$row_puntos_principal = $row_es_inverso ? '7,2 106,2 100,98 1,98' : '-6,2 93,2 99,98 0,98';
+				$row_viewbox_principal = $row_es_inverso ? '-6 0 106 100' : '0 0 106 100';
+				$row_puntos_principal = $row_es_inverso ? '-6,2 93,2 99,98 0,98' : '7,2 106,2 100,98 1,98';
 				$row_marco_lower = $row_es_relleno ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
 				$row_marco_upper = $row_es_relleno_super ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
 				?>
@@ -399,8 +402,8 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 				$variante_render = $mapa_variante_linea[ $linea['variante'] ];
 				$linea_es_inverso = in_array( $variante_render, array( 'linea_inversa', 'relleno_inverso' ), true );
 				$linea_es_relleno = in_array( $variante_render, array( 'relleno', 'relleno_inverso' ), true );
-				$linea_viewbox_principal = $linea_es_inverso ? '0 0 106 100' : '-6 0 106 100';
-				$linea_puntos_principal  = $linea_es_inverso ? '7,2 106,2 100,98 1,98' : '-6,2 93,2 99,98 0,98';
+				$linea_viewbox_principal = $linea_es_inverso ? '-6 0 106 100' : '0 0 106 100';
+				$linea_puntos_principal  = $linea_es_inverso ? '-6,2 93,2 99,98 0,98' : '7,2 106,2 100,98 1,98';
 				$linea_clase_marco       = $linea_es_relleno ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
 				$linea_clases            = array(
 					'rotulo-editorial',

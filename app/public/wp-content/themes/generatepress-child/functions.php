@@ -3,6 +3,143 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Modo estabilidad editor:
+ * evita que notices/warnings se impriman en respuestas admin/AJAX/REST.
+ */
+add_action(
+	'init',
+	function () {
+		$is_admin_like = is_admin()
+			|| ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+			|| ( defined( 'REST_REQUEST' ) && REST_REQUEST );
+
+		if ( ! $is_admin_like ) {
+			return;
+		}
+
+		@ini_set( 'display_errors', '0' );
+		@ini_set( 'html_errors', '0' );
+	},
+	1
+);
+
+/**
+ * ACF: asegura `_name` en subcampos de flexible/repeater/grupo (JSON local a veces no lo trae).
+ * Evita notices en `acf-field-flexible-content.php` format_value (usa $sub_field['_name']).
+ *
+ * @param array<string, mixed> $field Campo ACF.
+ * @return array<string, mixed>
+ */
+function fiflp_acf_backfill_field_internal_names_recursive( array &$field ) {
+	if ( ! empty( $field['name'] ) && ! isset( $field['_name'] ) ) {
+		$field['_name'] = $field['name'];
+	}
+
+	if ( ! empty( $field['layouts'] ) && is_array( $field['layouts'] ) ) {
+		foreach ( $field['layouts'] as &$layout ) {
+			if ( ! is_array( $layout ) || empty( $layout['sub_fields'] ) || ! is_array( $layout['sub_fields'] ) ) {
+				continue;
+			}
+			foreach ( $layout['sub_fields'] as &$sub_field ) {
+				if ( is_array( $sub_field ) ) {
+					fiflp_acf_backfill_field_internal_names_recursive( $sub_field );
+				}
+			}
+		}
+		unset( $layout, $sub_field );
+	}
+
+	if ( ! empty( $field['sub_fields'] ) && is_array( $field['sub_fields'] ) ) {
+		foreach ( $field['sub_fields'] as &$sub_field ) {
+			if ( is_array( $sub_field ) ) {
+				fiflp_acf_backfill_field_internal_names_recursive( $sub_field );
+			}
+		}
+		unset( $sub_field );
+	}
+
+	return $field;
+}
+
+/**
+ * Campos flexible con muchos layouts exportados a JSON; refuerzo quirúrgico.
+ */
+function fiflp_acf_load_field_backfill_underscore_name( $field ) {
+	if ( empty( $field['key'] ) || ! is_array( $field ) ) {
+		return $field;
+	}
+
+	$target_keys = array(
+		'field_bloques',
+		'field_seccion_onepage_modulos',
+		'field_69c69652256ef',
+	);
+
+	if ( ! in_array( (string) $field['key'], $target_keys, true ) ) {
+		return $field;
+	}
+
+	fiflp_acf_backfill_field_internal_names_recursive( $field );
+
+	return $field;
+}
+
+add_filter( 'acf/load_field', 'fiflp_acf_load_field_backfill_underscore_name', 1 );
+
+/**
+ * Desactiva por código el grupo duplicado "Contenido Capítulo" (mismo meta `bloques` que el grupo global).
+ * Evita dos flexibles `bloques` en una misma pantalla (p. ej. página ID 35), que rompe el guardado ACF.
+ * Reversible: quitar este filtro y fusionar layouts en `group_bloques_editoriales` si hiciera falta.
+ *
+ * @param bool                 $match       Resultado de la regla.
+ * @param array<string, mixed> $rule        Regla de ubicación.
+ * @param array<string, mixed> $screen      Pantalla ACF.
+ * @param array<string, mixed> $field_group Definición del grupo.
+ * @return bool
+ */
+function fiflp_acf_location_disable_duplicate_capitulo_group( $match, $rule, $screen, $field_group ) {
+	if ( empty( $field_group['key'] ) || 'group_69c6962c3d4c9' !== $field_group['key'] ) {
+		return $match;
+	}
+
+	return false;
+}
+
+add_filter( 'acf/location/rule_match', 'fiflp_acf_location_disable_duplicate_capitulo_group', 10, 4 );
+
+/**
+ * Cinturón y tirantes: impedir carga del grupo duplicado "Contenido Capítulo".
+ * Así ACF no procesa dos flexibles "bloques" en la misma petición.
+ */
+function fiflp_acf_disable_duplicate_capitulo_group_load( $field_group ) {
+	if ( is_array( $field_group ) && ! empty( $field_group['key'] ) && 'group_69c6962c3d4c9' === $field_group['key'] ) {
+		return false;
+	}
+
+	return $field_group;
+}
+
+add_filter( 'acf/load_field_group', 'fiflp_acf_disable_duplicate_capitulo_group_load', 1 );
+
+/**
+ * Fuerza pasos de 0.1 en offsets numéricos del onepage en el admin ACF.
+ *
+ * Evita desajustes cuando el JSON y la base de datos no están sincronizados.
+ */
+function fiflp_acf_force_tenth_step_onepage_offsets( $field ) {
+	$field_name = isset( $field['name'] ) ? (string) $field['name'] : '';
+	if ( ! in_array( $field_name, array( 'numero_offset_x', 'numero_top_vh' ), true ) ) {
+		return $field;
+	}
+
+	$field['step'] = 0.1;
+
+	return $field;
+}
+add_filter( 'acf/load_field/key=field_seccion_onepage_numero_offset_x', 'fiflp_acf_force_tenth_step_onepage_offsets', 20 );
+add_filter( 'acf/load_field/key=field_seccion_onepage_numero_top', 'fiflp_acf_force_tenth_step_onepage_offsets', 20 );
+
 add_action(
 	'after_setup_theme',
 	function() {
@@ -490,6 +627,29 @@ if ( ! function_exists( 'fiflp_resolve_onepage_seccion_post_id' ) ) {
 
 if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 	/**
+	 * Normaliza el número de sección onepage preservando ceros a la izquierda.
+	 * Ejemplos: "00" => "00", "0" => "00", "1" => "01", "01" => "01".
+	 *
+	 * @param mixed $raw Valor original de ACF.
+	 * @return string
+	 */
+	function fiflp_format_onepage_section_number( $raw ) {
+		$value = trim( (string) $raw );
+		if ( '' === $value ) {
+			return '';
+		}
+
+		if ( ctype_digit( $value ) ) {
+			$int_value = (int) $value;
+			if ( $int_value >= 0 && $int_value < 100 ) {
+				return str_pad( (string) $int_value, 2, '0', STR_PAD_LEFT );
+			}
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Devuelve un anchor estable para un módulo dentro de una sección onepage.
 	 *
 	 * @param int $row_index Índice 1-based de la fila del flexible "bloques".
@@ -531,6 +691,73 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Obtiene etiqueta de submenú para cualquier módulo onepage.
+	 *
+	 * @param array $modulo Módulo ACF.
+	 * @param int   $module_index Índice 1-based del módulo.
+	 * @return string
+	 */
+	function fiflp_onepage_module_submenu_label( $modulo, $module_index = 0 ) {
+		if ( ! is_array( $modulo ) ) {
+			return '';
+		}
+
+		$titulo_submenu = trim( (string) ( $modulo['titulo_submenu'] ?? '' ) );
+		if ( '' !== $titulo_submenu ) {
+			return $titulo_submenu;
+		}
+
+		$titulo_crono = fiflp_onepage_cronologia_submenu_label( $modulo );
+		if ( '' !== $titulo_crono ) {
+			return $titulo_crono;
+		}
+
+		$candidate_fields = array(
+			'titulo',
+			'titulo_modulo',
+			'titulo_editorial_imagen',
+			'supertitulo',
+		);
+
+		foreach ( $candidate_fields as $field_name ) {
+			if ( ! array_key_exists( $field_name, $modulo ) ) {
+				continue;
+			}
+			$value = trim( (string) $modulo[ $field_name ] );
+			if ( '' !== $value ) {
+				return str_replace( array( "\r\n", "\r", "\n" ), ' ', $value );
+			}
+		}
+
+		$layout = isset( $modulo['acf_fc_layout'] ) ? (string) $modulo['acf_fc_layout'] : '';
+		if ( '' !== $layout ) {
+			return ucwords( str_replace( array( '_', '-' ), ' ', $layout ) );
+		}
+
+		return $module_index > 0 ? 'Módulo ' . $module_index : '';
+	}
+
+	/**
+	 * Define si un módulo debe entrar en el submenú onepage.
+	 *
+	 * @param array $modulo Módulo ACF.
+	 * @return bool
+	 */
+	function fiflp_onepage_module_in_submenu( $modulo ) {
+		if ( ! is_array( $modulo ) ) {
+			return false;
+		}
+
+		$mostrar = isset( $modulo['mostrar_en_submenu'] ) ? (bool) $modulo['mostrar_en_submenu'] : false;
+		if ( $mostrar ) {
+			return true;
+		}
+
+		$titulo_submenu = trim( (string) ( $modulo['titulo_submenu'] ?? '' ) );
+		return '' !== $titulo_submenu;
 	}
 
 	/**
@@ -586,7 +813,9 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 				continue;
 			}
 
-			$numero = trim( (string) get_field( 'numero_seccion', $seccion_id ) );
+			$numero = function_exists( 'fiflp_format_onepage_section_number' )
+				? fiflp_format_onepage_section_number( get_field( 'numero_seccion', $seccion_id ) )
+				: trim( (string) get_field( 'numero_seccion', $seccion_id ) );
 			$titulo = trim( (string) get_field( 'titulo_seccion', $seccion_id ) );
 
 			if ( '' === $titulo ) {
@@ -602,17 +831,11 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 				$module_index = 0;
 				foreach ( $modulos as $modulo ) {
 					$module_index++;
-					$layout = isset( $modulo['acf_fc_layout'] ) ? (string) $modulo['acf_fc_layout'] : '';
-					if ( 'cronologia_editorial' !== $layout ) {
+					if ( ! fiflp_onepage_module_in_submenu( $modulo ) ) {
 						continue;
 					}
 
-					$mostrar = isset( $modulo['mostrar_en_submenu'] ) ? (bool) $modulo['mostrar_en_submenu'] : false;
-					if ( ! $mostrar ) {
-						continue;
-					}
-
-					$sub_label = fiflp_onepage_cronologia_submenu_label( $modulo );
+					$sub_label = fiflp_onepage_module_submenu_label( $modulo, $module_index );
 					if ( '' === $sub_label ) {
 						continue;
 					}
@@ -638,6 +861,22 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 		return $sections;
 	}
 }
+
+if ( ! function_exists( 'fiflp_extend_onepage_module_submenu_fields' ) ) {
+	/**
+	 * Añade controles de submenú a todos los layouts del flexible "modulos_onepage".
+	 * Permite activar cualquier módulo en el submenú lateral onepage.
+	 *
+	 * @param array $field Campo ACF flexible content.
+	 * @return array
+	 */
+	function fiflp_extend_onepage_module_submenu_fields( $field ) {
+		// Desactivado temporalmente: inyección dinámica de subcampos rompía el guardado en editor ACF.
+		return $field;
+	}
+}
+
+// add_filter( 'acf/load_field/key=field_seccion_onepage_modulos', 'fiflp_extend_onepage_module_submenu_fields', 20 );
 
 if ( ! function_exists( 'fiflp_get_sub_field_compat' ) ) {
 	/**
@@ -1684,16 +1923,7 @@ add_action(
 				);
 			}
 
-			$prologos_js = get_stylesheet_directory() . '/assets/js/acf-prologos-admin.js';
-			if ( is_readable( $prologos_js ) ) {
-				wp_enqueue_script(
-					'fiflp-acf-prologos-admin',
-					get_stylesheet_directory_uri() . '/assets/js/acf-prologos-admin.js',
-					array( 'jquery', 'acf-input' ),
-					(string) filemtime( $prologos_js ),
-					true
-				);
-			}
+			// Modo estable: desactivamos JS de admin en page para evitar bloqueos de guardado ACF.
 
 			$rotulo_css = get_stylesheet_directory() . '/assets/css/acf-rotulo-editorial-admin.css';
 			if ( is_readable( $rotulo_css ) ) {
@@ -1705,16 +1935,7 @@ add_action(
 				);
 			}
 
-			$rotulo_js = get_stylesheet_directory() . '/assets/js/acf-rotulo-editorial-admin.js';
-			if ( is_readable( $rotulo_js ) ) {
-				wp_enqueue_script(
-					'fiflp-acf-rotulo-editorial-admin',
-					get_stylesheet_directory_uri() . '/assets/js/acf-rotulo-editorial-admin.js',
-					array( 'jquery', 'acf-input' ),
-					(string) filemtime( $rotulo_js ),
-					true
-				);
-			}
+			// $rotulo_js desactivado temporalmente por estabilidad de guardado en editor.
 		}
 	},
 	20
@@ -2020,6 +2241,10 @@ add_action(
 			return;
 		}
 
+		if ( 'page' === $screen->post_type ) {
+			return;
+		}
+
 		$is_post_editor = in_array( $screen->base, array( 'post', 'post-new' ), true );
 		$is_fiflp_options = false !== strpos( (string) $screen->id, 'fiflp-' );
 
@@ -2081,11 +2306,11 @@ add_action(
 			 * dependencia de wrapper.width, reflujo por orden DOM), y eso provoca solapes.
 			 * Patron a mantener: columna izquierda fija para imagen + flujo vertical limpio a la derecha.
 			 */
-			/* ── layout imagen: imagen fija + panel controles 2+2+3 ── */
+			/* ── layout imagen: preview grande + panel compacto con fila de colores ── */
 			.layout[data-layout="imagen"] > .acf-fields {
 				display: grid;
-				grid-template-columns: 280px repeat(6, 1fr);
-				gap: 0 12px;
+				grid-template-columns: 340px repeat(6, minmax(0, 1fr));
+				gap: 0 10px;
 				align-items: start;
 			}
 
@@ -2094,7 +2319,7 @@ add_action(
 				clear: none !important;
 				width: auto !important;
 				margin: 0 !important;
-				padding: 8px 6px !important;
+				padding: 6px 6px !important;
 				box-sizing: border-box;
 				border-top: 1px solid #f0f0f0 !important;
 			}
@@ -2105,47 +2330,61 @@ add_action(
 				grid-row: 1 / span 20;
 				border-top: none !important;
 				border-right: 1px solid #e0e0e0;
-				padding: 10px 16px 10px 6px !important;
+				padding: 8px 12px 8px 4px !important;
+			}
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"] .acf-image-uploader img {
+				width: 100% !important;
+				max-width: none !important;
+				height: auto !important;
 			}
 
-			/* caption: línea superior, mayor parte del ancho */
+			/* cabecera lado derecho */
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"] {
-				grid-column: 2 / span 4;
+				grid-column: 2 / 8;
+				grid-row: 2;
 			}
 
-			/* full: toggle a sangre, columna final */
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="full"] {
-				grid-column: 6 / span 2;
+				grid-column: 2 / span 3;
+				grid-row: 3;
 			}
 
-			/* título editorial: ancho completo del lado derecho */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="sin_redondeo"] {
+				grid-column: 5 / span 3;
+				grid-row: 3;
+			}
+
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"] {
-				grid-column: 2 / span 6;
+				grid-column: 2 / 8;
+				grid-row: 1;
+				padding-bottom: 0 !important;
 			}
 
-			/* === panel controles 2+2+3 via nth-child === */
-
-			/* fila 1: variante_titulo_imagen + tipografia_titulo_imagen */
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(5) { grid-column: 2 / span 3; }
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(6) { grid-column: 5 / span 3; }
-
-			/* fila 2: tamano_titulo_imagen + ancho_titulo_imagen */
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(7) { grid-column: 2 / span 3; }
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(8) { grid-column: 5 / span 3; }
-
-			/* fila 3: alineacion_titulo_imagen + color_titulo_imagen + disposicion_titulo_imagen */
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(9)  { grid-column: 2 / span 2; }
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(10) { grid-column: 4 / span 2; }
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(11) { grid-column: 6 / span 2; }
-
-			/* tipografia_pie + tamano_pie: debajo del panel */
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(12) { grid-column: 2 / span 3; }
-			.layout[data-layout="imagen"] > .acf-fields > .acf-field:nth-child(13) { grid-column: 5 / span 3; }
+			/* pares compactos */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="variante_titulo_imagen"] { grid-column: 2 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tipografia_titulo_imagen"] { grid-column: 5 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tamano_titulo_imagen"] { grid-column: 2 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="ancho_titulo_imagen"] { grid-column: 5 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="alineacion_titulo_imagen"] { grid-column: 2 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="disposicion_titulo_imagen"] { grid-column: 5 / span 3; }
+			/* tres colores en una sola fila */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_borde_titulo_imagen"] { grid-column: 2 / span 2; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_solido_titulo_imagen"] { grid-column: 4 / span 2; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_letra_titulo_imagen"] { grid-column: 6 / span 2; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tipografia_pie_imagen"] { grid-column: 2 / span 3; }
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="tamano_pie_imagen"] { grid-column: 5 / span 3; }
+			/* color picker compacto */
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_borde_titulo_imagen"] .wp-picker-container .button,
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_solido_titulo_imagen"] .wp-picker-container .button,
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_letra_titulo_imagen"] .wp-picker-container .button {
+				font-size: 12px !important;
+				padding: 0 8px !important;
+			}
 
 			/* preview editorial */
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="preview_editorial"] {
-				grid-column: 2 / span 6;
-				padding-top: 16px !important;
+				grid-column: 2 / 8;
+				padding-top: 10px !important;
 				border-top: 1px solid #e4e6e9 !important;
 			}
 
@@ -2296,7 +2535,7 @@ add_action(
 			/* Onepage rótulo: tipografía + variante en la misma línea, ancho completo y botones cuadrados */
 			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields {
 				display: grid;
-				grid-template-columns: repeat(3, minmax(0, 1fr));
+				grid-template-columns: repeat(2, minmax(0, 1fr));
 				gap: 10px 12px;
 			}
 
@@ -2320,7 +2559,7 @@ add_action(
 			}
 
 			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="variante"] {
-				grid-column: 3;
+				grid-column: 1;
 			}
 
 			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="color_trazo"] {
@@ -2332,7 +2571,7 @@ add_action(
 			}
 
 			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-table > tbody > tr.acf-row .acf-fields > .acf-field[data-name="color_texto"] {
-				grid-column: 3;
+				grid-column: 1 / -1;
 			}
 
 			.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-button-group {

@@ -29,6 +29,9 @@ $tamano_titulo_imagen       = trim( (string) $get_field( 'tamano_titulo_imagen',
 $tamano_pie_imagen          = trim( (string) $get_field( 'tamano_pie_imagen', '' ) );
 $tipografia_pie_imagen      = trim( (string) $get_field( 'tipografia_pie_imagen', '' ) );
 $color_titulo_imagen        = sanitize_hex_color( (string) $get_field( 'color_titulo_imagen', '' ) );
+$color_borde_titulo_imagen  = sanitize_hex_color( (string) $get_field( 'color_borde_titulo_imagen', '' ) );
+$color_solido_titulo_imagen = sanitize_hex_color( (string) $get_field( 'color_solido_titulo_imagen', '' ) );
+$color_letra_titulo_imagen  = sanitize_hex_color( (string) $get_field( 'color_letra_titulo_imagen', '' ) );
 
 if ( ! $imagen ) {
 	return;
@@ -77,6 +80,14 @@ if ( ! $color_titulo_imagen ) {
 	$color_titulo_imagen = '#0f2d30';
 }
 
+if ( ! $color_borde_titulo_imagen ) {
+	$color_borde_titulo_imagen = $color_titulo_imagen;
+}
+
+if ( ! $color_solido_titulo_imagen ) {
+	$color_solido_titulo_imagen = $color_titulo_imagen;
+}
+
 $clases = array( 'bloque', 'imagen', 'fade-in' );
 
 if ( $full ) {
@@ -92,11 +103,17 @@ $es_relleno_titulo  = in_array( $variante_titulo_imagen, array( 'relleno', 'rell
 $clase_marco_titulo = $es_relleno_titulo
 	? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno'
 	: 'rotulo-editorial__marco-shape';
-$viewbox_titulo     = $es_inverso_titulo ? '0 0 106 100' : '-6 0 106 100';
-$puntos_titulo      = $es_inverso_titulo ? '7,2 106,2 100,98 1,98' : '-6,2 93,2 99,98 0,98';
+$viewbox_titulo     = $es_inverso_titulo ? '-6 0 106 100' : '0 0 106 100';
+$puntos_titulo      = $es_inverso_titulo ? '-6,2 93,2 99,98 0,98' : '7,2 106,2 100,98 1,98';
 $style_titulo       = array(
-	'--rotulo-color:' . $color_titulo_imagen,
+	'--rotulo-color:' . $color_borde_titulo_imagen,
 );
+if ( $es_relleno_titulo ) {
+	$style_titulo[] = '--rotulo-bg:' . $color_solido_titulo_imagen;
+	$style_titulo[] = '--rotulo-text-color:' . ( $color_letra_titulo_imagen ?: '#fcfcf8' );
+} else {
+	$style_titulo[] = '--rotulo-text-color:' . ( $color_letra_titulo_imagen ?: $color_borde_titulo_imagen );
+}
 ?>
 
 <section class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>">
@@ -109,7 +126,7 @@ $style_titulo       = array(
 
 		<?php if ( '' !== $titulo_editorial_imagen ) : ?>
 			<figcaption class="imagen-meta imagen-meta--disposicion-<?php echo esc_attr( $disposicion_titulo_imagen ); ?> imagen-meta--alineacion-<?php echo esc_attr( $alineacion_titulo_imagen ); ?> imagen-meta--ancho-<?php echo esc_attr( $ancho_titulo_imagen ); ?>">
-				<div class="rotulo-editorial rotulo-editorial--<?php echo esc_attr( $variante_titulo_imagen ); ?> rotulo-editorial--tamano-<?php echo esc_attr( $tamano_titulo_imagen ); ?> rotulo-editorial--imagen-tipografia-<?php echo esc_attr( $tipografia_titulo_imagen ); ?>" style="<?php echo esc_attr( implode( '; ', $style_titulo ) ); ?>">
+				<div class="rotulo-editorial rotulo-editorial--<?php echo esc_attr( $variante_titulo_imagen ); ?> rotulo-editorial--tamano-<?php echo esc_attr( $tamano_titulo_imagen ); ?>" style="<?php echo esc_attr( implode( '; ', $style_titulo ) ); ?>">
 					<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
 						<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_titulo ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
 							<polygon class="<?php echo esc_attr( $clase_marco_titulo ); ?>" points="<?php echo esc_attr( $puntos_titulo ); ?>"></polygon>
