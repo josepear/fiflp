@@ -10,7 +10,10 @@ if ( $seccion_id <= 0 ) {
 	return;
 }
 
-$numero   = trim( (string) get_field( 'numero_seccion', $seccion_id ) );
+$numero_raw = get_field( 'numero_seccion', $seccion_id );
+$numero   = function_exists( 'fiflp_format_onepage_section_number' )
+	? fiflp_format_onepage_section_number( $numero_raw )
+	: trim( (string) $numero_raw );
 $titulo   = trim( (string) get_field( 'titulo_seccion', $seccion_id ) );
 $titulo_alineacion = strtolower( trim( (string) get_field( 'titulo_alineacion', $seccion_id ) ) );
 $titulo_tamano = strtolower( trim( (string) get_field( 'titulo_tamano', $seccion_id ) ) );
@@ -27,12 +30,20 @@ $numero_offset_x_raw         = get_field( 'numero_offset_x', $seccion_id );
 $numero_top_vh_raw           = get_field( 'numero_top_vh', $seccion_id );
 $onepage_morph_end_pct_raw   = get_field( 'onepage_morph_end_pct', $seccion_id );
 
+$parse_decimal = static function ( $value ) {
+	if ( is_string( $value ) ) {
+		$value = str_replace( ',', '.', trim( $value ) );
+	}
+
+	return (float) $value;
+};
+
 $numero_grosor_linea     = (float) $numero_grosor_linea_raw;
 $numero_opacidad_relleno = (float) $numero_opacidad_relleno_raw;
 $numero_opacidad_linea   = (float) $numero_opacidad_linea_raw;
 $numero_escala_vh        = (float) $numero_escala_vh_raw;
-$numero_offset_x         = (float) $numero_offset_x_raw;
-$numero_top_vh           = (float) $numero_top_vh_raw;
+$numero_offset_x         = $parse_decimal( $numero_offset_x_raw );
+$numero_top_vh           = $parse_decimal( $numero_top_vh_raw );
 $onepage_morph_end_pct   = (float) $onepage_morph_end_pct_raw;
 $modulos  = get_field( 'modulos_onepage', $seccion_id );
 $items    = get_field( 'items_contenido', $seccion_id ); // Fallback legacy.
@@ -158,12 +169,9 @@ if ( '#072728' === $fondo ) {
 						}
 
 						$modulo_anchor_attr = '';
-						if ( 'cronologia_editorial' === $layout ) {
-							$mostrar_en_submenu = isset( $modulo['mostrar_en_submenu'] ) ? (bool) $modulo['mostrar_en_submenu'] : false;
-							if ( $mostrar_en_submenu && function_exists( 'fiflp_onepage_module_anchor' ) ) {
-								$modulo_anchor = fiflp_onepage_module_anchor( $onepage_row_index, $module_index );
-								$modulo_anchor_attr = ' id="' . esc_attr( $modulo_anchor ) . '" data-onepage-subitem="1"';
-							}
+						if ( function_exists( 'fiflp_onepage_module_anchor' ) && function_exists( 'fiflp_onepage_module_in_submenu' ) && fiflp_onepage_module_in_submenu( $modulo ) ) {
+							$modulo_anchor = fiflp_onepage_module_anchor( $onepage_row_index, $module_index );
+							$modulo_anchor_attr = ' id="' . esc_attr( $modulo_anchor ) . '" data-onepage-subitem="1"';
 						}
 						?>
 						<div class="seccion-onepage__modulo seccion-onepage__modulo--<?php echo esc_attr( $template_slug ); ?>" role="listitem"<?php echo $modulo_anchor_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
