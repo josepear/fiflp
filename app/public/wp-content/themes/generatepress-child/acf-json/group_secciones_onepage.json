@@ -416,6 +416,26 @@
                             "toolbar": "full",
                             "media_upload": 1,
                             "delay": 0
+                        },
+                        {
+                            "key": "field_onepage_mod_texto_capitular_activa",
+                            "label": "Capitular",
+                            "name": "capitular_activa",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Activa capitular en el primer párrafo. Si se desactiva, toda la caja de texto usa sangría de 5mm.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 1,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
                         }
                     ],
                     "min": "",

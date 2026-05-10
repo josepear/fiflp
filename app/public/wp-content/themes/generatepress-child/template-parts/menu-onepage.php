@@ -63,7 +63,7 @@ $panel_id = 'fiflp-onepage-nav-panel';
 										}
 										?>
 										<li>
-											<a href="#<?php echo esc_attr( $sub_anchor ); ?>" data-onepage-nav-link data-onepage-sub-nav-link><?php echo esc_html( $sub_label ); ?></a>
+											<a href="#<?php echo esc_attr( $sub_anchor ); ?>" data-onepage-nav-link data-onepage-sub-nav-link><span class="fiflp-onepage-sidebar__sublist-label"><?php echo esc_html( $sub_label ); ?></span></a>
 										</li>
 									<?php endforeach; ?>
 								</ol>

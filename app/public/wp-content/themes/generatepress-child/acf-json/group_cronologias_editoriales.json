@@ -235,6 +235,32 @@
                     "allow_null": 0,
                     "layout": "horizontal",
                     "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_escala_visual_imagen",
+                    "label": "Escala visual imagen",
+                    "name": "escala_visual_imagen",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "Controla el ancho visual de la imagen del hito.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-meta",
+                        "id": ""
+                    },
+                    "choices": {
+                        "100": "100%",
+                        "75": "75%",
+                        "50": "50%",
+                        "33": "33%"
+                    },
+                    "default_value": "100",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
                 }
             ]
         }

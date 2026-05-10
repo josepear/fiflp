@@ -56,6 +56,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			$img_pos      = isset( $hito['imagen_posicion'] ) ? (string) $hito['imagen_posicion'] : 'izquierda';
 			$txt_pos      = isset( $hito['texto_posicion'] ) ? (string) $hito['texto_posicion'] : 'derecha';
 			$img_bleed    = isset( $hito['imagen_sangre'] ) ? (string) $hito['imagen_sangre'] : 'none';
+			$img_scale    = isset( $hito['escala_visual_imagen'] ) ? (string) $hito['escala_visual_imagen'] : '100';
 
 			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) ) {
 				continue;
@@ -105,6 +106,10 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			if ( ! in_array( $img_bleed, array( 'none', 'izquierda', 'derecha' ), true ) ) {
 				$img_bleed = 'none';
 			}
+
+			if ( ! in_array( $img_scale, array( '100', '75', '50', '33' ), true ) ) {
+				$img_scale = '100';
+			}
 			?>
 			<?php
 			$item_classes = array(
@@ -131,7 +136,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 						<?php endif; ?>
 
 						<?php if ( $has_media ) : ?>
-							<figure class="cronologia-editorial__media cronologia-editorial__media--bleed-<?php echo esc_attr( $img_bleed ); ?>">
+							<figure class="cronologia-editorial__media cronologia-editorial__media--bleed-<?php echo esc_attr( $img_bleed ); ?> cronologia-editorial__media--escala-<?php echo esc_attr( $img_scale ); ?>">
 								<div class="cronologia-editorial__media-stack <?php echo count( $medias ) > 1 ? 'cronologia-editorial__media-stack--cols-2' : 'cronologia-editorial__media-stack--cols-1'; ?>">
 									<?php foreach ( $medias as $media ) : ?>
 										<a href="<?php echo esc_url( $media['url'] ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $media['caption'] ); ?>">

@@ -557,7 +557,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 event.preventDefault();
-                target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+
+                const scrollPaddingTop =
+                    parseFloat(window.getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+                const top =
+                    target.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
+
+                window.scrollTo({
+                    top: Math.max(0, top),
+                    behavior: reduceMotion ? 'auto' : 'smooth',
+                });
 
                 if (window.history && window.history.pushState) {
                     window.history.pushState(null, '', href);
