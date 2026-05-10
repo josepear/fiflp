@@ -57,6 +57,9 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			$txt_pos      = isset( $hito['texto_posicion'] ) ? (string) $hito['texto_posicion'] : 'derecha';
 			$img_bleed    = isset( $hito['imagen_sangre'] ) ? (string) $hito['imagen_sangre'] : 'none';
 			$img_scale    = isset( $hito['escala_visual_imagen'] ) ? (string) $hito['escala_visual_imagen'] : '100';
+			$galeria_masonry_imgs = isset( $hito['galeria_masonry'] ) && is_array( $hito['galeria_masonry'] ) ? $hito['galeria_masonry'] : array();
+			$has_galeria_masonry  = ! empty( $galeria_masonry_imgs );
+			$galeria_masonry_cols = isset( $hito['galeria_masonry_columnas'] ) ? trim( (string) $hito['galeria_masonry_columnas'] ) : '3';
 			// Compatibilidad: si un hito antiguo solo tiene el campo legacy
 			// "imagen_multiplicar", lo reutilizamos para ambas imágenes.
 			$img_multiply_legacy = ! empty( $hito['imagen_multiplicar'] );
@@ -77,7 +80,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 				'highlights' => isset( $hito['ajuste_luces_imagen_2'] ) ? (float) $hito['ajuste_luces_imagen_2'] : 0.0,
 			);
 
-			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) ) {
+			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) && ! $has_galeria_masonry ) {
 				continue;
 			}
 
@@ -187,6 +190,20 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 							<div class="cronologia-editorial__texto">
 								<?php echo wp_kses_post( wpautop( $texto ) ); ?>
 							</div>
+						<?php endif; ?>
+
+						<?php if ( $has_galeria_masonry ) : ?>
+							<?php
+							get_template_part(
+								'template-parts/bloques/galeria-masonry',
+								null,
+								array(
+									'imagenes' => $galeria_masonry_imgs,
+									'columnas' => $galeria_masonry_cols,
+									'context'  => 'cronologia',
+								)
+							);
+							?>
 						<?php endif; ?>
 
 						<?php if ( $has_media ) : ?>

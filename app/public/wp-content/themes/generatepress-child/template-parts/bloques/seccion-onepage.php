@@ -52,7 +52,7 @@ if ( '' === $titulo ) {
 	$titulo = get_the_title( $seccion_id );
 }
 
-$palette = array( '#ea4142', '#fde25f', '#072728', '#e9e9e9', '#73c3b6' );
+$palette = array( '#ffffff', '#1e1e1e', '#ea4142', '#fde25f', '#072728', '#e9e9e9', '#73c3b6' );
 if ( ! in_array( $fondo, $palette, true ) ) {
 	$fondo = '#e9e9e9';
 }
@@ -129,7 +129,7 @@ $shell_classes = array(
 	'seccion-onepage__numero-font--' . $tipografia_numero,
 );
 
-if ( '#072728' === $fondo ) {
+if ( in_array( $fondo, array( '#072728', '#1e1e1e' ), true ) ) {
 	$shell_classes[] = 'seccion-onepage__shell--dark-bg';
 }
 ?>

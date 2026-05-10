@@ -57,16 +57,34 @@
 				];
 				var $gText = $('<div class="fiflp-crono-hito-grupo-texto" />');
 				var $gImg = $('<div class="fiflp-crono-hito-grupo-imagen" />');
+				var namesGal = ['galeria_masonry', 'galeria_masonry_columnas'];
+				var $gGal = $('<div class="fiflp-crono-hito-grupo-galeria" />');
 				namesText.forEach(function (n) {
 					$td.children('.acf-field[data-name="' + n + '"]').appendTo($gText);
 				});
 				namesImg.forEach(function (n) {
 					$td.children('.acf-field[data-name="' + n + '"]').appendTo($gImg);
 				});
+				namesGal.forEach(function (n) {
+					$td.children('.acf-field[data-name="' + n + '"]').appendTo($gGal);
+				});
 				$td.append($gText, $gImg);
+				if ($gGal.children().length) {
+					$td.append($gGal);
+				}
 				wrapMetaRow($gImg);
 			} else {
 				wrapMetaRow($td.children('.fiflp-crono-hito-grupo-imagen').first());
+				if (!$td.children('.fiflp-crono-hito-grupo-galeria').length) {
+					var namesGal = ['galeria_masonry', 'galeria_masonry_columnas'];
+					var $gGal = $('<div class="fiflp-crono-hito-grupo-galeria" />');
+					namesGal.forEach(function (n) {
+						$td.children('.acf-field[data-name="' + n + '"]').appendTo($gGal);
+					});
+					if ($gGal.children().length) {
+						$td.append($gGal);
+					}
+				}
 			}
 			setCollapsedTitle($td);
 

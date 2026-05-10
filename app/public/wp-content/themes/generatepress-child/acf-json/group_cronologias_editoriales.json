@@ -443,6 +443,64 @@
                     "allow_null": 0,
                     "layout": "horizontal",
                     "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_galeria_masonry",
+                    "label": "Galería masonry (opcional)",
+                    "name": "galeria_masonry",
+                    "aria-label": "",
+                    "type": "gallery",
+                    "instructions": "Opcional. Se muestra dentro del hito, tras el texto y antes de las imágenes del hito.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-galeria",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "library": "all",
+                    "min": "",
+                    "max": "",
+                    "min_width": 0,
+                    "min_height": 0,
+                    "min_size": 0,
+                    "max_width": 0,
+                    "max_height": 0,
+                    "max_size": 0,
+                    "mime_types": "",
+                    "insert": "append",
+                    "preview_size": "medium",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_galeria_masonry_columnas",
+                    "label": "Columnas galería masonry",
+                    "name": "galeria_masonry_columnas",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-galeria",
+                        "id": ""
+                    },
+                    "choices": {
+                        "2": "2",
+                        "3": "3",
+                        "4": "4"
+                    },
+                    "default_value": "3",
+                    "return_format": "value",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "allow_in_bindings": 0,
+                    "ui": 0,
+                    "ajax": 0,
+                    "placeholder": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
                 }
             ]
         }
@@ -466,5 +524,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1778208000
+    "modified": 1778300402
 }
