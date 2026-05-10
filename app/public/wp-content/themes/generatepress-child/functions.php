@@ -265,6 +265,62 @@ function fiflp_get_local_svg_path_from_url( $url ) {
 	return '';
 }
 
+/**
+ * Admin AJAX: devuelve URL original (full) de un adjunto para previsualización de edición.
+ */
+function fiflp_ajax_get_original_image_url() {
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
+	}
+
+	$id  = isset( $_REQUEST['id'] ) ? absint( $_REQUEST['id'] ) : 0;
+	$url = isset( $_REQUEST['url'] ) ? esc_url_raw( wp_unslash( (string) $_REQUEST['url'] ) ) : '';
+
+	$attachment_id = 0;
+
+	if ( $id > 0 ) {
+		$attachment_id = $id;
+	} elseif ( '' !== $url ) {
+		$attachment_id = attachment_url_to_postid( $url );
+
+		if ( 0 === $attachment_id ) {
+			$parsed = wp_parse_url( $url, PHP_URL_PATH );
+			if ( is_string( $parsed ) && '' !== $parsed ) {
+				$normalized = preg_replace( '/-\d+x\d+(?=\.[a-z0-9]+$)/i', '', $parsed );
+				if ( is_string( $normalized ) && '' !== $normalized ) {
+					$base = wp_get_upload_dir();
+					if ( ! empty( $base['baseurl'] ) ) {
+						$candidate = rtrim( (string) $base['baseurl'], '/' ) . $normalized;
+						$attachment_id = attachment_url_to_postid( $candidate );
+					}
+				}
+			}
+		}
+	}
+
+	if ( $attachment_id > 0 ) {
+		$full = wp_get_attachment_url( $attachment_id );
+		if ( $full ) {
+			wp_send_json_success(
+				array(
+					'url' => esc_url_raw( $full ),
+				)
+			);
+		}
+	}
+
+	if ( '' !== $url ) {
+		wp_send_json_success(
+			array(
+				'url' => esc_url_raw( $url ),
+			)
+		);
+	}
+
+	wp_send_json_error( array( 'message' => 'not_found' ), 404 );
+}
+add_action( 'wp_ajax_fiflp_get_original_image_url', 'fiflp_ajax_get_original_image_url' );
+
 function fiflp_get_svg_logo_markup( $image, $args = array() ) {
 	$args = wp_parse_args(
 		$args,
@@ -2241,10 +2297,6 @@ add_action(
 			return;
 		}
 
-		if ( 'page' === $screen->post_type ) {
-			return;
-		}
-
 		$is_post_editor = in_array( $screen->base, array( 'post', 'post-new' ), true );
 		$is_fiflp_options = false !== strpos( (string) $screen->id, 'fiflp-' );
 
@@ -2362,6 +2414,118 @@ add_action(
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="alineacion_visual_imagen"] {
 				grid-column: 2 / 8;
 				grid-row: 5;
+			}
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="ajuste_sombras_imagen"] {
+				display: none !important;
+			}
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="ajuste_medios_imagen"] {
+				display: none !important;
+			}
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="ajuste_luces_imagen"] {
+				display: none !important;
+			}
+
+			.fiflp-imagen-tono-launch {
+				margin-top: 10px !important;
+				width: 100%;
+				min-height: 34px !important;
+				font-size: 13px !important;
+			}
+
+			.fiflp-btn-unificado {
+				display: inline-flex !important;
+				align-items: center;
+				justify-content: center;
+				min-height: 36px !important;
+				padding: 0 14px !important;
+				border-radius: 999px !important;
+				border: 1px solid #ff4d00 !important;
+				background: #ff4d00 !important;
+				color: #ffffff !important;
+				font-weight: 700 !important;
+				font-size: 13px !important;
+				line-height: 1 !important;
+				box-shadow: none !important;
+				text-decoration: none !important;
+			}
+
+			.fiflp-btn-unificado:hover,
+			.fiflp-btn-unificado:focus {
+				background: #e44700 !important;
+				border-color: #e44700 !important;
+				color: #ffffff !important;
+			}
+
+			.fiflp-imagen-tono-modal {
+				position: fixed;
+				inset: 0;
+				background: rgba(17, 17, 17, 0.62);
+				z-index: 99999;
+				display: none;
+				align-items: center;
+				justify-content: center;
+				padding: 28px;
+			}
+
+			.fiflp-imagen-tono-modal.is-open {
+				display: flex;
+			}
+
+			.fiflp-imagen-tono-modal__dialog {
+				width: min(1120px, 94vw);
+				max-height: 90vh;
+				overflow: auto;
+				background: #ffffff;
+				border-radius: 10px;
+				padding: 18px;
+				display: grid;
+				grid-template-columns: minmax(0, 2.15fr) minmax(320px, 1fr);
+				gap: 16px;
+			}
+
+			.fiflp-imagen-tono-modal__preview-wrap {
+				background: #f6f6f2;
+				border: 1px solid #d8d8d2;
+				border-radius: 8px;
+				padding: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				min-height: 560px;
+			}
+
+			.fiflp-imagen-tono-modal__preview {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 76vh;
+				object-fit: contain;
+				image-rendering: auto;
+				display: block;
+			}
+
+			.fiflp-imagen-tono-modal__controls {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 12px;
+				align-content: start;
+			}
+
+			.fiflp-imagen-tono-modal__control label {
+				display: block;
+				font-weight: 600;
+				margin-bottom: 6px;
+			}
+
+			.fiflp-imagen-tono-modal__control input[type="range"] {
+				width: 100%;
+			}
+
+			.fiflp-imagen-tono-modal__actions {
+				margin-top: 6px;
+				display: flex;
+				justify-content: flex-end;
+				gap: 8px;
 			}
 
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"] {
@@ -2831,6 +2995,292 @@ add_action(
 					return '';
 				};
 
+				const readRangeValue = (layout, name) => {
+					const field = layout.querySelector('.acf-field[data-name="' + name + '"]');
+					if (!field) {
+						return 0;
+					}
+
+					const rangeInput = field.querySelector('input[type="range"]');
+					const numberInput = field.querySelector('input[type="number"]');
+					const raw = rangeInput ? rangeInput.value : (numberInput ? numberInput.value : '0');
+					const value = Number(raw);
+
+					if (!Number.isFinite(value)) {
+						return 0;
+					}
+
+					return Math.max(-100, Math.min(100, value));
+				};
+
+				const buildToneFilter = (shadows, mids, highlights) => {
+					const brightness = 1 + ((mids + (shadows * 0.35) + (highlights * 0.25)) * 0.003);
+					const contrast = 1 + ((highlights - shadows) * 0.002);
+					return 'brightness(' + brightness.toFixed(4) + ') contrast(' + contrast.toFixed(4) + ')';
+				};
+
+				const getRangeField = (layout, name) => layout.querySelector('.acf-field[data-name="' + name + '"]');
+
+				const setRangeFieldValue = (field, value) => {
+					if (!field) {
+						return;
+					}
+
+					const safeValue = Math.max(-100, Math.min(100, Number(value) || 0));
+					const rangeInput = field.querySelector('input[type="range"]');
+					const numberInput = field.querySelector('input[type="number"]');
+
+					if (rangeInput) {
+						rangeInput.value = String(safeValue);
+						rangeInput.dispatchEvent(new Event('input', { bubbles: true }));
+						rangeInput.dispatchEvent(new Event('change', { bubbles: true }));
+					}
+
+					if (numberInput) {
+						numberInput.value = String(safeValue);
+						numberInput.dispatchEvent(new Event('input', { bubbles: true }));
+						numberInput.dispatchEvent(new Event('change', { bubbles: true }));
+					}
+				};
+
+				const toneModal = (() => {
+					let currentLayout = null;
+					let modal = null;
+					let previewImg = null;
+					let inputShadows = null;
+					let inputMids = null;
+					let inputHighlights = null;
+					let outShadows = null;
+					let outMids = null;
+					let outHighlights = null;
+					const mediaUrlCache = new Map();
+
+					const getLargestFromSrcset = (srcset) => {
+						if (!srcset || 'string' !== typeof srcset) {
+							return '';
+						}
+
+						const candidates = srcset
+							.split(',')
+							.map((item) => item.trim())
+							.filter(Boolean)
+							.map((item) => {
+								const parts = item.split(/\s+/);
+								const url = parts[0] || '';
+								const widthToken = parts.find((part) => /w$/.test(part)) || '';
+								const width = parseInt(widthToken.replace('w', ''), 10);
+								return {
+									url,
+									width: Number.isFinite(width) ? width : 0,
+								};
+							})
+							.filter((item) => item.url);
+
+						if (!candidates.length) {
+							return '';
+						}
+
+						candidates.sort((a, b) => b.width - a.width);
+						return candidates[0].url || '';
+					};
+
+					const getFieldImageMeta = (layout) => {
+						const imageField = layout.querySelector('.acf-field[data-name="imagen"]');
+						if (!imageField) {
+							return { id: '', previewSrc: '', fullSrcCandidate: '', directUrl: '', alt: '' };
+						}
+
+						const hidden = imageField.querySelector('input[type="hidden"]');
+						const img = imageField.querySelector('.acf-image-uploader .image-wrap img');
+						const uploader = imageField.querySelector('.acf-image-uploader');
+						const largestSrcset = img ? getLargestFromSrcset(img.getAttribute('srcset') || '') : '';
+						const dataId = uploader && uploader.getAttribute('data-id') ? String(uploader.getAttribute('data-id')).trim() : '';
+						const hiddenValue = hidden ? String(hidden.value || '').trim() : '';
+						const directUrl = /^(https?:)?\/\//.test(hiddenValue) || hiddenValue.startsWith('/')
+							? hiddenValue
+							: '';
+
+						return {
+							id: dataId || (hidden ? String(hidden.value || '').trim() : ''),
+							previewSrc: img ? (img.currentSrc || img.src || '') : '',
+							fullSrcCandidate: largestSrcset,
+							directUrl,
+							alt: img ? (img.alt || '') : '',
+						};
+					};
+
+					const resolveFullImageUrl = async (attachmentId, fallbackUrl) => {
+						if (!attachmentId || !/^\d+$/.test(attachmentId)) {
+							try {
+								const params = new URLSearchParams({
+									action: 'fiflp_get_original_image_url',
+									url: fallbackUrl || '',
+								});
+								const response = await fetch('/wp-admin/admin-ajax.php?' + params.toString(), { credentials: 'same-origin' });
+								if (!response.ok) {
+									return fallbackUrl;
+								}
+								const data = await response.json();
+								if (data && data.success && data.data && data.data.url) {
+									return String(data.data.url);
+								}
+							} catch (error) {}
+							return fallbackUrl;
+						}
+
+						if (mediaUrlCache.has(attachmentId)) {
+							return mediaUrlCache.get(attachmentId) || fallbackUrl;
+						}
+
+						try {
+							const params = new URLSearchParams({
+								action: 'fiflp_get_original_image_url',
+								id: attachmentId,
+								url: fallbackUrl || '',
+							});
+							const response = await fetch('/wp-admin/admin-ajax.php?' + params.toString(), { credentials: 'same-origin' });
+							if (!response.ok) {
+								mediaUrlCache.set(attachmentId, fallbackUrl);
+								return fallbackUrl;
+							}
+
+							const data = await response.json();
+							const fullUrl = (data && data.success && data.data && data.data.url) ? String(data.data.url) : fallbackUrl;
+							mediaUrlCache.set(attachmentId, fullUrl);
+							return fullUrl || fallbackUrl;
+						} catch (error) {
+							mediaUrlCache.set(attachmentId, fallbackUrl);
+							return fallbackUrl;
+						}
+					};
+
+					const syncOutputs = () => {
+						const shadows = Number(inputShadows.value || 0);
+						const mids = Number(inputMids.value || 0);
+						const highlights = Number(inputHighlights.value || 0);
+
+						outShadows.textContent = String(shadows);
+						outMids.textContent = String(mids);
+						outHighlights.textContent = String(highlights);
+						previewImg.style.filter = buildToneFilter(shadows, mids, highlights);
+					};
+
+					const close = () => {
+						if (modal) {
+							modal.classList.remove('is-open');
+						}
+						currentLayout = null;
+					};
+
+					const ensure = () => {
+						if (modal) {
+							return;
+						}
+
+						const wrapper = document.createElement('div');
+						wrapper.className = 'fiflp-imagen-tono-modal';
+						wrapper.innerHTML = `
+							<div class="fiflp-imagen-tono-modal__dialog" role="dialog" aria-modal="true" aria-label="Ajustar imagen">
+								<div class="fiflp-imagen-tono-modal__preview-wrap">
+									<img class="fiflp-imagen-tono-modal__preview" src="" alt="">
+								</div>
+								<div class="fiflp-imagen-tono-modal__controls">
+									<div class="fiflp-imagen-tono-modal__control">
+										<label>Sombras: <strong data-tono-out="sombras">0</strong></label>
+										<input type="range" min="-100" max="100" step="1" value="0" data-tono-input="sombras">
+									</div>
+									<div class="fiflp-imagen-tono-modal__control">
+										<label>Medios tonos: <strong data-tono-out="medios">0</strong></label>
+										<input type="range" min="-100" max="100" step="1" value="0" data-tono-input="medios">
+									</div>
+									<div class="fiflp-imagen-tono-modal__control">
+										<label>Altas luces: <strong data-tono-out="luces">0</strong></label>
+										<input type="range" min="-100" max="100" step="1" value="0" data-tono-input="luces">
+									</div>
+									<div class="fiflp-imagen-tono-modal__actions">
+										<button type="button" class="button fiflp-btn-unificado" data-tono-action="cancelar">Cancelar</button>
+										<button type="button" class="button fiflp-btn-unificado" data-tono-action="guardar">Guardar</button>
+									</div>
+								</div>
+							</div>
+						`;
+
+						document.body.appendChild(wrapper);
+						modal = wrapper;
+						previewImg = modal.querySelector('.fiflp-imagen-tono-modal__preview');
+						inputShadows = modal.querySelector('[data-tono-input="sombras"]');
+						inputMids = modal.querySelector('[data-tono-input="medios"]');
+						inputHighlights = modal.querySelector('[data-tono-input="luces"]');
+						outShadows = modal.querySelector('[data-tono-out="sombras"]');
+						outMids = modal.querySelector('[data-tono-out="medios"]');
+						outHighlights = modal.querySelector('[data-tono-out="luces"]');
+
+						[inputShadows, inputMids, inputHighlights].forEach((input) => {
+							input.addEventListener('input', syncOutputs);
+						});
+
+						modal.addEventListener('click', (event) => {
+							if (event.target === modal || event.target.closest('[data-tono-action="cancelar"]')) {
+								close();
+								return;
+							}
+
+							if (event.target.closest('[data-tono-action="guardar"]')) {
+								if (!currentLayout) {
+									close();
+									return;
+								}
+
+								setRangeFieldValue(getRangeField(currentLayout, 'ajuste_sombras_imagen'), inputShadows.value);
+								setRangeFieldValue(getRangeField(currentLayout, 'ajuste_medios_imagen'), inputMids.value);
+								setRangeFieldValue(getRangeField(currentLayout, 'ajuste_luces_imagen'), inputHighlights.value);
+								updatePreview(currentLayout);
+								close();
+							}
+						});
+					};
+
+					return {
+						async open(layout) {
+							ensure();
+							currentLayout = layout;
+
+							const imageMeta = getFieldImageMeta(layout);
+							previewImg.src = imageMeta.directUrl || imageMeta.fullSrcCandidate || imageMeta.previewSrc || '';
+							previewImg.alt = imageMeta.alt || '';
+
+							inputShadows.value = String(readRangeValue(layout, 'ajuste_sombras_imagen'));
+							inputMids.value = String(readRangeValue(layout, 'ajuste_medios_imagen'));
+							inputHighlights.value = String(readRangeValue(layout, 'ajuste_luces_imagen'));
+							syncOutputs();
+
+							modal.classList.add('is-open');
+
+							const fullUrl = await resolveFullImageUrl(
+								imageMeta.id,
+								imageMeta.directUrl || imageMeta.fullSrcCandidate || imageMeta.previewSrc
+							);
+							if (currentLayout === layout && fullUrl) {
+								previewImg.src = fullUrl;
+							}
+						}
+					};
+				})();
+
+				const ensureToneButton = (layout) => {
+					const imageField = layout.querySelector('.acf-field[data-name="imagen"]');
+					if (!imageField || imageField.querySelector('.fiflp-imagen-tono-launch')) {
+						return;
+					}
+
+					const button = document.createElement('button');
+					button.type = 'button';
+					button.className = 'button fiflp-imagen-tono-launch fiflp-btn-unificado';
+					button.textContent = 'Ajustar imagen';
+					button.addEventListener('click', () => toneModal.open(layout));
+					imageField.appendChild(button);
+				};
+
 				const updatePreview = (layout) => {
 					const preview = layout.querySelector('[data-fiflp-imagen-preview]');
 					if (!preview) {
@@ -2847,9 +3297,13 @@ add_action(
 					const size = readValue(layout, 'tamano_titulo_imagen') || 'm';
 					const pieSize = readValue(layout, 'tamano_pie_imagen') || 'm';
 					const color = readValue(layout, 'color_titulo_imagen') || '#0f2d30';
+					const shadows = readRangeValue(layout, 'ajuste_sombras_imagen');
+					const mids = readRangeValue(layout, 'ajuste_medios_imagen');
+					const highlights = readRangeValue(layout, 'ajuste_luces_imagen');
 
 					const titleNode = preview.querySelector('[data-preview-title]');
 					const captionNode = preview.querySelector('[data-preview-caption]');
+					const imagePreview = layout.querySelector('.acf-field[data-name="imagen"] .acf-image-uploader .image-wrap img');
 
 					if (titleNode) {
 						titleNode.textContent = title;
@@ -2862,6 +3316,14 @@ add_action(
 						captionNode.textContent = caption;
 					}
 
+					if (imagePreview) {
+						if (0 === shadows && 0 === mids && 0 === highlights) {
+							imagePreview.style.filter = '';
+						} else {
+							imagePreview.style.filter = buildToneFilter(shadows, mids, highlights);
+						}
+					}
+
 					preview.setAttribute('data-preview-variante', variante);
 					preview.setAttribute('data-preview-tipografia-titulo', tipografiaTitulo);
 					preview.setAttribute('data-preview-tipografia-pie', tipografiaPie);
@@ -2872,7 +3334,10 @@ add_action(
 				};
 
 				const updateAll = () => {
-					document.querySelectorAll('.layout[data-layout="imagen"]').forEach(updatePreview);
+					document.querySelectorAll('.layout[data-layout="imagen"]').forEach((layout) => {
+						ensureToneButton(layout);
+						updatePreview(layout);
+					});
 				};
 
 				document.addEventListener('input', updateAll, true);

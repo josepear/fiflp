@@ -196,6 +196,27 @@
                             "allow_in_bindings": 0
                         },
                         {
+                            "key": "field_imagen_multiplicar",
+                            "label": "Multiplicar imagen",
+                            "name": "imagen_multiplicar",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Aplica modo de fusión Multiplicar sobre esta imagen.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "20",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No",
+                            "allow_in_bindings": 0
+                        },
+                        {
                             "key": "field_imagen_escala_visual",
                             "label": "Escala visual imagen",
                             "name": "escala_visual_imagen",
@@ -243,6 +264,72 @@
                             "return_format": "value",
                             "allow_null": 0,
                             "layout": "horizontal"
+                        },
+                        {
+                            "key": "field_imagen_ajuste_sombras",
+                            "label": "Sombras",
+                            "name": "ajuste_sombras_imagen",
+                            "aria-label": "",
+                            "type": "range",
+                            "instructions": "Ajuste tonal de sombras (-100 a 100).",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "0",
+                            "min": "-100",
+                            "max": "100",
+                            "allow_in_bindings": 0,
+                            "step": "1",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_imagen_ajuste_medios",
+                            "label": "Medios tonos",
+                            "name": "ajuste_medios_imagen",
+                            "aria-label": "",
+                            "type": "range",
+                            "instructions": "Ajuste tonal de medios tonos (-100 a 100).",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "0",
+                            "min": "-100",
+                            "max": "100",
+                            "allow_in_bindings": 0,
+                            "step": "1",
+                            "prepend": "",
+                            "append": ""
+                        },
+                        {
+                            "key": "field_imagen_ajuste_luces",
+                            "label": "Altas luces",
+                            "name": "ajuste_luces_imagen",
+                            "aria-label": "",
+                            "type": "range",
+                            "instructions": "Ajuste tonal de altas luces (-100 a 100).",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "0",
+                            "min": "-100",
+                            "max": "100",
+                            "allow_in_bindings": 0,
+                            "step": "1",
+                            "prepend": "",
+                            "append": ""
                         },
                         {
                             "key": "field_imagen_titulo_editorial_imagen",

@@ -1670,12 +1670,20 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 }
 
 /*
- * Fallback controlado para fondos casi blancos en imágenes históricas.
- * Solo se aplica en cronología y solo a imágenes marcadas con multiply.
+ * Refuerzo tonal para fondos históricos claros: mantiene multiply visible
+ * sin tocar imágenes que NO tienen la clase is-multiply.
  */
 .cronologia-editorial__media--multiply .lightbox-trigger.is-multiply img {
     filter: contrast(1.08) brightness(1.03)
         url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='m'><feColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -0.72 -0.72 -0.72 2.4 -0.62'/></filter></svg>#m") !important;
+}
+
+/* Imagen normal (sin multiplicar): comportamiento estándar, sin oscurecido */
+.cronologia-editorial__media img:not(.is-multiply) {
+    mix-blend-mode: normal !important;
+    -webkit-mix-blend-mode: normal !important;
+    filter: none !important;
+    opacity: 1 !important;
 }
 
 .cronologia-editorial__media figcaption {
@@ -3586,6 +3594,46 @@ p.rotulo-editorial__subtitulo {
     max-width: 100%;
     height: auto;
     display: block;
+}
+
+.bloque.imagen.imagen--ajustes-tonales .lightbox-trigger img {
+    filter:
+        brightness(calc(1 + ((var(--img-ajuste-medios, 0) + (var(--img-ajuste-sombras, 0) * 0.35) + (var(--img-ajuste-luces, 0) * 0.25)) * 0.003)))
+        contrast(calc(1 + ((var(--img-ajuste-luces, 0) - var(--img-ajuste-sombras, 0)) * 0.002)));
+}
+
+.bloque.imagen .lightbox-trigger img.is-multiply {
+    mix-blend-mode: multiply;
+    -webkit-mix-blend-mode: multiply;
+}
+
+.bloque.imagen.imagen--multiply,
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.imagen.imagen--multiply {
+    isolation: auto !important;
+    opacity: 1 !important;
+    filter: none !important;
+    will-change: auto !important;
+}
+
+.bloque.imagen.imagen--multiply.fade-in,
+.bloque.imagen.imagen--multiply.fade-in.visible {
+    transform: none !important;
+}
+
+.bloque.imagen.imagen--multiply figure,
+.bloque.imagen.imagen--multiply .lightbox-trigger {
+    overflow: visible !important;
+    isolation: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    will-change: auto !important;
+}
+
+/* Mismo comportamiento que cronología en módulo imagen normal + onepage. */
+.bloque.imagen.imagen--multiply .lightbox-trigger.is-multiply img {
+    filter: contrast(1.08) brightness(1.03)
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='m'><feColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -0.72 -0.72 -0.72 2.4 -0.62'/></filter></svg>#m") !important;
 }
 
 .bloque.imagen .lightbox-trigger,

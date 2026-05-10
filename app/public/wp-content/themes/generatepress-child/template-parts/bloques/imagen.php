@@ -18,8 +18,12 @@ $imagen  = $get_field( 'imagen', null );
 $caption = trim( (string) $get_field( 'caption', '' ) );
 $full    = $get_field( 'full', false );
 $sin_redondeo = (bool) $get_field( 'sin_redondeo', false );
+$imagen_multiplicar = (bool) $get_field( 'imagen_multiplicar', false );
 $escala_visual_imagen = trim( (string) $get_field( 'escala_visual_imagen', '100' ) );
 $alineacion_visual_imagen = trim( (string) $get_field( 'alineacion_visual_imagen', 'center' ) );
+$ajuste_sombras_imagen = (float) $get_field( 'ajuste_sombras_imagen', 0 );
+$ajuste_medios_imagen = (float) $get_field( 'ajuste_medios_imagen', 0 );
+$ajuste_luces_imagen  = (float) $get_field( 'ajuste_luces_imagen', 0 );
 
 $titulo_editorial_imagen    = trim( (string) $get_field( 'titulo_editorial_imagen', '' ) );
 $variante_titulo_imagen     = trim( (string) $get_field( 'variante_titulo_imagen', '' ) );
@@ -108,8 +112,35 @@ if ( $sin_redondeo ) {
 	$clases[] = 'imagen--sin-redondeo';
 }
 
+if ( $imagen_multiplicar ) {
+	$clases[] = 'imagen--multiply';
+}
+
 $clases[] = 'imagen--escala-' . $escala_visual_imagen;
 $clases[] = 'imagen--alineacion-' . $alineacion_visual_imagen;
+
+if ( 0.0 !== $ajuste_sombras_imagen || 0.0 !== $ajuste_medios_imagen || 0.0 !== $ajuste_luces_imagen ) {
+	$clases[] = 'imagen--ajustes-tonales';
+}
+
+$ajuste_sombras_imagen = max( -100, min( 100, $ajuste_sombras_imagen ) );
+$ajuste_medios_imagen  = max( -100, min( 100, $ajuste_medios_imagen ) );
+$ajuste_luces_imagen   = max( -100, min( 100, $ajuste_luces_imagen ) );
+
+$image_filter_vars = sprintf(
+	'--img-ajuste-sombras:%s; --img-ajuste-medios:%s; --img-ajuste-luces:%s;',
+	rtrim( rtrim( number_format( $ajuste_sombras_imagen, 2, '.', '' ), '0' ), '.' ),
+	rtrim( rtrim( number_format( $ajuste_medios_imagen, 2, '.', '' ), '0' ), '.' ),
+	rtrim( rtrim( number_format( $ajuste_luces_imagen, 2, '.', '' ), '0' ), '.' )
+);
+
+$lightbox_classes = array( 'lightbox-trigger' );
+$image_classes    = array();
+
+if ( $imagen_multiplicar ) {
+	$lightbox_classes[] = 'is-multiply';
+	$image_classes[]    = 'is-multiply';
+}
 
 $es_inverso_titulo  = in_array( $variante_titulo_imagen, array( 'linea_inversa', 'relleno_inverso' ), true );
 $es_relleno_titulo  = in_array( $variante_titulo_imagen, array( 'relleno', 'relleno_inverso' ), true );
@@ -131,10 +162,10 @@ if ( $es_relleno_titulo ) {
 
 <section class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>">
 
-	<figure>
+	<figure style="<?php echo esc_attr( $image_filter_vars ); ?>">
 
-		<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ?? '' ); ?>">
-			<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
+		<a href="<?php echo esc_url( $imagen_url ); ?>" class="<?php echo esc_attr( implode( ' ', $lightbox_classes ) ); ?>" data-caption="<?php echo esc_attr( $caption ?? '' ); ?>">
+			<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>"<?php echo $image_classes ? ' class="' . esc_attr( implode( ' ', $image_classes ) ) . '"' : ''; ?>>
 		</a>
 
 		<?php if ( '' !== $titulo_editorial_imagen ) : ?>

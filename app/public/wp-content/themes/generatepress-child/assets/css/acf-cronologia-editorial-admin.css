@@ -290,6 +290,21 @@
 	resize: vertical;
 }
 
+/* Ajustes tonales se gestionan por modal, no en línea */
+.post-type-fiflp_cronologia .fiflp-crono-hito-grupo-imagen .acf-field[data-name="ajuste_sombras_imagen_1"],
+.post-type-fiflp_cronologia .fiflp-crono-hito-grupo-imagen .acf-field[data-name="ajuste_medios_imagen_1"],
+.post-type-fiflp_cronologia .fiflp-crono-hito-grupo-imagen .acf-field[data-name="ajuste_luces_imagen_1"],
+.post-type-fiflp_cronologia .fiflp-crono-hito-grupo-imagen .acf-field[data-name="ajuste_sombras_imagen_2"],
+.post-type-fiflp_cronologia .fiflp-crono-hito-grupo-imagen .acf-field[data-name="ajuste_medios_imagen_2"],
+.post-type-fiflp_cronologia .fiflp-crono-hito-grupo-imagen .acf-field[data-name="ajuste_luces_imagen_2"] {
+	display: none !important;
+}
+
+.post-type-fiflp_cronologia .fiflp-crono-tono-launch {
+	margin-top: 8px !important;
+	width: 100%;
+}
+
 /* Posición imagen + sangre en una fila */
 .post-type-fiflp_cronologia .fiflp-crono-hito-imagen-meta-row {
 	display: grid;

@@ -66,39 +66,71 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			$img_multiply_2      = array_key_exists( 'imagen_multiplicar_2', $hito )
 				? ! empty( $hito['imagen_multiplicar_2'] )
 				: $img_multiply_legacy;
+			$img_tone_1 = array(
+				'shadows'    => isset( $hito['ajuste_sombras_imagen_1'] ) ? (float) $hito['ajuste_sombras_imagen_1'] : 0.0,
+				'mids'       => isset( $hito['ajuste_medios_imagen_1'] ) ? (float) $hito['ajuste_medios_imagen_1'] : 0.0,
+				'highlights' => isset( $hito['ajuste_luces_imagen_1'] ) ? (float) $hito['ajuste_luces_imagen_1'] : 0.0,
+			);
+			$img_tone_2 = array(
+				'shadows'    => isset( $hito['ajuste_sombras_imagen_2'] ) ? (float) $hito['ajuste_sombras_imagen_2'] : 0.0,
+				'mids'       => isset( $hito['ajuste_medios_imagen_2'] ) ? (float) $hito['ajuste_medios_imagen_2'] : 0.0,
+				'highlights' => isset( $hito['ajuste_luces_imagen_2'] ) ? (float) $hito['ajuste_luces_imagen_2'] : 0.0,
+			);
 
 			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) ) {
 				continue;
 			}
 
-			$extract_media = static function ( $raw_image, $raw_caption, $raw_multiply = false ) {
+			$extract_media = static function ( $raw_image, $raw_caption, $raw_multiply = false, $raw_tone = array() ) {
 				$url = '';
+				$lightbox_url = '';
 				$alt = '';
 
 				if ( is_array( $raw_image ) ) {
-					$url = (string) ( $raw_image['sizes']['large'] ?? $raw_image['url'] ?? '' );
+					$lightbox_url = (string) ( $raw_image['url'] ?? '' );
+					$url          = (string) ( $raw_image['sizes']['large'] ?? $lightbox_url );
 					$alt = (string) ( $raw_image['alt'] ?? '' );
 				} elseif ( is_string( $raw_image ) ) {
 					$url = trim( $raw_image );
+					$lightbox_url = $url;
 				}
 
 				if ( '' === $url ) {
 					return null;
 				}
 
+				if ( '' === $lightbox_url ) {
+					$lightbox_url = $url;
+				}
+
+				$shadows    = isset( $raw_tone['shadows'] ) ? max( -100, min( 100, (float) $raw_tone['shadows'] ) ) : 0.0;
+				$mids       = isset( $raw_tone['mids'] ) ? max( -100, min( 100, (float) $raw_tone['mids'] ) ) : 0.0;
+				$highlights = isset( $raw_tone['highlights'] ) ? max( -100, min( 100, (float) $raw_tone['highlights'] ) ) : 0.0;
+				$has_tone   = ( 0.0 !== $shadows || 0.0 !== $mids || 0.0 !== $highlights );
+				$brightness = 1 + ( ( $mids + ( $shadows * 0.35 ) + ( $highlights * 0.25 ) ) * 0.003 );
+				$contrast   = 1 + ( ( $highlights - $shadows ) * 0.002 );
+
 				return array(
 					'url'     => $url,
+					'lightbox_url' => $lightbox_url,
 					'alt'     => $alt,
 					'caption' => trim( (string) $raw_caption ),
 					'multiply' => ! empty( $raw_multiply ),
+					'tone_style' => $has_tone
+						? sprintf(
+							'filter: brightness(%1$.4f) contrast(%2$.4f) !important;',
+							$brightness,
+							$contrast
+						)
+						: '',
 				);
 			};
 
 			$medias = array_values(
 				array_filter(
 					array(
-						$extract_media( $imagen, $caption, $img_multiply_1 ),
-						$extract_media( $imagen_2, $caption_2, $img_multiply_2 ),
+						$extract_media( $imagen, $caption, $img_multiply_1, $img_tone_1 ),
+						$extract_media( $imagen_2, $caption_2, $img_multiply_2, $img_tone_2 ),
 					)
 				)
 			);
@@ -161,8 +193,8 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 							<figure class="<?php echo esc_attr( implode( ' ', $figure_classes ) ); ?>">
 								<div class="cronologia-editorial__media-stack <?php echo count( $medias ) > 1 ? 'cronologia-editorial__media-stack--cols-2' : 'cronologia-editorial__media-stack--cols-1'; ?>">
 									<?php foreach ( $medias as $media ) : ?>
-										<a href="<?php echo esc_url( $media['url'] ); ?>" class="lightbox-trigger<?php echo ! empty( $media['multiply'] ) ? ' is-multiply' : ''; ?>" data-caption="<?php echo esc_attr( $media['caption'] ); ?>">
-											<img src="<?php echo esc_url( $media['url'] ); ?>" alt="<?php echo esc_attr( $media['alt'] ); ?>" class="<?php echo ! empty( $media['multiply'] ) ? 'is-multiply' : ''; ?>">
+										<a href="<?php echo esc_url( $media['lightbox_url'] ?? $media['url'] ); ?>" class="lightbox-trigger<?php echo ! empty( $media['multiply'] ) ? ' is-multiply' : ''; ?>" data-caption="<?php echo esc_attr( $media['caption'] ); ?>">
+											<img src="<?php echo esc_url( $media['url'] ); ?>" alt="<?php echo esc_attr( $media['alt'] ); ?>" class="<?php echo ! empty( $media['multiply'] ) ? 'is-multiply' : ''; ?>"<?php echo '' !== $media['tone_style'] ? ' style="' . esc_attr( $media['tone_style'] ) . '"' : ''; ?>>
 										</a>
 									<?php endforeach; ?>
 								</div>

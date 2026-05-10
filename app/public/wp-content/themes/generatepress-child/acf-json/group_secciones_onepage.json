@@ -533,6 +533,26 @@
                             "ui_off_text": "No"
                         },
                         {
+                            "key": "field_onepage_mod_imagen_multiplicar",
+                            "label": "Multiplicar imagen",
+                            "name": "imagen_multiplicar",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Aplica modo de fusión Multiplicar sobre esta imagen.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
+                        },
+                        {
                             "key": "field_onepage_mod_imagen_escala_visual",
                             "label": "Escala visual imagen",
                             "name": "escala_visual_imagen",

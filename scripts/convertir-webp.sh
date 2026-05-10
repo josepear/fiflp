@@ -2,14 +2,22 @@
 set -euo pipefail
 
 # Uso:
-# ./convertir-webp.sh [origen] [destino] [calidad]
+# ./convertir-webp.sh [origen] [destino] [calidad] [preset] [color_mode]
 #
 # calidad (opcional): 0-100
-# Recomendado para máxima optimización sin destrozar imagen: 65-75
+# preset (opcional): balanced | high | small
+# - balanced: equilibrio calidad/peso (por defecto)
+# - high: más calidad visual, peso contenido
+# - small: más compresión, menor peso
+# color_mode (opcional): preserve | srgb
+# - preserve: conserva el perfil de color original (por defecto)
+# - srgb: convierte a sRGB para web manteniendo color estable
 
 SRC_DIR="${1:-/Volumes/RAID/Fotos_WebP}"
 DST_DIR="${2:-/Volumes/RAID/Fotos_WebP_convertidas}"
-QUALITY="${3:-72}"
+QUALITY="${3:-76}"
+PRESET="${4:-balanced}"
+COLOR_MODE="${5:-preserve}"
 
 if ! command -v magick >/dev/null 2>&1; then
   echo "ERROR: ImageMagick no está instalado. Instala con: brew install imagemagick"
@@ -17,6 +25,59 @@ if ! command -v magick >/dev/null 2>&1; then
 fi
 
 mkdir -p "$DST_DIR"
+
+if ! [[ "$QUALITY" =~ ^[0-9]+$ ]] || (( QUALITY < 0 || QUALITY > 100 )); then
+  echo "ERROR: calidad inválida '$QUALITY'. Usa un número entre 0 y 100."
+  exit 1
+fi
+
+if [[ "$PRESET" != "balanced" && "$PRESET" != "high" && "$PRESET" != "small" ]]; then
+  echo "ERROR: preset inválido '$PRESET'. Usa: balanced | high | small"
+  exit 1
+fi
+
+if [[ "$COLOR_MODE" != "preserve" && "$COLOR_MODE" != "srgb" ]]; then
+  echo "ERROR: color_mode inválido '$COLOR_MODE'. Usa: preserve | srgb"
+  exit 1
+fi
+
+# Parámetros de WebP por preset
+# (un preset es un “modo preconfigurado”)
+WEBP_METHOD=6
+WEBP_SNS=58
+WEBP_FILTER=18
+WEBP_SHARPNESS=3
+WEBP_SEGMENTS=4
+WEBP_PASS=6
+WEBP_SHARP_YUV=true
+WEBP_AUTO_FILTER=true
+
+case "$PRESET" in
+  high)
+    WEBP_SNS=62
+    WEBP_FILTER=18
+    WEBP_SHARPNESS=3
+    WEBP_PASS=8
+    ;;
+  balanced)
+    WEBP_SNS=58
+    WEBP_FILTER=18
+    WEBP_SHARPNESS=3
+    WEBP_PASS=6
+    ;;
+  small)
+    WEBP_SNS=48
+    WEBP_FILTER=16
+    WEBP_SHARPNESS=2
+    WEBP_PASS=4
+    ;;
+esac
+
+if [[ "$COLOR_MODE" == "preserve" ]]; then
+  # Evita contraste extra cuando queremos fidelidad al color original.
+  WEBP_SHARP_YUV=false
+  WEBP_AUTO_FILTER=false
+fi
 
 # Normaliza nombres para base de datos/URLs:
 # - minúsculas
@@ -62,6 +123,8 @@ fi
 echo "Origen:   $SRC_DIR"
 echo "Destino:  $DST_DIR"
 echo "Calidad:  $QUALITY"
+echo "Preset:   $PRESET"
+echo "Color:    $COLOR_MODE"
 echo "Archivos: $TOTAL"
 echo
 
@@ -98,14 +161,37 @@ for file in "${FILES[@]}"; do
   mkdir -p "$(dirname "$out")"
 
   # -auto-orient: corrige orientación EXIF
-  # -strip: elimina metadatos pesados
-  # webp:method=6: compresión más agresiva (más lenta, menor peso)
-  magick "$file" \
-    -auto-orient \
-    -strip \
-    -define webp:method=6 \
-    -quality "$QUALITY" \
-    "$out"
+  # preserve: mantiene perfil ICC (evita cambios de color no deseados)
+  # srgb: normaliza a sRGB para web
+  # use-sharp-yuv/autofilter/sns/filter/pass: mejora detalle visual sin disparar peso
+  if [[ "$COLOR_MODE" == "srgb" ]]; then
+    magick "$file" \
+      -auto-orient \
+      -colorspace sRGB \
+      -define webp:method="$WEBP_METHOD" \
+      -define webp:use-sharp-yuv="$WEBP_SHARP_YUV" \
+      -define webp:auto-filter="$WEBP_AUTO_FILTER" \
+      -define webp:sns-strength="$WEBP_SNS" \
+      -define webp:filter-strength="$WEBP_FILTER" \
+      -define webp:filter-sharpness="$WEBP_SHARPNESS" \
+      -define webp:segments="$WEBP_SEGMENTS" \
+      -define webp:pass="$WEBP_PASS" \
+      -quality "$QUALITY" \
+      "$out"
+  else
+    magick "$file" \
+      -auto-orient \
+      -define webp:method="$WEBP_METHOD" \
+      -define webp:use-sharp-yuv="$WEBP_SHARP_YUV" \
+      -define webp:auto-filter="$WEBP_AUTO_FILTER" \
+      -define webp:sns-strength="$WEBP_SNS" \
+      -define webp:filter-strength="$WEBP_FILTER" \
+      -define webp:filter-sharpness="$WEBP_SHARPNESS" \
+      -define webp:segments="$WEBP_SEGMENTS" \
+      -define webp:pass="$WEBP_PASS" \
+      -quality "$QUALITY" \
+      "$out"
+  fi
 
   pct=$(( i * 100 / TOTAL ))
   printf "[%4d/%4d] %3d%% %s\n" "$i" "$TOTAL" "$pct" "$out"

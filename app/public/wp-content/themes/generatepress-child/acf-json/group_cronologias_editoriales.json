@@ -162,6 +162,75 @@
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 },
                 {
+                    "key": "field_cronologia_editorial_hito_ajuste_sombras_1",
+                    "label": "Sombras imagen 1",
+                    "name": "ajuste_sombras_imagen_1",
+                    "aria-label": "",
+                    "type": "range",
+                    "instructions": "Ajuste tonal de sombras (-100 a 100).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-ajuste",
+                        "id": ""
+                    },
+                    "default_value": "0",
+                    "min": "-100",
+                    "max": "100",
+                    "allow_in_bindings": 0,
+                    "step": "1",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_ajuste_medios_1",
+                    "label": "Medios tonos imagen 1",
+                    "name": "ajuste_medios_imagen_1",
+                    "aria-label": "",
+                    "type": "range",
+                    "instructions": "Ajuste tonal de medios tonos (-100 a 100).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-ajuste",
+                        "id": ""
+                    },
+                    "default_value": "0",
+                    "min": "-100",
+                    "max": "100",
+                    "allow_in_bindings": 0,
+                    "step": "1",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_ajuste_luces_1",
+                    "label": "Altas luces imagen 1",
+                    "name": "ajuste_luces_imagen_1",
+                    "aria-label": "",
+                    "type": "range",
+                    "instructions": "Ajuste tonal de altas luces (-100 a 100).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-ajuste",
+                        "id": ""
+                    },
+                    "default_value": "0",
+                    "min": "-100",
+                    "max": "100",
+                    "allow_in_bindings": 0,
+                    "step": "1",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
                     "key": "field_cronologia_editorial_hito_imagen_2",
                     "label": "Imagen 2",
                     "name": "imagen_2",
@@ -229,6 +298,75 @@
                     "ui_on_text": "Sí",
                     "ui_off_text": "No",
                     "ui": 1,
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_ajuste_sombras_2",
+                    "label": "Sombras imagen 2",
+                    "name": "ajuste_sombras_imagen_2",
+                    "aria-label": "",
+                    "type": "range",
+                    "instructions": "Ajuste tonal de sombras (-100 a 100).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-ajuste",
+                        "id": ""
+                    },
+                    "default_value": "0",
+                    "min": "-100",
+                    "max": "100",
+                    "allow_in_bindings": 0,
+                    "step": "1",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_ajuste_medios_2",
+                    "label": "Medios tonos imagen 2",
+                    "name": "ajuste_medios_imagen_2",
+                    "aria-label": "",
+                    "type": "range",
+                    "instructions": "Ajuste tonal de medios tonos (-100 a 100).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-ajuste",
+                        "id": ""
+                    },
+                    "default_value": "0",
+                    "min": "-100",
+                    "max": "100",
+                    "allow_in_bindings": 0,
+                    "step": "1",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_ajuste_luces_2",
+                    "label": "Altas luces imagen 2",
+                    "name": "ajuste_luces_imagen_2",
+                    "aria-label": "",
+                    "type": "range",
+                    "instructions": "Ajuste tonal de altas luces (-100 a 100).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-ajuste",
+                        "id": ""
+                    },
+                    "default_value": "0",
+                    "min": "-100",
+                    "max": "100",
+                    "allow_in_bindings": 0,
+                    "step": "1",
+                    "prepend": "",
+                    "append": "",
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 },
                 {

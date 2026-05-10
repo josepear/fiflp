@@ -48,7 +48,13 @@
 			}
 			if (!$td.children('.fiflp-crono-hito-grupo-texto').length) {
 				var namesText = ['fecha_titulo', 'texto', 'texto_posicion'];
-				var namesImg = ['imagen', 'caption', 'imagen_2', 'caption_2', 'imagen_posicion', 'imagen_sangre'];
+				var namesImg = [
+					'imagen', 'caption', 'imagen_multiplicar_1',
+					'ajuste_sombras_imagen_1', 'ajuste_medios_imagen_1', 'ajuste_luces_imagen_1',
+					'imagen_2', 'caption_2', 'imagen_multiplicar_2',
+					'ajuste_sombras_imagen_2', 'ajuste_medios_imagen_2', 'ajuste_luces_imagen_2',
+					'imagen_posicion', 'imagen_sangre', 'escala_visual_imagen'
+				];
 				var $gText = $('<div class="fiflp-crono-hito-grupo-texto" />');
 				var $gImg = $('<div class="fiflp-crono-hito-grupo-imagen" />');
 				namesText.forEach(function (n) {
@@ -84,6 +90,188 @@
 			});
 			$repeater.data('fiflp-init-collapsed', true);
 		}
+	}
+
+	function readRangeValue($scope, name) {
+		var $field = $scope.find('.acf-field[data-name="' + name + '"]').first();
+		if (!$field.length) {
+			return 0;
+		}
+		var $range = $field.find('input[type="range"]').first();
+		var $number = $field.find('input[type="number"]').first();
+		var raw = $range.length ? $range.val() : ($number.length ? $number.val() : 0);
+		var value = Number(raw);
+		if (!Number.isFinite(value)) {
+			value = 0;
+		}
+		return Math.max(-100, Math.min(100, value));
+	}
+
+	function setRangeValue($scope, name, value) {
+		var $field = $scope.find('.acf-field[data-name="' + name + '"]').first();
+		if (!$field.length) {
+			return;
+		}
+		var safeValue = Math.max(-100, Math.min(100, Number(value) || 0));
+		$field.find('input[type="range"], input[type="number"]').each(function () {
+			this.value = String(safeValue);
+			$(this).trigger('input').trigger('change');
+		});
+	}
+
+	function buildToneFilter(shadows, mids, highlights) {
+		var brightness = 1 + ((mids + (shadows * 0.35) + (highlights * 0.25)) * 0.003);
+		var contrast = 1 + ((highlights - shadows) * 0.002);
+		return 'brightness(' + brightness.toFixed(4) + ') contrast(' + contrast.toFixed(4) + ')';
+	}
+
+	function ensureToneModal() {
+		var $modal = $('.fiflp-imagen-tono-modal');
+		if ($modal.length) {
+			return $modal;
+		}
+
+		$modal = $(
+			'<div class="fiflp-imagen-tono-modal">' +
+				'<div class="fiflp-imagen-tono-modal__dialog" role="dialog" aria-modal="true" aria-label="Ajustar imagen">' +
+					'<div class="fiflp-imagen-tono-modal__preview-wrap"><img class="fiflp-imagen-tono-modal__preview" src="" alt=""></div>' +
+					'<div class="fiflp-imagen-tono-modal__controls">' +
+						'<div class="fiflp-imagen-tono-modal__control"><label>Sombras: <strong data-tono-out="sombras">0</strong></label><input type="range" min="-100" max="100" step="1" value="0" data-tono-input="sombras"></div>' +
+						'<div class="fiflp-imagen-tono-modal__control"><label>Medios tonos: <strong data-tono-out="medios">0</strong></label><input type="range" min="-100" max="100" step="1" value="0" data-tono-input="medios"></div>' +
+						'<div class="fiflp-imagen-tono-modal__control"><label>Altas luces: <strong data-tono-out="luces">0</strong></label><input type="range" min="-100" max="100" step="1" value="0" data-tono-input="luces"></div>' +
+						'<div class="fiflp-imagen-tono-modal__actions"><button type="button" class="button fiflp-btn-unificado" data-tono-action="cancelar">Cancelar</button><button type="button" class="button fiflp-btn-unificado" data-tono-action="guardar">Guardar</button></div>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
+		);
+		$('body').append($modal);
+		return $modal;
+	}
+
+	function attachToneTools() {
+		var activeState = null;
+
+		$(document).off('click.fiflpToneLaunch').on('click.fiflpToneLaunch', '.fiflp-crono-tono-launch', function () {
+			var $btn = $(this);
+			var target = String($btn.data('img-target') || '1');
+			var $scope = $btn.closest('.fiflp-crono-hito-grupo-imagen');
+			if (!$scope.length) {
+				return;
+			}
+
+			var $imgField = '2' === target
+				? $scope.find('.acf-field[data-name="imagen_2"]').first()
+				: $scope.find('.acf-field[data-name="imagen"]').first();
+			var $img = $imgField.find('.acf-image-uploader .image-wrap img').first();
+			var directUrl = '';
+			var attachmentId = '';
+
+			var $hidden = $imgField.find('input[type="hidden"]').first();
+			if ($hidden.length) {
+				var hiddenVal = String($hidden.val() || '').trim();
+				if (/^\d+$/.test(hiddenVal)) {
+					attachmentId = hiddenVal;
+				} else if (/^(https?:)?\/\//.test(hiddenVal) || hiddenVal.indexOf('/') === 0) {
+					directUrl = hiddenVal;
+				}
+			}
+
+			var fallbackUrl = directUrl || String($img.attr('src') || '');
+			var $modal = ensureToneModal();
+			var $preview = $modal.find('.fiflp-imagen-tono-modal__preview');
+			var $inS = $modal.find('[data-tono-input="sombras"]');
+			var $inM = $modal.find('[data-tono-input="medios"]');
+			var $inL = $modal.find('[data-tono-input="luces"]');
+			var $outS = $modal.find('[data-tono-out="sombras"]');
+			var $outM = $modal.find('[data-tono-out="medios"]');
+			var $outL = $modal.find('[data-tono-out="luces"]');
+
+			var names = '2' === target
+				? { s: 'ajuste_sombras_imagen_2', m: 'ajuste_medios_imagen_2', l: 'ajuste_luces_imagen_2' }
+				: { s: 'ajuste_sombras_imagen_1', m: 'ajuste_medios_imagen_1', l: 'ajuste_luces_imagen_1' };
+
+			var sync = function () {
+				var s = Number($inS.val() || 0);
+				var m = Number($inM.val() || 0);
+				var l = Number($inL.val() || 0);
+				$outS.text(s);
+				$outM.text(m);
+				$outL.text(l);
+				$preview.css('filter', buildToneFilter(s, m, l));
+			};
+
+			$inS.val(readRangeValue($scope, names.s));
+			$inM.val(readRangeValue($scope, names.m));
+			$inL.val(readRangeValue($scope, names.l));
+			$preview.attr('src', fallbackUrl).attr('alt', String($img.attr('alt') || ''));
+			sync();
+			$modal.addClass('is-open');
+
+			activeState = {
+				$scope: $scope,
+				$img: $img,
+				names: names,
+			};
+
+			$modal.find('[data-tono-input]').off('input.fiflpTone change.fiflpTone').on('input.fiflpTone change.fiflpTone', sync);
+
+			var params = { action: 'fiflp_get_original_image_url' };
+			if (attachmentId) {
+				params.id = attachmentId;
+			}
+			if (fallbackUrl) {
+				params.url = fallbackUrl;
+			}
+			$.getJSON(ajaxurl, params).done(function (res) {
+				if (res && res.success && res.data && res.data.url) {
+					$preview.attr('src', String(res.data.url));
+				}
+			});
+		});
+
+		$(document).off('click.fiflpToneModal').on('click.fiflpToneModal', '.fiflp-imagen-tono-modal, .fiflp-imagen-tono-modal [data-tono-action]', function (e) {
+			var $target = $(e.target);
+			var $modal = $('.fiflp-imagen-tono-modal');
+			if (!$modal.length) {
+				return;
+			}
+
+			if ($target.closest('[data-tono-action="cancelar"]').length || $target.is('.fiflp-imagen-tono-modal')) {
+				$modal.removeClass('is-open');
+				activeState = null;
+				return;
+			}
+
+			if ($target.closest('[data-tono-action="guardar"]').length && activeState) {
+				var s = Number($modal.find('[data-tono-input="sombras"]').val() || 0);
+				var m = Number($modal.find('[data-tono-input="medios"]').val() || 0);
+				var l = Number($modal.find('[data-tono-input="luces"]').val() || 0);
+
+				setRangeValue(activeState.$scope, activeState.names.s, s);
+				setRangeValue(activeState.$scope, activeState.names.m, m);
+				setRangeValue(activeState.$scope, activeState.names.l, l);
+				activeState.$img.css('filter', (0 === s && 0 === m && 0 === l) ? '' : buildToneFilter(s, m, l));
+
+				$modal.removeClass('is-open');
+				activeState = null;
+			}
+		});
+	}
+
+	function injectToneButtons() {
+		$('.acf-field[data-key="' + fieldKey + '"] .fiflp-crono-hito-grupo-imagen').each(function () {
+			var $scope = $(this);
+			var $img1 = $scope.find('.acf-field[data-name="imagen"]').first();
+			var $img2 = $scope.find('.acf-field[data-name="imagen_2"]').first();
+
+			if ($img1.length && !$img1.find('.fiflp-crono-tono-launch').length) {
+				$img1.append('<button type="button" class="button fiflp-btn-unificado fiflp-crono-tono-launch" data-img-target="1">Ajustar imagen 1</button>');
+			}
+
+			if ($img2.length && !$img2.find('.fiflp-crono-tono-launch').length) {
+				$img2.append('<button type="button" class="button fiflp-btn-unificado fiflp-crono-tono-launch" data-img-target="2">Ajustar imagen 2</button>');
+			}
+		});
 	}
 
 	function bindSync() {
@@ -189,11 +377,21 @@
 	}
 
 	if (typeof acf !== 'undefined') {
-		acf.addAction('ready', setupRows);
-		acf.addAction('append', setupRows);
+		acf.addAction('ready', function () {
+			setupRows();
+			injectToneButtons();
+		});
+		acf.addAction('append', function () {
+			setupRows();
+			injectToneButtons();
+		});
 	}
+	attachToneTools();
 	bindSync();
 	bindCollapsedClickOpen();
 	bindRowNumberToggle();
-	$(setupRows);
+	$(function () {
+		setupRows();
+		injectToneButtons();
+	});
 })(jQuery);
