@@ -37,7 +37,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 }
 ?>
 
-<section class="bloque cronologia-editorial cronologia-editorial--texto-<?php echo esc_attr( $ancho_texto ); ?> fade-in">
+<section class="bloque cronologia-editorial cronologia-editorial--texto-<?php echo esc_attr( $ancho_texto ); ?>">
 	<?php if ( '' !== trim( (string) $titulo ) ) : ?>
 		<header class="cronologia-editorial__header">
 			<h2 class="cronologia-editorial__titulo"><?php echo wp_kses_post( nl2br( esc_html( $titulo ) ) ); ?></h2>
@@ -57,12 +57,21 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			$txt_pos      = isset( $hito['texto_posicion'] ) ? (string) $hito['texto_posicion'] : 'derecha';
 			$img_bleed    = isset( $hito['imagen_sangre'] ) ? (string) $hito['imagen_sangre'] : 'none';
 			$img_scale    = isset( $hito['escala_visual_imagen'] ) ? (string) $hito['escala_visual_imagen'] : '100';
+			// Compatibilidad: si un hito antiguo solo tiene el campo legacy
+			// "imagen_multiplicar", lo reutilizamos para ambas imágenes.
+			$img_multiply_legacy = ! empty( $hito['imagen_multiplicar'] );
+			$img_multiply_1      = array_key_exists( 'imagen_multiplicar_1', $hito )
+				? ! empty( $hito['imagen_multiplicar_1'] )
+				: $img_multiply_legacy;
+			$img_multiply_2      = array_key_exists( 'imagen_multiplicar_2', $hito )
+				? ! empty( $hito['imagen_multiplicar_2'] )
+				: $img_multiply_legacy;
 
 			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) ) {
 				continue;
 			}
 
-			$extract_media = static function ( $raw_image, $raw_caption ) {
+			$extract_media = static function ( $raw_image, $raw_caption, $raw_multiply = false ) {
 				$url = '';
 				$alt = '';
 
@@ -81,14 +90,15 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 					'url'     => $url,
 					'alt'     => $alt,
 					'caption' => trim( (string) $raw_caption ),
+					'multiply' => ! empty( $raw_multiply ),
 				);
 			};
 
 			$medias = array_values(
 				array_filter(
 					array(
-						$extract_media( $imagen, $caption ),
-						$extract_media( $imagen_2, $caption_2 ),
+						$extract_media( $imagen, $caption, $img_multiply_1 ),
+						$extract_media( $imagen_2, $caption_2, $img_multiply_2 ),
 					)
 				)
 			);
@@ -109,6 +119,18 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 
 			if ( ! in_array( $img_scale, array( '100', '75', '50', '33' ), true ) ) {
 				$img_scale = '100';
+			}
+
+			$figure_classes = array(
+				'cronologia-editorial__media',
+				'cronologia-editorial__media--bleed-' . $img_bleed,
+				'cronologia-editorial__media--escala-' . $img_scale,
+			);
+			foreach ( $medias as $_m ) {
+				if ( ! empty( $_m['multiply'] ) ) {
+					$figure_classes[] = 'cronologia-editorial__media--multiply';
+					break;
+				}
 			}
 			?>
 			<?php
@@ -136,11 +158,11 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 						<?php endif; ?>
 
 						<?php if ( $has_media ) : ?>
-							<figure class="cronologia-editorial__media cronologia-editorial__media--bleed-<?php echo esc_attr( $img_bleed ); ?> cronologia-editorial__media--escala-<?php echo esc_attr( $img_scale ); ?>">
+							<figure class="<?php echo esc_attr( implode( ' ', $figure_classes ) ); ?>">
 								<div class="cronologia-editorial__media-stack <?php echo count( $medias ) > 1 ? 'cronologia-editorial__media-stack--cols-2' : 'cronologia-editorial__media-stack--cols-1'; ?>">
 									<?php foreach ( $medias as $media ) : ?>
-										<a href="<?php echo esc_url( $media['url'] ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $media['caption'] ); ?>">
-											<img src="<?php echo esc_url( $media['url'] ); ?>" alt="<?php echo esc_attr( $media['alt'] ); ?>">
+										<a href="<?php echo esc_url( $media['url'] ); ?>" class="lightbox-trigger<?php echo ! empty( $media['multiply'] ) ? ' is-multiply' : ''; ?>" data-caption="<?php echo esc_attr( $media['caption'] ); ?>">
+											<img src="<?php echo esc_url( $media['url'] ); ?>" alt="<?php echo esc_attr( $media['alt'] ); ?>" class="<?php echo ! empty( $media['multiply'] ) ? 'is-multiply' : ''; ?>">
 										</a>
 									<?php endforeach; ?>
 								</div>

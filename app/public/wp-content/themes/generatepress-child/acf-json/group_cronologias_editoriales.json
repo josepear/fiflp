@@ -140,6 +140,28 @@
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 },
                 {
+                    "key": "field_cronologia_editorial_hito_imagen_multiplicar_1",
+                    "label": "Multiplicar imagen 1",
+                    "name": "imagen_multiplicar_1",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "Aplica modo de fusión multiply a Imagen 1.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-meta",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "allow_in_bindings": 0,
+                    "ui_on_text": "Sí",
+                    "ui_off_text": "No",
+                    "ui": 1,
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
                     "key": "field_cronologia_editorial_hito_imagen_2",
                     "label": "Imagen 2",
                     "name": "imagen_2",
@@ -185,6 +207,28 @@
                     "maxlength": "",
                     "placeholder": "",
                     "rows": 2,
+                    "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_imagen_multiplicar_2",
+                    "label": "Multiplicar imagen 2",
+                    "name": "imagen_multiplicar_2",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "Aplica modo de fusión multiply a Imagen 2.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-imagen-meta",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "allow_in_bindings": 0,
+                    "ui_on_text": "Sí",
+                    "ui_off_text": "No",
+                    "ui": 1,
                     "parent_repeater": "field_cronologia_editorial_hitos"
                 },
                 {

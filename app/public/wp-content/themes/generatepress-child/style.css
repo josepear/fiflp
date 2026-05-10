@@ -1482,6 +1482,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
 .cronologia-editorial__lista {
     position: relative;
+    isolation: auto;
 }
 
 .cronologia-editorial__lista::before {
@@ -1566,6 +1567,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
 .cronologia-editorial__media {
     --cron-media-scale: 1;
+    background: transparent !important;
     width: var(--cron-media-col);
     max-width: 100%;
     margin: 24px 0 0 auto;
@@ -1591,6 +1593,8 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
 .cronologia-editorial__media .lightbox-trigger {
     display: block;
+    position: relative;
+    background: transparent !important;
     border-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
     overflow: hidden;
 }
@@ -1612,6 +1616,66 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     height: auto;
     display: block;
     border-radius: max(var(--fiflp-image-radius, 18px), 18px) !important;
+}
+
+/*
+ * Multiply real: solo en la <img>. overflow:hidden encapsula el blend.
+ * Neutralizar opacity/transform/filter/will-change/isolation en la cadena del media
+ * (y en el bloque si hace falta) evita stacking contexts que aíslen el backdrop.
+ * Evitar z-index/position extra en el figure: crean contexto y pueden atrapar el blend.
+ * No mezclar en el <a>.
+ */
+.bloque.cronologia-editorial:has(.cronologia-editorial__media--multiply) {
+    isolation: auto !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    will-change: auto !important;
+}
+
+.cronologia-editorial__media--multiply {
+    overflow: visible;
+    isolation: auto !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    will-change: auto !important;
+}
+
+.cronologia-editorial__media--multiply .cronologia-editorial__media-stack {
+    isolation: auto !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    will-change: auto !important;
+}
+
+.cronologia-editorial__media--multiply .lightbox-trigger {
+    overflow: visible;
+    isolation: auto !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    will-change: auto !important;
+}
+
+.cronologia-editorial__media img.is-multiply {
+    mix-blend-mode: multiply;
+    -webkit-mix-blend-mode: multiply;
+    isolation: auto !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    will-change: auto !important;
+}
+
+/*
+ * Fallback controlado para fondos casi blancos en imágenes históricas.
+ * Solo se aplica en cronología y solo a imágenes marcadas con multiply.
+ */
+.cronologia-editorial__media--multiply .lightbox-trigger.is-multiply img {
+    filter: contrast(1.08) brightness(1.03)
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='m'><feColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -0.72 -0.72 -0.72 2.4 -0.62'/></filter></svg>#m") !important;
 }
 
 .cronologia-editorial__media figcaption {
