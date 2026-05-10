@@ -2354,6 +2354,16 @@ add_action(
 				grid-row: 3;
 			}
 
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="escala_visual_imagen"] {
+				grid-column: 2 / 8;
+				grid-row: 4;
+			}
+
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="alineacion_visual_imagen"] {
+				grid-column: 2 / 8;
+				grid-row: 5;
+			}
+
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"] {
 				grid-column: 2 / 8;
 				grid-row: 1;

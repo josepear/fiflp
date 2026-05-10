@@ -95,7 +95,7 @@
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "60",
+                                "width": "100",
                                 "class": "",
                                 "id": ""
                             },
@@ -173,6 +173,55 @@
                             "ui_on_text": "Sí",
                             "ui_off_text": "No",
                             "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_imagen_escala_visual",
+                            "label": "Escala visual imagen",
+                            "name": "escala_visual_imagen",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "Controla el ancho visual: completo, 3/4, mitad o 1/3.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "100": "100%",
+                                "75": "75%",
+                                "50": "50%",
+                                "33": "33%"
+                            },
+                            "default_value": "100",
+                            "return_format": "value",
+                            "allow_null": 0,
+                            "layout": "horizontal"
+                        },
+                        {
+                            "key": "field_imagen_alineacion_visual",
+                            "label": "Alineación visual imagen",
+                            "name": "alineacion_visual_imagen",
+                            "aria-label": "",
+                            "type": "button_group",
+                            "instructions": "Alinea la imagen dentro del contenedor.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "left": "Izquierda",
+                                "center": "Centro",
+                                "right": "Derecha"
+                            },
+                            "default_value": "center",
+                            "return_format": "value",
+                            "allow_null": 0,
+                            "layout": "horizontal"
                         },
                         {
                             "key": "field_imagen_titulo_editorial_imagen",

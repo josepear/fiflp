@@ -18,6 +18,8 @@ $imagen  = $get_field( 'imagen', null );
 $caption = trim( (string) $get_field( 'caption', '' ) );
 $full    = $get_field( 'full', false );
 $sin_redondeo = (bool) $get_field( 'sin_redondeo', false );
+$escala_visual_imagen = trim( (string) $get_field( 'escala_visual_imagen', '100' ) );
+$alineacion_visual_imagen = trim( (string) $get_field( 'alineacion_visual_imagen', 'center' ) );
 
 $titulo_editorial_imagen    = trim( (string) $get_field( 'titulo_editorial_imagen', '' ) );
 $variante_titulo_imagen     = trim( (string) $get_field( 'variante_titulo_imagen', '' ) );
@@ -76,6 +78,14 @@ if ( ! in_array( $tipografia_pie_imagen, array( 'body', 'meta' ), true ) ) {
 	$tipografia_pie_imagen = 'body';
 }
 
+if ( ! in_array( $escala_visual_imagen, array( '100', '75', '50', '33' ), true ) ) {
+	$escala_visual_imagen = '100';
+}
+
+if ( ! in_array( $alineacion_visual_imagen, array( 'left', 'center', 'right' ), true ) ) {
+	$alineacion_visual_imagen = 'center';
+}
+
 if ( ! $color_titulo_imagen ) {
 	$color_titulo_imagen = '#0f2d30';
 }
@@ -97,6 +107,9 @@ if ( $full ) {
 if ( $sin_redondeo ) {
 	$clases[] = 'imagen--sin-redondeo';
 }
+
+$clases[] = 'imagen--escala-' . $escala_visual_imagen;
+$clases[] = 'imagen--alineacion-' . $alineacion_visual_imagen;
 
 $es_inverso_titulo  = in_array( $variante_titulo_imagen, array( 'linea_inversa', 'relleno_inverso' ), true );
 $es_relleno_titulo  = in_array( $variante_titulo_imagen, array( 'relleno', 'relleno_inverso' ), true );

@@ -32,7 +32,7 @@ $panel_id = 'fiflp-onepage-nav-panel';
 			></div>
 
 			<nav class="fiflp-onepage-sidebar__panel" id="<?php echo esc_attr( $panel_id ); ?>" data-onepage-sidebar-panel>
-				<p class="fiflp-onepage-sidebar__heading"><?php echo esc_html__( 'Secciones', 'generatepress' ); ?></p>
+				<p class="fiflp-onepage-sidebar__heading"><?php echo esc_html__( 'Menú', 'generatepress' ); ?></p>
 				<ol class="fiflp-onepage-sidebar__list">
 					<?php foreach ( $sections as $sec ) : ?>
 						<?php

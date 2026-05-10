@@ -655,6 +655,22 @@ body.fiflp-menu-open #page {
     max-width: 1100px; /* más ancho que texto */
 }
 
+.bloque.imagen.imagen--escala-100 {
+    max-width: 1100px;
+}
+
+.bloque.imagen.imagen--escala-75 {
+    max-width: 825px;
+}
+
+.bloque.imagen.imagen--escala-50 {
+    max-width: 550px;
+}
+
+.bloque.imagen.imagen--escala-33 {
+    max-width: 366px;
+}
+
 /* Elimina márgenes por defecto del figure */
 .bloque.imagen figure {
     margin: 0;
@@ -896,18 +912,22 @@ body.fiflp-menu-open #page {
 
 .seccion-onepage__titulo--tam-s {
     font-size: clamp(20px, 2.6vw, 36px);
+    line-height: calc(clamp(20px, 2.6vw, 36px) - 10px);
 }
 
 .seccion-onepage__titulo--tam-m {
     font-size: clamp(26px, 3.6vw, 52px);
+    line-height: calc(clamp(26px, 3.6vw, 52px) - 14px);
 }
 
 .seccion-onepage__titulo--tam-l {
     font-size: clamp(32px, 4.4vw, 64px);
+    line-height: calc(clamp(32px, 4.4vw, 64px) - 16px);
 }
 
 .seccion-onepage__titulo--tam-xl {
     font-size: clamp(38px, 5.2vw, 78px);
+    line-height: calc(clamp(38px, 5.2vw, 78px) - 20px);
 }
 
 .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__titulo {
@@ -3366,12 +3386,66 @@ p.rotulo-editorial__subtitulo {
     margin: 120px 0;
 }
 
+/* Escala visual del módulo imagen (global + onepage), sin depender del pie de foto. */
+.bloque.imagen.imagen--escala-100,
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.imagen.imagen--escala-100 {
+    max-width: 1100px !important;
+}
+
+.bloque.imagen.imagen--escala-75,
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.imagen.imagen--escala-75 {
+    max-width: 825px !important;
+}
+
+.bloque.imagen.imagen--escala-50,
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.imagen.imagen--escala-50 {
+    max-width: 550px !important;
+}
+
+.bloque.imagen.imagen--escala-33,
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.imagen.imagen--escala-33 {
+    max-width: 366px !important;
+}
+
 .bloque.imagen.imagen-full {
     width: calc(100% + (50vw - 50%));
     max-width: none;
-    margin-left: 0;
-    margin-right: calc(50% - 50vw);
+    margin-left: auto;
+    margin-right: auto;
     overflow: visible;
+}
+
+/* En A sangre la escala también aplica sobre el ancho expandido */
+.bloque.imagen.imagen-full.imagen--escala-100 {
+    width: calc((100% + (50vw - 50%)) * 1);
+}
+
+.bloque.imagen.imagen-full.imagen--escala-75 {
+    width: calc((100% + (50vw - 50%)) * 0.75);
+}
+
+.bloque.imagen.imagen-full.imagen--escala-50 {
+    width: calc((100% + (50vw - 50%)) * 0.5);
+}
+
+.bloque.imagen.imagen-full.imagen--escala-33 {
+    width: calc((100% + (50vw - 50%)) * 0.33);
+}
+
+/* Alineación visual del módulo imagen */
+.bloque.imagen.imagen--alineacion-left {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+.bloque.imagen.imagen--alineacion-center {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.bloque.imagen.imagen--alineacion-right {
+    margin-left: auto !important;
+    margin-right: 0 !important;
 }
 
 /* Imagen */
@@ -3424,6 +3498,7 @@ p.rotulo-editorial__subtitulo {
 .bloque.imagen figcaption {
     max-width: 100%;
     margin: 10px 0 0;
+    margin-bottom: 20px;
     padding: 0;
 }
 
@@ -3435,6 +3510,12 @@ p.rotulo-editorial__subtitulo {
     margin-top: 14px;
     width: 100%;
     max-width: 100%;
+}
+
+.bloque.imagen .imagen-meta__caption,
+.bloque.texto-imagen figcaption,
+.bloque.imagen figcaption {
+    margin-bottom: 20px;
 }
 
 .bloque.imagen .imagen-meta--disposicion-inline {
