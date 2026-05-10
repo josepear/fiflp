@@ -57,8 +57,14 @@ $color_fondo = $normalize_color( $get_field( 'color_fondo', '' ), '' );
 
 $interlineado_raw     = $get_field( 'interlineado', null );
 $espaciado_letras_raw = $get_field( 'espaciado_letras', null );
-$is_onepage_context = ! empty( $args['onepage'] );
-$titulo_lineas_raw  = $is_onepage_context ? $get_field( 'titulo_lineas', array() ) : array(); // En normal desactivado; en onepage sigue activo.
+$titulo_lineas_raw = $get_field( 'titulo_lineas', null );
+
+// Compatibilidad entre los 3 rótulos editoriales:
+// - Normal/onepage: `titulo_lineas`
+// - Home hero legado: `rotulo_titulo_lineas`
+if ( ! is_array( $titulo_lineas_raw ) || empty( $titulo_lineas_raw ) ) {
+	$titulo_lineas_raw = $get_field( 'rotulo_titulo_lineas', array() );
+}
 
 $variantes_validas = array(
 	'linea',
@@ -373,22 +379,24 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 				$row_marco_upper = $row_es_relleno_super ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
 				?>
 				<div class="<?php echo esc_attr( implode( ' ', $row_clases ) ); ?>" style="<?php echo esc_attr( implode( '; ', $row_style ) ); ?>">
-					<?php if ( '' !== $row['titulo'] ) : ?>
-						<div class="rotulo-editorial__franja rotulo-editorial__franja--principal<?php echo $row_es_inverso ? ' is-inversa' : ''; ?><?php echo $row_es_relleno ? ' is-relleno' : ''; ?>">
-							<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $row_viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-								<polygon class="<?php echo esc_attr( $row_marco_lower ); ?>" points="<?php echo esc_attr( $row_puntos_principal ); ?>"></polygon>
-							</svg>
-							<<?php echo esc_attr( $etiqueta ); ?> class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $row['titulo'] ); ?></<?php echo esc_attr( $etiqueta ); ?>>
-						</div>
-					<?php endif; ?>
-					<?php if ( '' !== $row['supertitulo'] ) : ?>
-						<div class="rotulo-editorial__franja rotulo-editorial__franja--superior<?php echo $row_es_inverso_super ? ' is-inversa' : ''; ?><?php echo $row_es_relleno_super ? ' is-relleno' : ''; ?>">
-							<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-								<polygon class="<?php echo esc_attr( $row_marco_upper ); ?>" points="<?php echo esc_attr( $row_puntos_superior ); ?>"></polygon>
-							</svg>
-							<span class="rotulo-editorial__union"><span class="rotulo-editorial__texto rotulo-editorial__texto--superior"><?php echo esc_html( $row['supertitulo'] ); ?></span></span>
-						</div>
-					<?php endif; ?>
+					<div class="rotulo-editorial__cabecera">
+						<?php if ( '' !== $row['titulo'] ) : ?>
+							<div class="rotulo-editorial__franja rotulo-editorial__franja--principal<?php echo $row_es_inverso ? ' is-inversa' : ''; ?><?php echo $row_es_relleno ? ' is-relleno' : ''; ?>">
+								<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $row_viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+									<polygon class="<?php echo esc_attr( $row_marco_lower ); ?>" points="<?php echo esc_attr( $row_puntos_principal ); ?>"></polygon>
+								</svg>
+								<<?php echo esc_attr( $etiqueta ); ?> class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $row['titulo'] ); ?></<?php echo esc_attr( $etiqueta ); ?>>
+							</div>
+						<?php endif; ?>
+						<?php if ( '' !== $row['supertitulo'] ) : ?>
+							<div class="rotulo-editorial__franja rotulo-editorial__franja--superior<?php echo $row_es_inverso_super ? ' is-inversa' : ''; ?><?php echo $row_es_relleno_super ? ' is-relleno' : ''; ?>">
+								<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+									<polygon class="<?php echo esc_attr( $row_marco_upper ); ?>" points="<?php echo esc_attr( $row_puntos_superior ); ?>"></polygon>
+								</svg>
+								<span class="rotulo-editorial__union"><span class="rotulo-editorial__texto rotulo-editorial__texto--superior"><?php echo esc_html( $row['supertitulo'] ); ?></span></span>
+							</div>
+						<?php endif; ?>
+					</div>
 					<?php if ( '' !== $row['subtitulo'] ) : ?>
 						<p class="rotulo-editorial__subtitulo"><?php echo esc_html( $row['subtitulo'] ); ?></p>
 					<?php endif; ?>
@@ -413,35 +421,39 @@ if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' ===
 				);
 				?>
 				<div class="<?php echo esc_attr( implode( ' ', $linea_clases ) ); ?>">
-					<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
-						<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $linea_viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-							<polygon class="<?php echo esc_attr( $linea_clase_marco ); ?>" points="<?php echo esc_attr( $linea_puntos_principal ); ?>"></polygon>
-						</svg>
-						<p class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $linea['texto'] ); ?></p>
+					<div class="rotulo-editorial__cabecera">
+						<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
+							<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $linea_viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+								<polygon class="<?php echo esc_attr( $linea_clase_marco ); ?>" points="<?php echo esc_attr( $linea_puntos_principal ); ?>"></polygon>
+							</svg>
+							<p class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $linea['texto'] ); ?></p>
+						</div>
 					</div>
 				</div>
 			<?php endforeach; ?>
 		</div>
 	<?php else : ?>
 		<div class="<?php echo esc_attr( implode( ' ', $clases_rotulo ) ); ?>" style="<?php echo esc_attr( implode( '; ', $style_rules ) ); ?>">
-			<?php if ( '' !== $titulo ) : ?>
-				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal<?php echo $es_inverso ? ' is-inversa' : ''; ?><?php echo $es_relleno ? ' is-relleno' : ''; ?>">
-					<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-						<polygon class="<?php echo esc_attr( $clase_marco_lower ); ?>" points="<?php echo esc_attr( $puntos_principal ); ?>"></polygon>
-					</svg>
-					<<?php echo esc_attr( $etiqueta ); ?> class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo ); ?></<?php echo esc_attr( $etiqueta ); ?>>
-				</div>
-			<?php endif; ?>
-			<?php if ( '' !== $supertitulo ) : ?>
-				<div class="rotulo-editorial__franja rotulo-editorial__franja--superior<?php echo $es_inverso_superior ? ' is-inversa' : ''; ?><?php echo $es_relleno_superior ? ' is-relleno' : ''; ?>">
-					<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-						<polygon class="<?php echo esc_attr( $clase_marco_upper ); ?>" points="<?php echo esc_attr( $puntos_superior ); ?>"></polygon>
-					</svg>
-					<span class="rotulo-editorial__union">
-						<span class="rotulo-editorial__texto rotulo-editorial__texto--superior"><?php echo esc_html( $supertitulo ); ?></span>
-					</span>
-				</div>
-			<?php endif; ?>
+			<div class="rotulo-editorial__cabecera">
+				<?php if ( '' !== $titulo ) : ?>
+					<div class="rotulo-editorial__franja rotulo-editorial__franja--principal<?php echo $es_inverso ? ' is-inversa' : ''; ?><?php echo $es_relleno ? ' is-relleno' : ''; ?>">
+						<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+							<polygon class="<?php echo esc_attr( $clase_marco_lower ); ?>" points="<?php echo esc_attr( $puntos_principal ); ?>"></polygon>
+						</svg>
+						<<?php echo esc_attr( $etiqueta ); ?> class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo ); ?></<?php echo esc_attr( $etiqueta ); ?>>
+					</div>
+				<?php endif; ?>
+				<?php if ( '' !== $supertitulo ) : ?>
+					<div class="rotulo-editorial__franja rotulo-editorial__franja--superior<?php echo $es_inverso_superior ? ' is-inversa' : ''; ?><?php echo $es_relleno_superior ? ' is-relleno' : ''; ?>">
+						<svg class="rotulo-editorial__marco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+							<polygon class="<?php echo esc_attr( $clase_marco_upper ); ?>" points="<?php echo esc_attr( $puntos_superior ); ?>"></polygon>
+						</svg>
+						<span class="rotulo-editorial__union">
+							<span class="rotulo-editorial__texto rotulo-editorial__texto--superior"><?php echo esc_html( $supertitulo ); ?></span>
+						</span>
+					</div>
+				<?php endif; ?>
+			</div>
 
 			<?php if ( '' !== $subtitulo ) : ?>
 				<p class="rotulo-editorial__subtitulo"><?php echo esc_html( $subtitulo ); ?></p>

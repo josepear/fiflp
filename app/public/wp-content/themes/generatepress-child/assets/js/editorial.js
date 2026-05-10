@@ -64,28 +64,41 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         document.querySelectorAll('.rotulo-editorial').forEach(function (rotulo) {
-            const principal = rotulo.querySelector('.rotulo-editorial__franja--principal');
+            const cabecera = rotulo.querySelector('.rotulo-editorial__cabecera');
             const subtitulo = rotulo.querySelector('.rotulo-editorial__subtitulo');
             const bloque = rotulo.closest('.rotulo-editorial-bloque');
+            const maxTrackWidth = Math.max(
+                0,
+                (bloque ? bloque.clientWidth : 0) ||
+                (rotulo.parentElement ? rotulo.parentElement.clientWidth : 0) ||
+                Math.floor(window.innerWidth * 0.92)
+            );
 
-            if (!principal || !subtitulo) {
+            if (cabecera && maxTrackWidth > 0) {
+                cabecera.style.transform = '';
+
+                const naturalWidth = cabecera.scrollWidth;
+                if (naturalWidth > 0) {
+                    const scale = Math.min(1, maxTrackWidth / naturalWidth);
+                    cabecera.style.transform = 'scale(' + scale.toFixed(4) + ')';
+                }
+            }
+
+            if (!subtitulo || maxTrackWidth <= 0) {
                 return;
             }
 
-            let subtituloWidth = principal.offsetWidth;
+            // Subtítulo/sumario independiente del tamaño del SVG.
+            subtitulo.style.width = '';
+            subtitulo.style.maxWidth = '';
 
             if (rotulo.classList.contains('rotulo-editorial--subtitulo-estrecho')) {
-                subtituloWidth = Math.round(principal.offsetWidth * 0.72);
+                subtitulo.style.width = Math.round(maxTrackWidth * 0.72) + 'px';
             } else if (rotulo.classList.contains('rotulo-editorial--subtitulo-ancho')) {
-                subtituloWidth = Math.max(
-                    0,
-                    (bloque ? bloque.clientWidth : 0) ||
-                    (rotulo.parentElement ? rotulo.parentElement.clientWidth : 0) ||
-                    Math.floor(window.innerWidth * 0.92)
-                );
+                subtitulo.style.width = Math.round(maxTrackWidth) + 'px';
+            } else {
+                subtitulo.style.maxWidth = Math.round(maxTrackWidth) + 'px';
             }
-
-            subtitulo.style.width = subtituloWidth + 'px';
         });
     };
 
