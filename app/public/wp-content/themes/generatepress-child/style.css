@@ -1656,36 +1656,48 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         padding-top: env(safe-area-inset-top, 0px) !important;
     }
 
-    /* Centrado vertical del contenido dentro del header sticky */
+    /* Centrado vertical del contenido dentro del header sticky.
+     * overflow:visible evita que GeneratePress grid-container recorte el logo. */
     .site-header .inside-header {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        padding-top: 8px !important;
-        padding-bottom: 8px !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        overflow: visible !important;
     }
 
     .site-header .site-branding {
         align-items: center !important;
         gap: 0 !important;
         min-height: 0 !important;
+        overflow: visible !important;
     }
 
-    /* Quitar el padding-bottom heredado que desplazaba el logo */
+    /* Logo dentro del header: tamaño propio para que quepa íntegro en la barra.
+     * El logo general de móvil (54–82 px) es demasiado grande para el header strip. */
     .site-header .fiflp-centenario-logo {
-        padding-bottom: 0 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        padding: 0 !important;
+        width: auto !important;
+        overflow: visible !important;
     }
 
-    /* Logo: transición de tamaño y color */
     .site-header .fiflp-centenario-logo img {
+        height: clamp(36px, 9vw, 48px) !important;
+        max-width: min(40vw, 180px) !important;
+        display: block;
         transition:
             height 0.3s var(--fiflp-ease-soft, ease),
             filter 0.3s ease;
     }
 
-    /* Compacto: 70% del tamaño original (clamp 54–82px × 0.7 ≈ 38–57px) */
+    /* Compacto: 70% → clamp(25px, 6.3vw, 34px) */
     .site-header.is-compact .fiflp-centenario-logo img {
-        height: clamp(38px, 11vw, 57px) !important;
+        height: clamp(25px, 6.3vw, 34px) !important;
     }
 
     /* Sección oscura: logo en blanco */
