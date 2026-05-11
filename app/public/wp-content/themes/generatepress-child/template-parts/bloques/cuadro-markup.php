@@ -35,11 +35,34 @@ $nc_raw = isset( $fields['num_columnas'] ) ? (string) $fields['num_columnas'] : 
 $nc     = in_array( $nc_raw, array( '2', '3', '4' ), true ) ? $nc_raw : '2';
 $n_cols = (int) $nc;
 
+$ancho_grid = isset( $fields['ancho_grid'] ) ? strtolower( trim( (string) $fields['ancho_grid'] ) ) : 'normal';
+if ( ! in_array( $ancho_grid, array( 'estrecho', 'normal', 'ancho' ), true ) ) {
+	$ancho_grid = 'normal';
+}
+
 $filas_raw = isset( $fields['filas'] ) && is_array( $fields['filas'] ) ? $fields['filas'] : array();
 
+$tipografias_cifra_validas = array(
+	'editorial',
+	'manrope',
+	'fk_upright',
+	'fk_slanted',
+	'fk_backslanted',
+);
+
 $tipografia = isset( $fields['tipografia_cifras'] ) ? (string) $fields['tipografia_cifras'] : 'editorial';
-if ( ! in_array( $tipografia, array( 'editorial', 'manrope' ), true ) ) {
+if ( ! in_array( $tipografia, $tipografias_cifra_validas, true ) ) {
 	$tipografia = 'editorial';
+}
+
+$tipografia_titular = isset( $fields['tipografia_titular'] ) ? (string) $fields['tipografia_titular'] : 'manrope';
+if ( ! in_array( $tipografia_titular, $tipografias_cifra_validas, true ) ) {
+	$tipografia_titular = 'manrope';
+}
+
+$tipografia_intro = isset( $fields['tipografia_intro'] ) ? (string) $fields['tipografia_intro'] : 'editorial';
+if ( ! in_array( $tipografia_intro, $tipografias_cifra_validas, true ) ) {
+	$tipografia_intro = 'editorial';
 }
 
 list( $cmin, $cmax ) = fiflp_cuadro_normalize_px_pair(
@@ -57,6 +80,22 @@ list( $tmin, $tmax ) = fiflp_cuadro_normalize_px_pair(
 
 $cifra_clamp = fiflp_cuadro_clamp_font_size( $cmin, $cmax, 4.0 );
 $texto_clamp = fiflp_cuadro_clamp_font_size( $tmin, $tmax, 2.75 );
+
+list( $tit_min, $tit_max ) = fiflp_cuadro_normalize_px_pair(
+	$fields['titular_min_px'] ?? 15,
+	$fields['titular_max_px'] ?? 26,
+	15,
+	26
+);
+list( $intro_min, $intro_max ) = fiflp_cuadro_normalize_px_pair(
+	$fields['texto_intro_min_px'] ?? 15,
+	$fields['texto_intro_max_px'] ?? 24,
+	15,
+	24
+);
+
+$titular_clamp = fiflp_cuadro_clamp_font_size_fluid( $tit_min, $tit_max );
+$intro_clamp   = fiflp_cuadro_clamp_font_size_fluid( $intro_min, $intro_max );
 
 $color_cifra = isset( $fields['color_cifra'] ) ? sanitize_hex_color( (string) $fields['color_cifra'] ) : '';
 $color_texto = isset( $fields['color_texto'] ) ? sanitize_hex_color( (string) $fields['color_texto'] ) : '';
@@ -118,6 +157,10 @@ $classes = array(
 	'fade-in',
 );
 
+if ( 'normal' !== $ancho_grid ) {
+	$classes[] = 'fiflp-cuadro--grid-' . $ancho_grid;
+}
+
 if ( ! $is_cronologia ) {
 	$classes[] = 'bloque';
 }
@@ -132,7 +175,12 @@ if ( $is_cronologia ) {
 
 if ( 'manrope' === $tipografia ) {
 	$classes[] = 'fiflp-cuadro--cifra-manrope';
+} elseif ( in_array( $tipografia, array( 'fk_upright', 'fk_slanted', 'fk_backslanted' ), true ) ) {
+	$classes[] = 'fiflp-cuadro--cifra-' . str_replace( '_', '-', $tipografia );
 }
+
+$classes[] = 'fiflp-cuadro--titular-' . str_replace( '_', '-', $tipografia_titular );
+$classes[] = 'fiflp-cuadro--intro-' . str_replace( '_', '-', $tipografia_intro );
 
 $aria_label = get_the_title( $cuadro_id );
 if ( '' === trim( $aria_label ) ) {
@@ -140,9 +188,11 @@ if ( '' === trim( $aria_label ) ) {
 }
 
 $style_vars = sprintf(
-	'--fiflp-cuadro-cifra-size:%1$s;--fiflp-cuadro-texto-size:%2$s;--fiflp-cuadro-color-cifra:%3$s;--fiflp-cuadro-color-texto:%4$s;',
+	'--fiflp-cuadro-cifra-size:%1$s;--fiflp-cuadro-texto-size:%2$s;--fiflp-cuadro-titular-size:%3$s;--fiflp-cuadro-intro-size:%4$s;--fiflp-cuadro-color-cifra:%5$s;--fiflp-cuadro-color-texto:%6$s;',
 	$cifra_clamp,
 	$texto_clamp,
+	$titular_clamp,
+	$intro_clamp,
 	$color_cifra,
 	$color_texto
 );

@@ -1,0 +1,133 @@
+/**
+ * Admin ACF — CPT Cuadro editorial (fiflp_cuadro).
+ * Metacampos en rejilla de dos columnas, repeater de filas más compacto.
+ */
+
+/* ── Caja del grupo: rejilla 2 columnas (anula float ACF) ── */
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .inside.acf-fields,
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-fields.-left {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+    clear: both;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .inside.acf-fields > .acf-field,
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-fields.-left > .acf-field {
+    float: none !important;
+    width: auto !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding-top: 0;
+    padding-bottom: 8px;
+    border-top: none;
+}
+
+/* Fila completa: intro WYSIWYG, tipografía intro, repeater filas */
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_intro"],
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_tipografia_intro"],
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] {
+    grid-column: 1 / -1;
+}
+
+/* Etiquetas más compactas */
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-label label {
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field p.description,
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field .description {
+    font-size: 11.5px;
+    line-height: 1.35;
+    margin-top: 4px;
+}
+
+/* Tipografía cifras: ancho completo; tamaños min/max en dos columnas (JSON 25+25; grid las alinea) */
+.post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_tipografia_cifras"] {
+    grid-column: 1 / -1;
+}
+
+/* ── Repeater Filas: asa más estrecha, cuerpo en 2 columnas ── */
+.post-type-fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > .acf-row-handle {
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+    padding: 4px 2px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.post-type-fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] .acf-repeater .acf-row-handle .acf-icon {
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 16px !important;
+    font-size: 12px !important;
+}
+
+.post-type-fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] .acf-repeater .acf-row-handle .acf-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.post-type-fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > td.acf-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    vertical-align: top;
+}
+
+.post-type-fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > td.acf-fields > .acf-field {
+    float: none !important;
+    width: auto !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 4px 0 !important;
+    border: none !important;
+}
+
+.post-type-fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] .acf-repeater.-block > .acf-table > tbody > tr.acf-row > td.acf-fields > .acf-field .acf-label label {
+    font-size: 11.5px;
+}
+
+/* Fallback si el id del metabox difiere (ACF / WP) */
+.post-type-fiflp_cuadro .acf-postbox.acf-field-group .inside.acf-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+}
+
+.post-type-fiflp_cuadro .acf-postbox.acf-field-group .inside.acf-fields > .acf-field {
+    float: none !important;
+    width: auto !important;
+    min-width: 0;
+}
+
+.post-type-fiflp_cuadro .acf-postbox.acf-field-group .inside.acf-fields > .acf-field[data-key="field_cuadro_intro"],
+.post-type-fiflp_cuadro .acf-postbox.acf-field-group .inside.acf-fields > .acf-field[data-key="field_cuadro_tipografia_intro"],
+.post-type-fiflp_cuadro .acf-postbox.acf-field-group .inside.acf-fields > .acf-field[data-key="field_cuadro_filas"] {
+    grid-column: 1 / -1;
+}
+
+.post-type-fiflp_cuadro .acf-postbox.acf-field-group .inside.acf-fields > .acf-field[data-key="field_cuadro_tipografia_cifras"] {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 1100px) {
+
+    .post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .inside.acf-fields,
+    .post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-fields.-left,
+    .post-type-fiflp_cuadro .acf-postbox.acf-field-group .inside.acf-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_intro"],
+    .post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_tipografia_intro"],
+    .post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_tipografia_cifras"],
+    .post-type-fiflp_cuadro #acf-group_group_fiflp_cuadro .acf-field[data-key="field_cuadro_filas"] {
+        grid-column: 1;
+    }
+}

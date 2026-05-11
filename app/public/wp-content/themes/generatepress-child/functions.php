@@ -1194,6 +1194,36 @@ if ( ! function_exists( 'fiflp_cuadro_clamp_font_size' ) ) {
 	}
 }
 
+if ( ! function_exists( 'fiflp_cuadro_clamp_font_size_fluid' ) ) {
+	/**
+	 * clamp() lineal entre min y max según el ancho del viewport.
+	 * Evita que `clamp(min, pocos vw, max)` deje el tamaño casi siempre por debajo del máximo
+	 * (subir "máx. px" en ACF no se notaba en titular/intro del cuadro).
+	 *
+	 * @param float $min_px            Tamaño mínimo (px).
+	 * @param float $max_px            Tamaño máximo (px).
+	 * @param int   $viewport_min_px   Vw donde aplica el mínimo (px).
+	 * @param int   $viewport_max_px   Vw donde aplica el máximo (px).
+	 * @return string
+	 */
+	function fiflp_cuadro_clamp_font_size_fluid( $min_px, $max_px, $viewport_min_px = 360, $viewport_max_px = 1200 ) {
+		list( $a, $b ) = fiflp_cuadro_normalize_px_pair( $min_px, $max_px, 12, 16 );
+		$viewport_min_px = (int) max( 280, min( 800, (int) $viewport_min_px ) );
+		$viewport_max_px = (int) max( $viewport_min_px + 160, min( 2400, (int) $viewport_max_px ) );
+		$span            = max( 1, $viewport_max_px - $viewport_min_px );
+		$delta           = $b - $a;
+
+		return sprintf(
+			'clamp(%1$.0fpx, calc(%1$.0fpx + %2$.5f * ((100vw - %3$dpx) / %4$d)), %5$.0fpx)',
+			$a,
+			$delta,
+			$viewport_min_px,
+			$span,
+			$b
+		);
+	}
+}
+
 if ( ! function_exists( 'fiflp_render_cuadro' ) ) {
 	/**
 	 * Renderiza un cuadro editorial (CPT fiflp_cuadro) desde una única plantilla.
@@ -1220,6 +1250,74 @@ if ( ! function_exists( 'fiflp_render_cuadro' ) ) {
 		get_template_part( 'template-parts/bloques/cuadro-markup', null, $args );
 	}
 }
+
+add_action(
+	'admin_post_fiflp_seed_cuadro_editorial_2',
+	function() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'No tienes permisos para esta acción.', 'generatepress-child' ), 403 );
+		}
+		check_admin_referer( 'fiflp_seed_cuadro_editorial_2' );
+
+		require_once get_stylesheet_directory() . '/inc/fiflp-cuadro-seed-2.php';
+
+		$result = fiflp_seed_cuadro_editorial_2();
+
+		if ( is_wp_error( $result ) ) {
+			wp_die( esc_html( $result->get_error_message() ), esc_html__( 'Cuadro editorial', 'generatepress-child' ), 500 );
+		}
+
+		wp_safe_redirect(
+			admin_url( 'post.php?post=' . (int) $result . '&action=edit&fiflp_cuadro_2_seeded=1' )
+		);
+		exit;
+	}
+);
+
+add_action(
+	'admin_notices',
+	function() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'edit-fiflp_cuadro' !== $screen->id ) {
+			return;
+		}
+
+		require_once get_stylesheet_directory() . '/inc/fiflp-cuadro-seed-2.php';
+
+		if ( fiflp_cuadro_editorial_2_post_id() > 0 ) {
+			return;
+		}
+
+		$url = wp_nonce_url(
+			admin_url( 'admin-post.php?action=fiflp_seed_cuadro_editorial_2' ),
+			'fiflp_seed_cuadro_editorial_2'
+		);
+
+		echo '<div class="notice notice-info is-dismissible"><p>';
+		echo esc_html__( '¿Añadir el cuadro editorial «2» con los datos de obra (3 columnas, 4 filas)?', 'generatepress-child' );
+		echo ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Crear cuadro 2', 'generatepress-child' ) . '</a>';
+		echo '</p></div>';
+	}
+);
+
+add_action(
+	'admin_notices',
+	function() {
+		if ( empty( $_GET['fiflp_cuadro_2_seeded'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'fiflp_cuadro' !== $screen->id || 'post' !== $screen->base ) {
+			return;
+		}
+		echo '<div class="notice notice-success is-dismissible"><p>';
+		echo esc_html__( 'Cuadro «2» creado o actualizado. Revisa los campos y enlázalo donde corresponda.', 'generatepress-child' );
+		echo '</p></div>';
+	}
+);
 
 function fiflp_get_home_hero_data( $page_id = 0 ) {
 	$page_id = (int) $page_id;
@@ -2164,6 +2262,18 @@ add_action(
 					array( 'jquery', 'acf-input' ),
 					(string) filemtime( $js_path ),
 					true
+				);
+			}
+		}
+
+		if ( 'fiflp_cuadro' === $screen->post_type ) {
+			$cuadro_css = get_stylesheet_directory() . '/assets/css/acf-cuadro-editorial-admin.css';
+			if ( is_readable( $cuadro_css ) ) {
+				wp_enqueue_style(
+					'fiflp-acf-cuadro-editorial-admin',
+					get_stylesheet_directory_uri() . '/assets/css/acf-cuadro-editorial-admin.css',
+					array(),
+					(string) filemtime( $cuadro_css )
 				);
 			}
 		}

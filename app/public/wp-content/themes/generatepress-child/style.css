@@ -4280,20 +4280,78 @@ p.rotulo-editorial__subtitulo {
     max-width: 100%;
 }
 
-.fiflp-cuadro__mensaje {
+/* Ancho del bloque (ACF ancho_grid): estrecho / ancho vs columna editorial ~900px */
+.fiflp-cuadro.fiflp-cuadro--grid-estrecho {
+    max-width: min(100%, 560px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.fiflp-cuadro.fiflp-cuadro--grid-ancho {
+    max-width: min(100%, 1100px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Gana a `.editorial p { font-size: 18px }` desde 1025px (antes pisaba el titular). */
+.fiflp-cuadro .fiflp-cuadro__mensaje {
     margin: 0 0 0.75rem;
-    font-family: var(--fiflp-font-meta, 'Manrope', sans-serif);
-    font-size: clamp(14px, 2vw, 18px);
+    font-size: var(--fiflp-cuadro-titular-size, clamp(15px, 2.85vw, 26px));
     font-weight: 600;
     letter-spacing: 0.02em;
+    line-height: 1.2;
     color: var(--fiflp-cuadro-color-texto, #1e1e1e);
+}
+
+.fiflp-cuadro--titular-editorial .fiflp-cuadro__mensaje {
+    font-family: var(--fiflp-font-body, 'Source Serif 4', serif);
+}
+
+.fiflp-cuadro--titular-manrope .fiflp-cuadro__mensaje {
+    font-family: var(--fiflp-font-meta, 'Manrope', sans-serif);
+}
+
+.fiflp-cuadro--titular-fk-upright .fiflp-cuadro__mensaje {
+    font-family: var(--fiflp-font-display, 'FKScreamer Upright', sans-serif);
+}
+
+.fiflp-cuadro--titular-fk-slanted .fiflp-cuadro__mensaje {
+    font-family: var(--fiflp-font-display-slanted, 'FKScreamer Slanted', sans-serif);
+}
+
+.fiflp-cuadro--titular-fk-backslanted .fiflp-cuadro__mensaje {
+    font-family: var(--fiflp-font-display-backslanted, 'FKScreamer Backslanted', sans-serif);
 }
 
 .fiflp-cuadro__intro {
     margin: 0 0 1rem;
-    font-size: var(--fiflp-cuadro-texto-size, 1rem);
+    font-size: var(--fiflp-cuadro-intro-size, clamp(15px, 3vw, 24px));
     line-height: 1.55;
     color: var(--fiflp-cuadro-color-texto, #1e1e1e);
+}
+
+.fiflp-cuadro--intro-editorial .fiflp-cuadro__intro {
+    font-family: var(--fiflp-font-body, 'Source Serif 4', serif);
+}
+
+.fiflp-cuadro--intro-manrope .fiflp-cuadro__intro {
+    font-family: var(--fiflp-font-meta, 'Manrope', sans-serif);
+}
+
+.fiflp-cuadro--intro-fk-upright .fiflp-cuadro__intro {
+    font-family: var(--fiflp-font-display, 'FKScreamer Upright', sans-serif);
+}
+
+.fiflp-cuadro--intro-fk-slanted .fiflp-cuadro__intro {
+    font-family: var(--fiflp-font-display-slanted, 'FKScreamer Slanted', sans-serif);
+}
+
+.fiflp-cuadro--intro-fk-backslanted .fiflp-cuadro__intro {
+    font-family: var(--fiflp-font-display-backslanted, 'FKScreamer Backslanted', sans-serif);
+}
+
+.fiflp-cuadro .fiflp-cuadro__intro p {
+    font-size: inherit;
 }
 
 .fiflp-cuadro__intro p:last-child {
@@ -4349,7 +4407,19 @@ p.rotulo-editorial__subtitulo {
     font-family: 'Manrope', sans-serif;
 }
 
-.fiflp-cuadro__texto {
+.fiflp-cuadro--cifra-fk-upright .fiflp-cuadro__cifra {
+    font-family: var(--fiflp-font-display, 'FKScreamer Upright', sans-serif);
+}
+
+.fiflp-cuadro--cifra-fk-slanted .fiflp-cuadro__cifra {
+    font-family: var(--fiflp-font-display-slanted, 'FKScreamer Slanted', sans-serif);
+}
+
+.fiflp-cuadro--cifra-fk-backslanted .fiflp-cuadro__cifra {
+    font-family: var(--fiflp-font-display-backslanted, 'FKScreamer Backslanted', sans-serif);
+}
+
+.fiflp-cuadro .fiflp-cuadro__texto {
     margin: 0;
     font-size: var(--fiflp-cuadro-texto-size, clamp(14px, 2.75vw, 20px));
     line-height: 1.45;
@@ -4364,6 +4434,20 @@ p.rotulo-editorial__subtitulo {
 .seccion-onepage__contenido--modulos .seccion-onepage__modulo .fiflp-cuadro {
     width: 100%;
     max-width: 100%;
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo .fiflp-cuadro.fiflp-cuadro--grid-estrecho,
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo .fiflp-cuadro.fiflp-cuadro--grid-ancho {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo .fiflp-cuadro.fiflp-cuadro--grid-estrecho {
+    max-width: min(100%, 560px);
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo .fiflp-cuadro.fiflp-cuadro--grid-ancho {
+    max-width: min(100%, 1100px);
 }
 
 @media (max-width: 720px) {

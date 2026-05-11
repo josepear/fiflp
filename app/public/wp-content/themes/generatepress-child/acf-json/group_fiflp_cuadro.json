@@ -12,7 +12,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "100",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -21,6 +21,79 @@
             "rows": 2,
             "placeholder": "",
             "new_lines": "br"
+        },
+        {
+            "key": "field_cuadro_tipografia_titular",
+            "label": "Tipografía del titular / mensaje",
+            "name": "tipografia_titular",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Mismas opciones que las cifras. Por defecto Manrope como antes.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "editorial": "Editorial (herencia)",
+                "manrope": "Manrope",
+                "fk_upright": "FK Screamer Upright",
+                "fk_slanted": "FK Screamer Slanted",
+                "fk_backslanted": "FK Screamer Backslanted"
+            },
+            "default_value": "manrope",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cuadro_titular_min_px",
+            "label": "Titular: tamaño mín. (px)",
+            "name": "titular_min_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Escalado fluido del mensaje superior.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 15,
+            "min": 10,
+            "max": 120,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cuadro_titular_max_px",
+            "label": "Titular: tamaño máx. (px)",
+            "name": "titular_max_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Sube el máximo para un titular más grande en pantallas anchas.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 26,
+            "min": 10,
+            "max": 160,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         },
         {
             "key": "field_cuadro_intro",
@@ -43,6 +116,79 @@
             "delay": 0
         },
         {
+            "key": "field_cuadro_tipografia_intro",
+            "label": "Tipografía de la introducción",
+            "name": "tipografia_intro",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Mismas opciones que las cifras. Editorial usa la tipografía de lectura del sitio.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "editorial": "Editorial (herencia)",
+                "manrope": "Manrope",
+                "fk_upright": "FK Screamer Upright",
+                "fk_slanted": "FK Screamer Slanted",
+                "fk_backslanted": "FK Screamer Backslanted"
+            },
+            "default_value": "editorial",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cuadro_texto_intro_min_px",
+            "label": "Intro: tamaño mín. (px)",
+            "name": "texto_intro_min_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Tamaño fluido del cuerpo de la introducción (WYSIWYG).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 15,
+            "min": 10,
+            "max": 120,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cuadro_texto_intro_max_px",
+            "label": "Intro: tamaño máx. (px)",
+            "name": "texto_intro_max_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Sube el máximo para una intro más grande.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 24,
+            "min": 10,
+            "max": 160,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_cuadro_num_columnas",
             "label": "Número de columnas",
             "name": "num_columnas",
@@ -52,7 +198,7 @@
             "required": 1,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "100",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -65,6 +211,33 @@
             "return_format": "value",
             "allow_null": 0,
             "layout": "horizontal"
+        },
+        {
+            "key": "field_cuadro_ancho_grid",
+            "label": "Ancho del grid",
+            "name": "ancho_grid",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Normal sigue el ancho de la columna editorial. Estrecho centra el cuadro en menos ancho. Ancho permite hasta ~1100px (como el bloque imagen) cuando el contenedor lo admite.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "estrecho": "Más estrecho",
+                "normal": "Normal",
+                "ancho": "Más ancho"
+            },
+            "default_value": "normal",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1,
+            "ajax": 0,
+            "placeholder": ""
         },
         {
             "key": "field_cuadro_filas",
@@ -98,7 +271,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "12",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -119,7 +292,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "38",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -140,7 +313,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "12",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -161,7 +334,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "38",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -182,7 +355,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "12",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -203,7 +376,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "38",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -224,7 +397,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "12",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -245,7 +418,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "38",
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -264,23 +437,26 @@
             "name": "tipografia_cifras",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
+            "instructions": "FK Screamer usa las mismas fuentes que el resto del libro (assets/fonts). Editorial hereda la tipografía del contexto.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "50",
+                "width": "100",
                 "class": "",
                 "id": ""
             },
             "choices": {
-                "editorial": "Editorial (Herencia)",
-                "manrope": "Manrope"
+                "editorial": "Editorial (herencia)",
+                "manrope": "Manrope",
+                "fk_upright": "FK Screamer Upright",
+                "fk_slanted": "FK Screamer Slanted",
+                "fk_backslanted": "FK Screamer Backslanted"
             },
             "default_value": "editorial",
             "return_format": "value",
             "multiple": 0,
             "allow_null": 0,
-            "ui": 0,
+            "ui": 1,
             "ajax": 0,
             "placeholder": ""
         },
@@ -294,7 +470,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "25",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -316,7 +492,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "25",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -338,7 +514,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "25",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -360,7 +536,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "25",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -428,5 +604,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1746812400
+    "modified": 1747300000
 }
