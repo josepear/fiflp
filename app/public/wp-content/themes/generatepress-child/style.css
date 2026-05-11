@@ -1695,9 +1695,9 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
             filter 0.3s ease;
     }
 
-    /* Compacto: 70% de 75px = ~53px */
+    /* Compacto al hacer scroll */
     .site-header.is-compact .fiflp-centenario-logo img {
-        width: 53px !important;
+        width: 55px !important;
     }
 
     /* Sección oscura: logo en blanco */
