@@ -1413,6 +1413,14 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
      */
     .bloque.seccion-onepage .seccion-onepage__shell {
         overflow: visible;
+        /*
+         * z-index explícito en root: el shell tiene isolation:isolate (stacking context).
+         * Sin z-index explícito, el contexto del shell queda en "auto" (por debajo de cualquier
+         * elemento fixed con z-index > 0). El .numero-wrap en fixed (z:15) quedaría encima del
+         * aside/título (z:100 dentro del shell pero trapped en su contexto).
+         * Con z-index:20 el shell-context queda sobre el fixed número (z:15) → el título gana. 
+         */
+        z-index: 20;
     }
 
     .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap {
