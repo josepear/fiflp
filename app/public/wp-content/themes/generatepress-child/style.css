@@ -223,15 +223,16 @@ body.admin-bar:not(.home) {
 
 @media (max-width: 782px) {
     .admin-bar .site-header {
-        top: 46px;
+        top: 0;
     }
 
+    /* sticky en ≤768px: el header vive en el flujo → no hace falta compensar con padding-top */
     body:not(.home) {
-        padding-top: 118px;
+        padding-top: 0;
     }
 
     body.admin-bar:not(.home) {
-        padding-top: 164px;
+        padding-top: 46px;
     }
 
     .site-branding {
@@ -1644,11 +1645,12 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
  * is-dark-section invierte el logo en fondos #1e1e1e / #072728.
  * ──────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    /* El site-header absorbe el color de la sección activa.
-     * Sobreescribimos background:transparent !important del bloque global.
-     * padding-top: env(safe-area-inset-top) extiende el fondo hasta el borde
-     * superior real de la pantalla en dispositivos con notch/barra de estado. */
+    /* El site-header pasa a sticky en móvil: vive en el flujo del documento
+     * y se pega al top al hacer scroll. El fondo de color cubre desde el
+     * borde físico superior de la pantalla (env safe-area) hacia abajo. */
     .site-header {
+        position: sticky !important;
+        top: 0 !important;
         background: var(--fiflp-header-section-bg, transparent) !important;
         transition: background-color 0.45s ease !important;
         padding-top: env(safe-area-inset-top, 0px) !important;
