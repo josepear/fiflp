@@ -1637,6 +1637,43 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 }
 
+/* ── Header: color de sección activa + logo compacto (solo móvil) ──────
+ * JS (initOnepageHeaderSync) detecta la sección más visible, lee
+ * --onepage-bg de su shell y lo pone en --fiflp-header-section-bg del
+ * .site-header.  is-compact se añade al pasar 40 px de scroll.
+ * is-dark-section invierte el logo en fondos #1e1e1e / #072728.
+ * ──────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    /* El site-header absorbe el color de la sección activa.
+     * Sobreescribimos background:transparent !important del bloque global. */
+    .site-header {
+        background: var(--fiflp-header-section-bg, transparent) !important;
+        transition: background-color 0.45s ease !important;
+    }
+
+    /* Reducir el padding inferior del logo en el header para que no sea tan alto */
+    .site-header .fiflp-centenario-logo {
+        padding-bottom: 10px;
+    }
+
+    /* Logo: transición de tamaño al compactar */
+    .site-header .fiflp-centenario-logo img {
+        transition:
+            height 0.3s var(--fiflp-ease-soft, ease),
+            filter 0.3s ease;
+    }
+
+    /* Compacto: logo más pequeño cuando se ha scrolleado > 40 px */
+    .site-header.is-compact .fiflp-centenario-logo img {
+        height: clamp(28px, 7vw, 40px) !important;
+    }
+
+    /* Sección oscura: logo en blanco */
+    .site-header.is-dark-section .fiflp-centenario-logo img {
+        filter: brightness(0) invert(1);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .seccion-onepage__numero,
     .seccion-onepage__numero--outline,

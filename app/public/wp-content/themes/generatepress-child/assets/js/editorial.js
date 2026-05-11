@@ -1381,4 +1381,72 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     }
+
+    /* ── Header: color de sección + logo compacto (móvil) ─────────────────
+     * Lee --onepage-bg del shell de la sección más visible y lo propaga
+     * al .site-header via --fiflp-header-section-bg.
+     * is-compact → logo pequeño tras 40 px de scroll.
+     * is-dark-section → logo en blanco (fondos #1e1e1e / #072728).
+     * Solo activo en móvil (≤768 px); en escritorio limpia y no interfiere.
+     * ─────────────────────────────────────────────────────────────────── */
+    (function initOnepageHeaderSync() {
+        const header = document.querySelector('.site-header');
+        const mqMobile = window.matchMedia('(max-width: 768px)');
+        const onepageSections = Array.from(
+            document.querySelectorAll('.bloque.seccion-onepage')
+        );
+
+        if (!header || !onepageSections.length) return;
+
+        function syncHeaderSection() {
+            if (!mqMobile.matches) {
+                header.style.removeProperty('--fiflp-header-section-bg');
+                header.classList.remove('is-dark-section', 'is-compact');
+                return;
+            }
+
+            const vh = window.innerHeight;
+            const scrollY = window.scrollY || 0;
+
+            header.classList.toggle('is-compact', scrollY > 40);
+
+            /* Sección que ocupa más área visible del viewport */
+            let bestSection = null;
+            let bestVisible = 0;
+
+            onepageSections.forEach(function (section) {
+                const r = section.getBoundingClientRect();
+                const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+                if (visible > bestVisible) {
+                    bestVisible = visible;
+                    bestSection = section;
+                }
+            });
+
+            if (bestSection) {
+                const shell = bestSection.querySelector('[data-onepage-shell]');
+                if (shell) {
+                    /* --onepage-bg está en inline style: getComputedStyle lo resuelve */
+                    const bg = getComputedStyle(shell)
+                        .getPropertyValue('--onepage-bg')
+                        .trim();
+                    header.style.setProperty(
+                        '--fiflp-header-section-bg',
+                        bg || 'transparent'
+                    );
+                    header.classList.toggle(
+                        'is-dark-section',
+                        shell.classList.contains('seccion-onepage__shell--dark-bg')
+                    );
+                }
+            } else {
+                header.style.removeProperty('--fiflp-header-section-bg');
+                header.classList.remove('is-dark-section');
+            }
+        }
+
+        window.addEventListener('scroll', syncHeaderSection, { passive: true });
+        mqMobile.addEventListener('change', syncHeaderSection);
+        syncHeaderSection();
+    }());
 });
