@@ -1656,9 +1656,24 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         padding-top: env(safe-area-inset-top, 0px) !important;
     }
 
-    /* Reducir el padding inferior del logo en el header */
+    /* Centrado vertical del contenido dentro del header sticky */
+    .site-header .inside-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+
+    .site-header .site-branding {
+        align-items: center !important;
+        gap: 0 !important;
+        min-height: 0 !important;
+    }
+
+    /* Quitar el padding-bottom heredado que desplazaba el logo */
     .site-header .fiflp-centenario-logo {
-        padding-bottom: 10px;
+        padding-bottom: 0 !important;
     }
 
     /* Logo: transición de tamaño y color */
@@ -1668,9 +1683,9 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
             filter 0.3s ease;
     }
 
-    /* Compacto: logo más pequeño cuando se ha scrolleado > 40 px */
+    /* Compacto: 70% del tamaño original (clamp 54–82px × 0.7 ≈ 38–57px) */
     .site-header.is-compact .fiflp-centenario-logo img {
-        height: clamp(28px, 7vw, 40px) !important;
+        height: clamp(38px, 11vw, 57px) !important;
     }
 
     /* Sección oscura: logo en blanco */
