@@ -1526,7 +1526,12 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         text-align: center;
         box-sizing: border-box;
         z-index: 100 !important;
-        background: var(--onepage-bg, #e9e9e9);
+        /*
+         * Sin fondo sólido: el shell ya tiene background:var(--onepage-bg),
+         * así que el texto sigue siendo legible y el número SVG no queda tapado
+         * por la banda de color del aside cuando este está sticky.
+         */
+        background: transparent !important;
     }
 
     .seccion-onepage__titulo,
