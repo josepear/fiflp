@@ -1378,6 +1378,13 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         margin-right: calc(50% - 50vw) !important;
         position: relative;
         box-sizing: border-box;
+        /*
+         * El global tiene overflow-x:clip. Según la spec CSS, cuando un eje
+         * es clip y el otro visible, ambos se computan como clip → el SVG del
+         * número queda recortado por la parte inferior de la sección.
+         * En móvil lo forzamos visible en ambos ejes.
+         */
+        overflow: visible !important;
     }
 
     /* Onepage móvil: editorial a sangre (evita max-width del main que encoge el número y el % del wrap) */
@@ -1441,7 +1448,9 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         display: block !important;
         width: min(calc(100vw - 40px), 400px) !important;
         max-width: none !important;
-        height: auto !important;
+        /* Alto explícito = ancho: evita que aspect-ratio no resuelva bien
+         * en algunos contextos flex y recorte el SVG por la parte inferior. */
+        height: min(calc(100vw - 40px), 400px) !important;
         max-height: min(calc(100vw - 40px), 400px) !important;
         margin-left: auto !important;
         margin-right: auto !important;
