@@ -804,12 +804,12 @@ body.fiflp-menu-open #page {
 /* Móvil */
 @media (max-width: 640px) {
 
-    /* Reduce tamaño de texto general */
+    /* Cuerpo: alineado con ≤768px (16 / 22); no pisar si ya aplica el bloque global móvil */
     body,
     .bloque.texto,
     .bloque.texto-imagen .texto {
-        font-size: 18px;
-        line-height: 1.7;
+        font-size: 16px;
+        line-height: 22px;
     }
 
     /* Ajuste título */
@@ -1363,30 +1363,218 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
 @media (max-width: 768px) {
     .bloque.seccion-onepage {
-        --onepage-pad-x: clamp(14px, 4vw, 20px);
-        --onepage-pad-y: clamp(18px, 4vw, 28px);
-        --onepage-gap: clamp(14px, 3vw, 22px);
-    }
-
-    .seccion-onepage__shell {
-        grid-template-columns: 1fr;
-        gap: var(--onepage-gap);
-        min-height: 100svh;
-        overflow: hidden;
-    }
-
-    .seccion-onepage__indice {
+        /* 20px a cada lado del viewport para el bloque número + título */
+        --onepage-pad-x: 20px;
+        --onepage-pad-y: clamp(14px, 3.5vw, 22px);
+        --onepage-gap: clamp(12px, 3vw, 20px);
+        /*
+         * Sangría real al viewport: si no, GeneratePress (.grid-container, .inside-article…)
+         * deja el bloque en ~1200px de “referencia” y el número queda minúsculo aunque use vw.
+         */
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin-left: calc(50% - 50vw) !important;
+        margin-right: calc(50% - 50vw) !important;
         position: relative;
-        top: auto;
-        min-height: min(100svh, 100dvh);
+        box-sizing: border-box;
+    }
+
+    /* Onepage móvil: editorial a sangre (evita max-width del main que encoge el número y el % del wrap) */
+    body.fiflp-onepage main.editorial,
+    .layout-editorial--onepage main.editorial {
+        max-width: none !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        min-width: 0;
+    }
+
+    /* Columna: stretch; sin padding-bottom:% (WebKit puede hinchar el hueco bajo el número) */
+    .seccion-onepage__shell {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        padding-bottom: clamp(8px, 2vw, 16px);
+        align-items: stretch;
+        gap: 0;
+        row-gap: 0;
+        column-gap: 0;
+        width: 100%;
+        min-width: 0;
+        min-height: 100svh;
+        /* Sin padding lateral aquí: el número usa calc(100vw - 40px) y queda a 20px del borde del viewport */
+        padding: clamp(24px, 6vw, 40px) 0 clamp(18px, 4vw, 32px);
+        box-sizing: border-box;
+        overflow-x: clip;
+        overflow-y: visible;
     }
 
-    .admin-bar .seccion-onepage__indice {
-        top: auto;
+    /*
+     * Shell: overflow visible en ambos ejes. overflow-x:clip + overflow-y:visible computa
+     * overflow-y como auto (spec), creando un scroll-container que atrapa sticky.
+     */
+    .bloque.seccion-onepage .seccion-onepage__shell {
+        overflow: visible;
+    }
+
+    .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap {
+        z-index: 5;
+    }
+
+    /*
+     * Cuadrado del número (móvil): centrado con márgenes, sin transform en el wrap.
+     * Texto SVG grande + central (alineado con revisión DevTools); morph sigue en clip-path del SVG.
+     */
+    .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__numero-wrap {
+        order: 1;
+        position: relative !important;
+        top: auto !important;
+        left: 0 !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        width: min(calc(100vw - 40px), 400px) !important;
+        max-width: none !important;
+        height: auto !important;
+        max-height: min(calc(100vw - 40px), 400px) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+        aspect-ratio: 1 / 1;
+        min-width: 0 !important;
+        flex: 0 0 auto !important;
+        flex-shrink: 0 !important;
+        align-self: center !important;
+        transform: none !important;
+        z-index: 15 !important;
+        pointer-events: none;
+        overflow: visible !important;
+        border-radius: 14px;
+    }
+
+    /* Relleno y contorno: mismo cuerpo tipográfico en coords. de usuario (viewBox 2400); HTML usa y=50% en el <text>. */
+    .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__numero-wrap .seccion-onepage__numero-text {
+        font-size: 2400px !important;
+        dominant-baseline: central !important;
+        text-anchor: middle !important;
+        y: 50% !important;
+    }
+
+    /* SVG van dentro de .numero-wrap, no son hijo directo del shell (el > hacía que no aplicara y quedaba clamp(1200px,…svh)). */
+    .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__numero-wrap .seccion-onepage__numero {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        transform: none !important;
+        overflow: visible !important;
+        opacity: 1;
+        will-change: clip-path;
+    }
+
+    /*
+     * Morph (igual que escritorio): --onepage-morph-progress 0→1
+     * - Sólido: clip-path inset(0 0 p% 0) → recorta desde abajo (desaparece la masa).
+     * - Contorno: clip-path inset((1-p)% 0 0 0) → revela el trazo desde arriba (la “línea” queda al final).
+     */
+    .seccion-onepage__numero--solid {
+        z-index: 0;
+    }
+
+    .seccion-onepage__numero--outline {
+        z-index: 1;
+    }
+
+    .seccion-onepage__numero-text--outline {
+        stroke-width: 1px !important;
+    }
+
+    /* Titular: sticky arriba, por encima del número (z-index). Orden flex: número → índice. */
+    .bloque.seccion-onepage .seccion-onepage__shell > aside.seccion-onepage__indice {
+        order: 2;
+        position: sticky !important;
+        top: max(0px, env(safe-area-inset-top, 0px)) !important;
+        align-self: stretch;
+        min-height: 0;
+        min-width: 0;
+        width: 100%;
+        max-width: none;
+        margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: max(8px, env(safe-area-inset-top, 0px)) 20px 10px;
+        text-align: center;
+        box-sizing: border-box;
+        z-index: 100 !important;
+        background: var(--onepage-bg, #e9e9e9);
+    }
+
+    .seccion-onepage__titulo,
+    .seccion-onepage__titulo--left,
+    .seccion-onepage__titulo--right {
+        text-align: center;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* ~38px → 16px según fase JS (--onepage-mobile-title-phase). */
+    .bloque.seccion-onepage .seccion-onepage__shell > aside.seccion-onepage__indice .seccion-onepage__titulo {
+        font-size: calc(16px + 22px * (1 - var(--onepage-mobile-title-phase, 0))) !important;
+        line-height: 1.15 !important;
+        margin-top: 0;
+        padding-top: 0;
+        transition: font-size 0.08s linear;
+    }
+
+    .seccion-onepage__shell > .seccion-onepage__contenido-wrap {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        align-self: stretch;
+        margin-top: 0;
+        padding: clamp(6px, 2vw, 18px) 20px 0;
+        box-sizing: border-box;
+    }
+
+    /*
+     * Número en fase morph (JS): fixed al viewport.
+     * sticky no funciona de forma fiable porque overflow-x:clip en #page (herencia GeneratePress)
+     * se computa como overflow-y:auto, convirtiendo #page en scroll-container y atrapando sticky.
+     * fixed es siempre relativo al viewport; el ::before de abajo mantiene el hueco en el flex.
+     */
+    .bloque.seccion-onepage .seccion-onepage__shell.is-onepage-numero-sticky > .seccion-onepage__numero-wrap {
+        position: fixed !important;
+        top: var(--onepage-numero-sticky-top, calc(50svh - min(calc(100vw - 40px), 400px) / 2)) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        margin: 0 !important;
+        z-index: 15 !important;
+    }
+
+    /*
+     * Placeholder flex: cuando el número pasa a fixed (sale del flujo), este ::before
+     * ocupa el mismo espacio (mismo order:1, mismo tamaño) para que aside e contenido
+     * no salten de posición.
+     */
+    .bloque.seccion-onepage .seccion-onepage__shell.is-onepage-numero-sticky::before {
+        content: '';
+        display: block;
+        order: 1;
+        width: min(calc(100vw - 40px), 400px);
+        height: min(calc(100vw - 40px), 400px);
+        flex-shrink: 0;
+        align-self: center;
+        pointer-events: none;
     }
 
     .seccion-onepage__contenido,
@@ -1400,12 +1588,6 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         grid-template-columns: 1fr !important;
     }
 
-    .seccion-onepage__contenido-wrap {
-        grid-column: 1;
-        grid-row: auto;
-        padding-top: min(62svh, 540px);
-    }
-
     .seccion-onepage__cols-2 .seccion-onepage__texto,
     .seccion-onepage__cols-3 .seccion-onepage__texto {
         column-count: 1;
@@ -1416,10 +1598,15 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         grid-template-columns: 1fr;
     }
 
-    .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__titulo,
-    .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__contenido-wrap {
-        opacity: 1;
+    .bloque.seccion-onepage .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__titulo {
+        opacity: 1 !important;
         transform: none;
+        transition: font-size 0.08s linear;
+    }
+
+    .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__contenido-wrap {
+        opacity: var(--onepage-reveal-progress);
+        transform: translateY(calc((1 - var(--onepage-reveal-progress)) * 10svh));
         transition: none;
     }
 
@@ -1435,29 +1622,6 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
     .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__foto-stage {
         display: none !important;
-    }
-
-    .seccion-onepage__numero {
-        width: clamp(300px, 74svh, 900px);
-        opacity: 0.24;
-        transform: translate(var(--onepage-number-offset-x, 36%), -50%);
-    }
-
-    .seccion-onepage__numero-wrap {
-        position: sticky !important;
-        top: var(--onepage-number-top-vh, 50vh);
-        right: auto;
-        margin: 0;
-        z-index: 1;
-    }
-
-    .seccion-onepage__titulo {
-        font-size: clamp(22px, 6.2vw, 34px);
-    }
-
-    .seccion-onepage__texto {
-        font-size: 18px;
-        line-height: 1.78;
     }
 
     .seccion-onepage__foto-stage-item {
@@ -1777,10 +1941,11 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     .cronologia-editorial__header {
         margin-right: calc(var(--cron-axis-col) + var(--cron-gap));
         margin-bottom: 26px;
+        text-align: right;
     }
 
     .cronologia-editorial__titulo {
-        font-size: 32px;
+        font-size: clamp(34px, 7.5vw, 42px);
         text-align: right;
     }
 
@@ -1792,7 +1957,10 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
     .cronologia-editorial__contenido {
         margin-top: 0;
+        margin-left: auto;
         padding-bottom: 48px;
+        text-align: right;
+        max-width: 100%;
     }
 
     .cronologia-editorial__meta {
@@ -1809,31 +1977,23 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         transform: translateY(15px) !important;
     }
 
-    /* Imágenes / stacks / bleed: visibles en móvil como en escritorio (ancho fluido). */
-    .cronologia-editorial__media {
+    /*
+     * Imágenes en móvil: mismo ancho máximo para todos los hitos (se ignora --cron-media-scale aquí)
+     * y bloque alineado a la derecha bajo el texto.
+     */
+    .bloque.cronologia-editorial .cronologia-editorial__media {
+        --cron-media-scale: 1;
         display: block;
-        width: 100%;
-        max-width: 100%;
-        margin: 1rem 0 0;
+        box-sizing: border-box;
+        width: min(100%, 288px);
+        max-width: min(100%, 288px);
+        margin: 1rem 0 0 auto;
         padding-left: 0;
         padding-right: 0;
     }
 
     .cronologia-editorial__item:not(.has-image) .cronologia-editorial__media {
         display: none;
-    }
-
-    .cronologia-editorial__media:not(.cronologia-editorial__media--bleed-izquierda):not(.cronologia-editorial__media--bleed-derecha) {
-        width: min(100%, calc(100% * var(--cron-media-scale)));
-        max-width: 100%;
-    }
-
-    .cronologia-editorial__media--bleed-izquierda,
-    .cronologia-editorial__media--bleed-derecha {
-        width: 100%;
-        max-width: 100%;
-        margin-left: 0;
-        margin-right: 0;
     }
 
     .cronologia-editorial__media-stack--cols-2 {
@@ -1844,10 +2004,11 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     /* Eje / “nodo”: alinear con el título del hito (sin translate negativo; márgenes de .editorial h3 no aplican aquí). */
     .bloque.cronologia-editorial h3.cronologia-editorial__fecha {
         margin: 0;
-        font-size: 28px;
+        font-size: clamp(30px, 6.5vw, 36px);
         line-height: 1.2;
         transform: none;
         padding: 0;
+        text-align: right;
     }
 
     .cronologia-editorial__fecha + .cronologia-editorial__texto {
@@ -1859,10 +2020,18 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         font-size: 15px;
         line-height: 1.45;
         margin: 0 0 0.75em;
+        text-align: right;
     }
 
     .bloque.cronologia-editorial .cronologia-editorial__texto p:last-child {
         margin-bottom: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .bloque.cronologia-editorial .cronologia-editorial__texto p {
+        font-size: 16px;
+        line-height: 22px;
     }
 }
 
@@ -2039,6 +2208,33 @@ body {
     font-size: 18px;
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .bloque.texto,
+    .bloque.texto-imagen .texto {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .editorial p,
+    .bloque.texto p,
+    .bloque.texto-imagen .texto p,
+    .prologo-texto :where(p, li, blockquote),
+    .cronologia-editorial__texto p,
+    .seccion-onepage__texto,
+    .seccion-onepage__texto p,
+    .seccion-onepage__texto li,
+    .editorial .wp-caption .wp-caption-text,
+    .bloque.imagen figcaption {
+        font-size: 16px;
+        line-height: 22px;
+    }
 }
 
 /* TÍTULOS — más carácter editorial */
@@ -2948,16 +3144,16 @@ body.fiflp-editorial-nav-open {
     }
 
     .menu-lateral a {
-        font-size: 20px;
-        line-height: 1.18;
+        font-size: 16px;
+        line-height: 22px;
     }
 
     .menu-lateral ul.children a,
     .menu-lateral .menu-item-level-2 > a,
     .menu-lateral .menu-item-level-3 > a,
     .menu-lateral .menu-item-level-4 > a {
-        font-size: 17px;
-        line-height: 1.28;
+        font-size: 16px;
+        line-height: 22px;
     }
 
     .menu-lateral-toggle {
@@ -3101,14 +3297,16 @@ body.fiflp-editorial-nav-open {
 @media (max-width: 768px) {
 
     .fiflp-global-index__link {
-        font-size: 20px !important;
+        font-size: 16px !important;
+        line-height: 22px !important;
     }
 
     .fiflp-global-index__item--level-1 > .fiflp-global-index__link,
     .fiflp-global-index__item--level-1 > .fiflp-global-index__group > .fiflp-global-index__summary > .fiflp-global-index__link,
     .fiflp-global-index__item--level-2 > .fiflp-global-index__link,
     .fiflp-global-index__item--level-2 > .fiflp-global-index__group > .fiflp-global-index__summary > .fiflp-global-index__link {
-        font-size: 17px !important;
+        font-size: 16px !important;
+        line-height: 22px !important;
     }
 }
 
@@ -4633,20 +4831,89 @@ p.rotulo-editorial__subtitulo {
     max-width: min(100%, 1100px);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 520px) {
 
-    .fiflp-cuadro--cols-3 .fiflp-cuadro__fila,
-    .fiflp-cuadro--cols-4 .fiflp-cuadro__fila {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Solo 2 columnas pasan a una fila; 3 y 4 se tratan en ≤900px para mantener proporción. */
+    .fiflp-cuadro--cols-2 .fiflp-cuadro__fila {
+        grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 520px) {
+/* Móvil / tablet estrecho: cuadros 3 y 4 columnas mantienen el grid y encajan (huecos + tipografía fluida). */
+@media (max-width: 900px) {
 
-    .fiflp-cuadro--cols-2 .fiflp-cuadro__fila,
-    .fiflp-cuadro--cols-3 .fiflp-cuadro__fila,
+    .fiflp-cuadro--cols-3 .fiflp-cuadro__fila {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: clamp(0.3rem, 1.8vw, 0.75rem);
+        row-gap: clamp(0.35rem, 2vw, 0.85rem);
+    }
+
     .fiflp-cuadro--cols-4 .fiflp-cuadro__fila {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        column-gap: clamp(0.2rem, 1.4vw, 0.55rem);
+        row-gap: clamp(0.3rem, 1.6vw, 0.65rem);
+    }
+
+    .fiflp-cuadro--cols-3 .fiflp-cuadro__celda,
+    .fiflp-cuadro--cols-4 .fiflp-cuadro__celda {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .fiflp-cuadro--cols-3 .fiflp-cuadro__cifra,
+    .fiflp-cuadro--cols-4 .fiflp-cuadro__cifra {
+        font-size: clamp(15px, 4.5vw, 52px);
+        line-height: 1.05;
+        text-align: center;
+    }
+
+    .fiflp-cuadro--cols-3 .fiflp-cuadro__texto,
+    .fiflp-cuadro--cols-4 .fiflp-cuadro__texto {
+        font-size: clamp(10px, 2.75vw, 15px);
+        line-height: 1.38;
+        text-align: center;
+    }
+
+    /* Cuadro editorial (todas las columnas en móvil): titulares más visibles y textos centrados. */
+    .fiflp-cuadro .fiflp-cuadro__mensaje {
+        text-align: center;
+        font-size: clamp(19px, 4.8vw, 32px);
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+    }
+
+    .fiflp-cuadro .fiflp-cuadro__intro,
+    .fiflp-cuadro .fiflp-cuadro__intro p {
+        text-align: center;
+    }
+
+    .fiflp-cuadro .fiflp-cuadro__celda {
+        text-align: center;
+    }
+
+    .fiflp-cuadro .fiflp-cuadro__cifra {
+        text-align: center;
+        font-size: clamp(18px, 5.2vw, 56px);
+    }
+
+    .fiflp-cuadro .fiflp-cuadro__texto {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .fiflp-cuadro .fiflp-cuadro__texto,
+    .fiflp-cuadro--cols-3 .fiflp-cuadro__texto,
+    .fiflp-cuadro--cols-4 .fiflp-cuadro__texto {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .fiflp-cuadro .fiflp-cuadro__intro,
+    .fiflp-cuadro .fiflp-cuadro__intro p {
+        font-size: 16px;
+        line-height: 22px;
     }
 }
 
@@ -5148,6 +5415,73 @@ p.rotulo-editorial__subtitulo {
 
     .prologo-img {
         max-width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Prólogos (solo móvil): careto 90×105; nombre y cargo a la derecha; cuerpo debajo a ancho completo */
+    .prologo-img {
+        width: 90px !important;
+        max-width: 90px !important;
+        height: 105px !important;
+        min-height: 105px !important;
+        max-height: 105px !important;
+        overflow: hidden !important;
+        border-radius: 14px !important;
+        display: block !important;
+        margin-bottom: 0 !important;
+    }
+
+    .prologo-img img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+
+    .prologo-cargo {
+        font-size: 9px !important;
+    }
+
+    .prologo:has(.prologo-img) {
+        display: grid;
+        grid-template-columns: 90px minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        column-gap: 14px;
+        row-gap: 0;
+        align-items: start;
+    }
+
+    .prologo:has(.prologo-img) .prologo-content {
+        display: contents;
+    }
+
+    .prologo:has(.prologo-img) .prologo-img {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        align-self: start;
+    }
+
+    .prologo:has(.prologo-img) .prologo-nombre {
+        grid-column: 2;
+        grid-row: 1;
+        margin: 0;
+        align-self: end;
+    }
+
+    .prologo:has(.prologo-img) .prologo-cargo {
+        grid-column: 2;
+        grid-row: 2;
+        margin: 6px 0 0;
+        align-self: start;
+    }
+
+    .prologo:has(.prologo-img) .prologo-texto {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        margin-top: 14px;
     }
 }
 

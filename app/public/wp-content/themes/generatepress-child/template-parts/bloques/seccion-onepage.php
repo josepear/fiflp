@@ -29,6 +29,7 @@ $numero_escala_vh_raw        = get_field( 'numero_escala_vh', $seccion_id );
 $numero_offset_x_raw         = get_field( 'numero_offset_x', $seccion_id );
 $numero_top_vh_raw           = get_field( 'numero_top_vh', $seccion_id );
 $onepage_morph_end_pct_raw   = get_field( 'onepage_morph_end_pct', $seccion_id );
+$onepage_morph_end_mobile_pct_raw = get_field( 'onepage_morph_end_pct_mobile', $seccion_id );
 
 $parse_decimal = static function ( $value ) {
 	if ( is_string( $value ) ) {
@@ -45,6 +46,7 @@ $numero_escala_vh        = (float) $numero_escala_vh_raw;
 $numero_offset_x         = $parse_decimal( $numero_offset_x_raw );
 $numero_top_vh           = $parse_decimal( $numero_top_vh_raw );
 $onepage_morph_end_pct   = (float) $onepage_morph_end_pct_raw;
+$onepage_morph_end_mobile_pct = (float) $onepage_morph_end_mobile_pct_raw;
 $modulos  = get_field( 'modulos_onepage', $seccion_id );
 $items    = get_field( 'items_contenido', $seccion_id ); // Fallback legacy.
 
@@ -114,6 +116,13 @@ if ( '' === (string) $onepage_morph_end_pct_raw || $onepage_morph_end_pct <= 0 )
 }
 $onepage_morph_end_pct = max( 2, min( 120, $onepage_morph_end_pct ) );
 
+$has_mobile_morph_override = '' !== trim( (string) $onepage_morph_end_mobile_pct_raw ) && $onepage_morph_end_mobile_pct > 0;
+if ( $has_mobile_morph_override ) {
+	$onepage_morph_end_mobile_pct = max( 2, min( 120, $onepage_morph_end_mobile_pct ) );
+} else {
+	$onepage_morph_end_mobile_pct = 0;
+}
+
 $has_modulos = is_array( $modulos ) && ! empty( $modulos );
 $has_legacy  = is_array( $items ) && ! empty( $items );
 
@@ -132,22 +141,23 @@ $shell_classes = array(
 if ( in_array( $fondo, array( '#072728', '#1e1e1e' ), true ) ) {
 	$shell_classes[] = 'seccion-onepage__shell--dark-bg';
 }
+
 ?>
 
 <section class="bloque seccion-onepage seccion-onepage--fullscreen fade-in"<?php echo '' !== $onepage_anchor_id ? ' id="' . esc_attr( $onepage_anchor_id ) . '"' : ''; ?>>
-	<div class="<?php echo esc_attr( implode( ' ', $shell_classes ) ); ?>" style="--onepage-bg: <?php echo esc_attr( $fondo ); ?>; --onepage-number-solid-color: <?php echo esc_attr( $numero_color_relleno ); ?>; --onepage-number-outline-color: <?php echo esc_attr( $numero_color_linea ); ?>; --onepage-number-stroke-width: <?php echo esc_attr( $numero_grosor_linea ); ?>px; --onepage-number-solid-opacity: <?php echo esc_attr( (string) $numero_opacidad_relleno ); ?>; --onepage-number-outline-opacity: <?php echo esc_attr( (string) $numero_opacidad_linea ); ?>; --onepage-number-size-vh: <?php echo esc_attr( (string) $numero_escala_vh ); ?>; --onepage-number-offset-x: <?php echo esc_attr( (string) $numero_offset_x ); ?>%; --onepage-number-top-vh: <?php echo esc_attr( (string) $numero_top_vh ); ?>vh;" data-onepage-shell data-onepage-morph-end="<?php echo esc_attr( (string) ( $onepage_morph_end_pct / 100 ) ); ?>">
+	<div class="<?php echo esc_attr( implode( ' ', $shell_classes ) ); ?>" style="--onepage-bg: <?php echo esc_attr( $fondo ); ?>; --onepage-number-solid-color: <?php echo esc_attr( $numero_color_relleno ); ?>; --onepage-number-outline-color: <?php echo esc_attr( $numero_color_linea ); ?>; --onepage-number-stroke-width: <?php echo esc_attr( $numero_grosor_linea ); ?>px; --onepage-number-solid-opacity: <?php echo esc_attr( (string) $numero_opacidad_relleno ); ?>; --onepage-number-outline-opacity: <?php echo esc_attr( (string) $numero_opacidad_linea ); ?>; --onepage-number-size-vh: <?php echo esc_attr( (string) $numero_escala_vh ); ?>; --onepage-number-offset-x: <?php echo esc_attr( (string) $numero_offset_x ); ?>%; --onepage-number-top-vh: <?php echo esc_attr( (string) $numero_top_vh ); ?>vh;" data-onepage-shell data-onepage-morph-end="<?php echo esc_attr( (string) ( $onepage_morph_end_pct / 100 ) ); ?>"<?php echo $has_mobile_morph_override ? ' data-onepage-morph-end-mobile="' . esc_attr( (string) ( $onepage_morph_end_mobile_pct / 100 ) ) . '"' : ''; ?>>
 		<aside class="seccion-onepage__indice" aria-label="Índice de sección">
 			<h2 class="seccion-onepage__titulo seccion-onepage__titulo--<?php echo esc_attr( $titulo_alineacion ); ?> seccion-onepage__titulo--tam-<?php echo esc_attr( $titulo_tamano ); ?>"><?php echo esc_html( $titulo ); ?></h2>
 		</aside>
 		<?php if ( '' !== $numero ) : ?>
-			<p class="seccion-onepage__numero-wrap" aria-hidden="true">
+			<div class="seccion-onepage__numero-wrap" aria-hidden="true">
 				<svg class="seccion-onepage__numero seccion-onepage__numero--solid" viewBox="0 0 2400 2400" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
 					<text class="seccion-onepage__numero-text seccion-onepage__numero-text--solid" x="50%" y="64%" text-anchor="middle"><?php echo esc_html( $numero ); ?></text>
 				</svg>
 				<svg class="seccion-onepage__numero seccion-onepage__numero--outline" viewBox="0 0 2400 2400" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
 					<text class="seccion-onepage__numero-text seccion-onepage__numero-text--outline" x="50%" y="64%" text-anchor="middle"><?php echo esc_html( $numero ); ?></text>
 				</svg>
-			</p>
+			</div>
 		<?php endif; ?>
 
 		<div class="seccion-onepage__contenido-wrap">

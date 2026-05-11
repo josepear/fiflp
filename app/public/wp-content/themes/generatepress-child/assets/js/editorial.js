@@ -630,6 +630,58 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
+        const scrollToOnepageAnchor = (targetEl, href) => {
+            const run = () => {
+                const scrollPaddingTop =
+                    parseFloat(window.getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+                const top =
+                    targetEl.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
+
+                window.scrollTo({
+                    top: Math.max(0, top),
+                    behavior: reduceMotion ? 'auto' : 'smooth',
+                });
+
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, '', href);
+                }
+            };
+
+            if (!isCompact()) {
+                run();
+                return;
+            }
+
+            const menuBusy =
+                document.body.classList.contains('onepage-menu-open') ||
+                document.body.classList.contains('onepage-menu-exit-down');
+
+            if (menuBusy && !document.body.classList.contains('onepage-menu-exit-down')) {
+                applyState(false);
+            }
+
+            const settled = () =>
+                !document.body.classList.contains('onepage-menu-open') &&
+                !document.body.classList.contains('onepage-menu-exit-down');
+
+            if (settled()) {
+                run();
+                return;
+            }
+
+            const intervalId = window.setInterval(() => {
+                if (settled()) {
+                    window.clearInterval(intervalId);
+                    run();
+                }
+            }, 24);
+
+            window.setTimeout(() => {
+                window.clearInterval(intervalId);
+                run();
+            }, 720);
+        };
+
         navLinks.forEach((link) => {
             link.addEventListener('click', (event) => {
                 const href = link.getAttribute('href') || '';
@@ -652,24 +704,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 event.preventDefault();
-
-                const scrollPaddingTop =
-                    parseFloat(window.getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-                const top =
-                    target.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
-
-                window.scrollTo({
-                    top: Math.max(0, top),
-                    behavior: reduceMotion ? 'auto' : 'smooth',
-                });
-
-                if (window.history && window.history.pushState) {
-                    window.history.pushState(null, '', href);
-                }
-
-                if (isCompact()) {
-                    applyState(false);
-                }
+                scrollToOnepageAnchor(target, href);
             });
         });
 
@@ -759,7 +794,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const mqMobile = window.matchMedia('(max-width: 768px)');
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         shells.forEach((shell) => {
@@ -793,23 +828,170 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const syncNumberState = () => {
                 const rect = shell.getBoundingClientRect();
+                const isMobile = mqMobile.matches;
+
+                if (reduceMotion) {
+                    shell.classList.remove('seccion-onepage--js');
+                    shell.classList.remove('is-onepage-numero-sticky');
+                    delete shell._fiflpOnepageMorphScrollY0;
+                    delete shell._fiflpShellPadTop;
+                    shell.style.removeProperty('--onepage-numero-sticky-top');
+                    shell.classList.add('is-title-visible');
+                    shell.classList.add('is-content-visible');
+                    shell.style.setProperty('--onepage-morph-progress', '1');
+                    shell.style.setProperty('--onepage-reveal-progress', '1');
+                    shell.style.removeProperty('--onepage-title-opacity');
+                    shell.style.setProperty('--onepage-mobile-title-phase', '1');
+                    return;
+                }
+
+                /* Móvil onepage: tramo narrativo unificado (morph al centrar + scroll cuando hay número). */
                 const minNarrativeTrack = window.innerHeight * 2.4;
                 const totalTrack = Math.max(window.innerHeight + rect.height, minNarrativeTrack, 1);
                 const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / totalTrack));
-                const morphStart = 0.00;
-                const morphEndSetting = Number.parseFloat(shell.getAttribute('data-onepage-morph-end') || '0.10');
-                const morphEnd = Math.max(0.02, Math.min(1.2, Number.isFinite(morphEndSetting) ? morphEndSetting : 0.10));
-                const revealStart = 0.00;
-                const revealEnd = 1.00;
+                const morphStart = 0.0;
+                const morphEndDesktop = Number.parseFloat(shell.getAttribute('data-onepage-morph-end') || '0.10');
+                const morphEndMobileRaw = shell.getAttribute('data-onepage-morph-end-mobile');
+                const morphEndSetting = (() => {
+                    if (
+                        isMobile &&
+                        morphEndMobileRaw !== null &&
+                        morphEndMobileRaw !== '' &&
+                        !Number.isNaN(Number.parseFloat(morphEndMobileRaw))
+                    ) {
+                        return Number.parseFloat(morphEndMobileRaw);
+                    }
+                    return morphEndDesktop;
+                })();
+                const morphEnd = Math.max(0.02, Math.min(1.2, Number.isFinite(morphEndSetting) ? morphEndSetting : 0.1));
+                const revealStart = 0.0;
+                const revealEnd = 1.0;
                 const revealTrackPx = Math.max(window.innerHeight * 0.42, 220);
                 const revealRaw = (window.innerHeight - rect.top) / revealTrackPx;
-                const morphProgress = Math.max(0, Math.min(1, (progress - morphStart) / Math.max(morphEnd - morphStart, 0.001)));
-                const revealProgress = Math.max(0, Math.min(1, (revealRaw - revealStart) / Math.max(revealEnd - revealStart, 0.001)));
+                const morphProgress = Math.max(
+                    0,
+                    Math.min(1, (progress - morphStart) / Math.max(morphEnd - morphStart, 0.001))
+                );
+                const revealProgressDesktop = Math.max(
+                    0,
+                    Math.min(1, (revealRaw - revealStart) / Math.max(revealEnd - revealStart, 0.001))
+                );
+
+                if (isMobile) {
+                    shell.classList.add('seccion-onepage--js');
+
+                    const firstContent =
+                        shell.querySelector('.seccion-onepage__contenido [data-onepage-item]') ||
+                        shell.querySelector('.seccion-onepage__contenido .seccion-onepage__modulo') ||
+                        shell.querySelector('.seccion-onepage__contenido-wrap .seccion-onepage__contenido > *');
+
+                    const numeroWrap = shell.querySelector('.seccion-onepage__numero-wrap');
+                    let morphProgressMobile = morphProgress;
+                    if (numeroWrap) {
+                        const wrap = numeroWrap;
+                        const vh = window.innerHeight;
+                        const centerY = vh * 0.5;
+                        const wr = wrap.getBoundingClientRect();
+                        const size = wr.height || Math.min(window.innerWidth - 40, 400);
+                        const stickyTopPx = centerY - size * 0.5;
+                        const isFixed = shell.classList.contains('is-onepage-numero-sticky');
+
+                        /*
+                         * Móvil: position:fixed (más fiable que sticky, que overflow:clip en #page atrapa).
+                         * Cuando fixed, getBoundingClientRect() devuelve la posición fijada, no la natural.
+                         * Usamos el rect de la sección + padding almacenado para estimar la posición natural.
+                         */
+                        const shellPadTop = isFixed ? (shell._fiflpShellPadTop || 30) : 30;
+                        const nc = isFixed
+                            ? rect.top + shellPadTop + size * 0.5   // posición natural estimada
+                            : wr.top + size * 0.5;                   // posición natural real
+
+                        const shellBottom = rect.top + shell.offsetHeight;
+                        const numBottomFixed = stickyTopPx + size;   // = 50vh + size/2
+
+                        if (isFixed && (nc > centerY + 2 || shellBottom < numBottomFixed)) {
+                            /* Desactivar: sección volvió atrás O el fondo de la sección pasó por debajo del número */
+                            morphProgressMobile = 0;
+                            shell.classList.remove('is-onepage-numero-sticky');
+                            delete shell._fiflpOnepageMorphScrollY0;
+                            delete shell._fiflpShellPadTop;
+                            shell.style.removeProperty('--onepage-numero-sticky-top');
+                        } else if (!isFixed && nc > centerY + 0.75) {
+                            /* Número aún no ha llegado al centro */
+                            morphProgressMobile = 0;
+                        } else {
+                            /* Activar o continuar morph */
+                            if (!isFixed) {
+                                shell._fiflpShellPadTop =
+                                    parseFloat(window.getComputedStyle(shell).paddingTop) || 30;
+                                shell.classList.add('is-onepage-numero-sticky');
+                                shell.style.setProperty('--onepage-numero-sticky-top', `${stickyTopPx}px`);
+                                shell._fiflpOnepageMorphScrollY0 = window.scrollY || window.pageYOffset || 0;
+                                morphProgressMobile = 0;
+                            } else {
+                                if (typeof shell._fiflpOnepageMorphScrollY0 !== 'number') {
+                                    shell._fiflpOnepageMorphScrollY0 = window.scrollY || window.pageYOffset || 0;
+                                }
+                                const sy = window.scrollY || window.pageYOffset || 0;
+                                const morphSpan = Math.max(vh * 0.42, 280);
+                                morphProgressMobile = Math.max(
+                                    0,
+                                    Math.min(1, (sy - shell._fiflpOnepageMorphScrollY0) / morphSpan)
+                                );
+                            }
+                        }
+                    } else {
+                        shell.classList.remove('is-onepage-numero-sticky');
+                        delete shell._fiflpOnepageMorphScrollY0;
+                        delete shell._fiflpShellPadTop;
+                        shell.style.removeProperty('--onepage-numero-sticky-top');
+                    }
+
+                    shell.style.setProperty('--onepage-morph-progress', morphProgressMobile.toFixed(3));
+
+                    let revealProgress = revealProgressDesktop;
+
+                    if (firstContent) {
+                        const cr = firstContent.getBoundingClientRect();
+                        const vh = window.innerHeight;
+                        const rStart = vh * 0.8;
+                        const rEnd = vh * 0.16;
+                        const rSpan = Math.max(140, rStart - rEnd);
+                        revealProgress = Math.max(0, Math.min(1, (rStart - cr.top) / rSpan));
+                    } else {
+                        const enter = Math.max(
+                            0,
+                            Math.min(1, (window.innerHeight * 0.62 - rect.top) / (window.innerHeight * 0.5))
+                        );
+                        revealProgress = enter > 0.52 ? 1 : enter;
+                    }
+
+                    const indiceEl = shell.querySelector('.seccion-onepage__indice');
+                    let titlePhase = 0;
+                    if (indiceEl) {
+                        const topPx = indiceEl.getBoundingClientRect().top;
+                        const band = Math.max(110, window.innerHeight * 0.2);
+                        titlePhase = 1 - Math.max(0, Math.min(1, topPx / band));
+                    }
+                    shell.style.setProperty('--onepage-mobile-title-phase', titlePhase.toFixed(3));
+                    shell.style.setProperty('--onepage-title-opacity', '1');
+
+                    shell.style.setProperty('--onepage-reveal-progress', revealProgress.toFixed(3));
+                    shell.classList.add('is-title-visible');
+                    shell.classList.toggle('is-content-visible', revealProgress > 0.05);
+                    return;
+                }
+
+                shell.classList.remove('is-onepage-numero-sticky');
+                delete shell._fiflpShellPadTop;
+                shell.style.removeProperty('--onepage-numero-sticky-top');
+                shell.style.removeProperty('--onepage-title-opacity');
+                shell.style.removeProperty('--onepage-mobile-title-phase');
 
                 shell.style.setProperty('--onepage-morph-progress', morphProgress.toFixed(3));
-                shell.style.setProperty('--onepage-reveal-progress', revealProgress.toFixed(3));
+                shell.style.setProperty('--onepage-reveal-progress', revealProgressDesktop.toFixed(3));
                 shell.classList.add('is-title-visible');
-                shell.classList.toggle('is-content-visible', revealProgress > 0.01);
+                shell.classList.toggle('is-content-visible', revealProgressDesktop > 0.01);
             };
             shell._fiflpSyncNumberState = syncNumberState;
 
@@ -818,12 +1000,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 setActiveItem(firstItem);
             }
 
-            if (isMobile || reduceMotion) {
+            if (reduceMotion) {
                 shell.classList.remove('seccion-onepage--js');
+                shell.classList.remove('is-onepage-numero-sticky');
+                delete shell._fiflpOnepageMorphScrollY0;
+                delete shell._fiflpShellPadTop;
+                shell.style.removeProperty('--onepage-numero-sticky-top');
                 shell.classList.add('is-title-visible');
                 shell.classList.add('is-content-visible');
                 shell.style.setProperty('--onepage-morph-progress', '1');
                 shell.style.setProperty('--onepage-reveal-progress', '1');
+                shell.style.removeProperty('--onepage-title-opacity');
+                shell.style.setProperty('--onepage-mobile-title-phase', '1');
+                shell.dataset.onepageNarrativeInit = '1';
                 return;
             }
 
@@ -831,29 +1020,44 @@ document.addEventListener("DOMContentLoaded", function () {
             shell.dataset.onepageNarrativeInit = '1';
             shell.style.setProperty('--onepage-reveal-progress', '0');
             shell.style.setProperty('--onepage-morph-progress', '0');
+            shell.classList.remove('is-onepage-numero-sticky');
+            delete shell._fiflpOnepageMorphScrollY0;
+            delete shell._fiflpShellPadTop;
+            shell.style.removeProperty('--onepage-numero-sticky-top');
+            if (mqMobile.matches) {
+                shell.style.setProperty('--onepage-title-opacity', '1');
+                shell.style.setProperty('--onepage-mobile-title-phase', '0');
+            } else {
+                shell.style.removeProperty('--onepage-title-opacity');
+                shell.style.removeProperty('--onepage-mobile-title-phase');
+            }
+
             syncNumberState();
             window.addEventListener('scroll', syncNumberState, { passive: true });
             window.addEventListener('resize', syncNumberState);
 
             if ('IntersectionObserver' in window) {
-                const observer = new IntersectionObserver((entries) => {
-                    let bestEntry = null;
-                    entries.forEach((entry) => {
-                        if (!entry.isIntersecting) {
-                            return;
-                        }
-                        if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
-                            bestEntry = entry;
-                        }
-                    });
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        let bestEntry = null;
+                        entries.forEach((entry) => {
+                            if (!entry.isIntersecting) {
+                                return;
+                            }
+                            if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
+                                bestEntry = entry;
+                            }
+                        });
 
-                    if (bestEntry && bestEntry.target) {
-                        setActiveItem(bestEntry.target);
+                        if (bestEntry && bestEntry.target) {
+                            setActiveItem(bestEntry.target);
+                        }
+                    },
+                    {
+                        threshold: [0.35, 0.55, 0.75],
+                        rootMargin: '-18% 0px -18% 0px',
                     }
-                }, {
-                    threshold: [0.35, 0.55, 0.75],
-                    rootMargin: '-18% 0px -18% 0px'
-                });
+                );
 
                 narrativeItems.forEach((item) => observer.observe(item));
                 return;
@@ -864,8 +1068,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 let distance = Number.POSITIVE_INFINITY;
 
                 narrativeItems.forEach((item) => {
-                    const rect = item.getBoundingClientRect();
-                    const d = Math.abs((rect.top + rect.height * 0.5) - window.innerHeight * 0.5);
+                    const itemRect = item.getBoundingClientRect();
+                    const d = Math.abs(itemRect.top + itemRect.height * 0.5 - window.innerHeight * 0.5);
                     if (d < distance) {
                         distance = d;
                         candidate = item;
@@ -882,6 +1086,72 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     };
 
+    /**
+     * Móvil ≤768px: cuadrado del número desde el ancho del viewport (no desde el padre estrecho del tema).
+     * visualViewport cuando exista (iOS); inline !important gana sobre max-width heredados.
+     */
+    const initOnepageMobileNumeroSquare = () => {
+        const mq = window.matchMedia('(max-width: 768px)');
+
+        const viewportWidth = () => {
+            if (window.visualViewport && typeof window.visualViewport.width === 'number') {
+                return window.visualViewport.width;
+            }
+            return window.innerWidth;
+        };
+
+        const applySquareHeights = () => {
+            document.querySelectorAll('.seccion-onepage__numero-wrap').forEach((wrap) => {
+                if (!mq.matches) {
+                    wrap.style.removeProperty('width');
+                    wrap.style.removeProperty('height');
+                    wrap.style.removeProperty('max-width');
+                    return;
+                }
+                const vw = viewportWidth();
+                const side = Math.round(Math.max(160, Math.min(400, vw - 40)));
+                if (side > 0) {
+                    wrap.style.setProperty('width', `${side}px`, 'important');
+                    wrap.style.setProperty('height', `${side}px`, 'important');
+                    wrap.style.setProperty('max-width', 'none', 'important');
+                }
+            });
+        };
+
+        const schedule = () => {
+            window.requestAnimationFrame(applySquareHeights);
+        };
+
+        if (typeof mq.addEventListener === 'function') {
+            mq.addEventListener('change', schedule);
+        } else if (typeof mq.addListener === 'function') {
+            mq.addListener(schedule);
+        }
+
+        window.addEventListener('resize', schedule, { passive: true });
+        window.addEventListener('load', schedule, { once: true });
+        window.addEventListener('pageshow', schedule);
+
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', schedule, { passive: true });
+        }
+
+        if (typeof ResizeObserver !== 'undefined') {
+            document.querySelectorAll('.seccion-onepage__numero-wrap').forEach((wrap) => {
+                const ro = new ResizeObserver(schedule);
+                ro.observe(wrap);
+            });
+        }
+
+        if (document.fonts && typeof document.fonts.ready === 'object') {
+            document.fonts.ready.then(schedule).catch(function () {});
+        }
+
+        schedule();
+        window.setTimeout(schedule, 120);
+        window.setTimeout(schedule, 400);
+    };
+
 
     scheduleRotuloFit();
 
@@ -890,6 +1160,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.addEventListener('resize', scheduleRotuloFit, { passive: true });
+    initOnepageMobileNumeroSquare();
     initOnepageLayoutNav();
     initOnepageNarrative();
     window.addEventListener('load', initOnepageNarrative, { once: true });

@@ -379,6 +379,28 @@
             "append": "%"
         },
         {
+            "key": "field_seccion_onepage_morph_end_mobile",
+            "label": "Fin barrido móvil (%)",
+            "name": "onepage_morph_end_pct_mobile",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Opcional. Solo pantallas ≤768px. Vacío = mismo valor que «Fin barrido (%)» (escritorio y tablet). Más bajo = barrido más rápido en móvil.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "min": 2,
+            "max": 120,
+            "step": 1,
+            "placeholder": "—",
+            "prepend": "",
+            "append": "%"
+        },
+        {
             "key": "field_seccion_onepage_modulos",
             "label": "Módulos onepage",
             "name": "modulos_onepage",
@@ -2483,5 +2505,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1746812400
+    "modified": 1768002000
 }
