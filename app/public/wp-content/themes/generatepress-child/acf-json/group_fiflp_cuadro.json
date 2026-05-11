@@ -1,0 +1,432 @@
+{
+    "key": "group_fiflp_cuadro",
+    "title": "Cuadro editorial",
+    "fields": [
+        {
+            "key": "field_cuadro_mensaje_superior",
+            "label": "Mensaje / titular (opcional)",
+            "name": "mensaje_superior",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Texto corto encima de la tabla (por ejemplo un titular destacado).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 2,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_cuadro_intro",
+            "label": "Introducción (opcional)",
+            "name": "intro",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Párrafo introductorio debajo del titular.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_cuadro_num_columnas",
+            "label": "Número de columnas",
+            "name": "num_columnas",
+            "aria-label": "",
+            "type": "button_group",
+            "instructions": "Cuántas columnas visibles por fila (las celdas extra se ignoran).",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "2": "2",
+                "3": "3",
+                "4": "4"
+            },
+            "default_value": "2",
+            "return_format": "value",
+            "allow_null": 0,
+            "layout": "horizontal"
+        },
+        {
+            "key": "field_cuadro_filas",
+            "label": "Filas",
+            "name": "filas",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Cada fila puede tener cifra + texto por columna.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_cuadro_fila_cifra_1",
+            "button_label": "Añadir fila",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_cuadro_fila_cifra_1",
+                    "label": "Cifra columna 1",
+                    "name": "cifra_1",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "12",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cuadro_filas"
+                },
+                {
+                    "key": "field_cuadro_fila_texto_1",
+                    "label": "Texto columna 1",
+                    "name": "texto_1",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "38",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "new_lines": "br",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "rows": 3,
+                    "parent_repeater": "field_cuadro_filas"
+                },
+                {
+                    "key": "field_cuadro_fila_cifra_2",
+                    "label": "Cifra col. 2",
+                    "name": "cifra_2",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "12",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cuadro_filas"
+                },
+                {
+                    "key": "field_cuadro_fila_texto_2",
+                    "label": "Texto col. 2",
+                    "name": "texto_2",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "38",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "new_lines": "br",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "rows": 3,
+                    "parent_repeater": "field_cuadro_filas"
+                },
+                {
+                    "key": "field_cuadro_fila_cifra_3",
+                    "label": "Cifra col. 3",
+                    "name": "cifra_3",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "12",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cuadro_filas"
+                },
+                {
+                    "key": "field_cuadro_fila_texto_3",
+                    "label": "Texto col. 3",
+                    "name": "texto_3",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "38",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "new_lines": "br",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "rows": 3,
+                    "parent_repeater": "field_cuadro_filas"
+                },
+                {
+                    "key": "field_cuadro_fila_cifra_4",
+                    "label": "Cifra col. 4",
+                    "name": "cifra_4",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "12",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_cuadro_filas"
+                },
+                {
+                    "key": "field_cuadro_fila_texto_4",
+                    "label": "Texto col. 4",
+                    "name": "texto_4",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "38",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "new_lines": "br",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "rows": 3,
+                    "parent_repeater": "field_cuadro_filas"
+                }
+            ]
+        },
+        {
+            "key": "field_cuadro_tipografia_cifras",
+            "label": "Tipografía de cifras",
+            "name": "tipografia_cifras",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "editorial": "Editorial (Herencia)",
+                "manrope": "Manrope"
+            },
+            "default_value": "editorial",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cuadro_cifra_min",
+            "label": "Tamaño cifra mín. (px)",
+            "name": "cifra_min_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Extremo inferior del escalado fluido.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 28,
+            "min": 10,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cuadro_cifra_max",
+            "label": "Tamaño cifra máx. (px)",
+            "name": "cifra_max_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Extremo superior del escalado fluido.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 72,
+            "min": 10,
+            "max": 240,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cuadro_texto_min",
+            "label": "Tamaño texto mín. (px)",
+            "name": "texto_min_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 10,
+            "max": 120,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cuadro_texto_max",
+            "label": "Tamaño texto máx. (px)",
+            "name": "texto_max_px",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 20,
+            "min": 10,
+            "max": 120,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cuadro_color_cifra",
+            "label": "Color cifras",
+            "name": "color_cifra",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#1e1e1e",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cuadro_color_texto",
+            "label": "Color texto",
+            "name": "color_texto",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#1e1e1e",
+            "enable_opacity": 0,
+            "return_format": "string"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fiflp_cuadro"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1746812400
+}

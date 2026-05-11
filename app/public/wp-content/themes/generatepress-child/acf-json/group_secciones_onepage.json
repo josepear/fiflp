@@ -2372,6 +2372,91 @@
                     ],
                     "min": "",
                     "max": ""
+                },
+                "layout_onepage_cuadro_editorial": {
+                    "key": "layout_onepage_cuadro_editorial",
+                    "name": "cuadro_editorial",
+                    "label": "Cuadro editorial",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_onepage_mod_cuadro_editorial_cuadro",
+                            "label": "Cuadro",
+                            "name": "cuadro",
+                            "aria-label": "",
+                            "type": "post_object",
+                            "instructions": "Crea el contenido en Cuadros editoriales y elige aquí cuál mostrar en esta sección.",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "post_type": [
+                                "fiflp_cuadro"
+                            ],
+                            "taxonomy": "",
+                            "return_format": "id",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "bidirectional": 0,
+                            "ui": 1,
+                            "bidirectional_target": []
+                        },
+                        {
+                            "key": "field_onepage_mod_cuadro_editorial_submenu_toggle",
+                            "label": "Mostrar en submenú",
+                            "name": "mostrar_en_submenu",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Si está activo, aparece como subitem en el índice lateral de la sección.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "40",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
+                        },
+                        {
+                            "key": "field_onepage_mod_cuadro_editorial_submenu_titulo",
+                            "label": "Título del submenú",
+                            "name": "titulo_submenu",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "Opcional. Si está vacío, se usa el título del cuadro editorial.",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_onepage_mod_cuadro_editorial_submenu_toggle",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "60",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
             },
             "button_label": "Añadir módulo",
@@ -2398,5 +2483,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1778300401
+    "modified": 1746812400
 }

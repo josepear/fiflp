@@ -60,6 +60,10 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			$galeria_masonry_imgs = isset( $hito['galeria_masonry'] ) && is_array( $hito['galeria_masonry'] ) ? $hito['galeria_masonry'] : array();
 			$has_galeria_masonry  = ! empty( $galeria_masonry_imgs );
 			$galeria_masonry_cols = isset( $hito['galeria_masonry_columnas'] ) ? trim( (string) $hito['galeria_masonry_columnas'] ) : '3';
+
+			$cuadro_hito_id      = isset( $hito['cuadro'] ) ? (int) $hito['cuadro'] : 0;
+			$hito_tiene_cuadro   = $cuadro_hito_id > 0 && 'fiflp_cuadro' === get_post_type( $cuadro_hito_id );
+
 			// Compatibilidad: si un hito antiguo solo tiene el campo legacy
 			// "imagen_multiplicar", lo reutilizamos para ambas imágenes.
 			$img_multiply_legacy = ! empty( $hito['imagen_multiplicar'] );
@@ -80,7 +84,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 				'highlights' => isset( $hito['ajuste_luces_imagen_2'] ) ? (float) $hito['ajuste_luces_imagen_2'] : 0.0,
 			);
 
-			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) && ! $has_galeria_masonry ) {
+			if ( '' === $fecha_titulo && '' === trim( wp_strip_all_tags( $texto ) ) && empty( $imagen ) && empty( $imagen_2 ) && ! $has_galeria_masonry && ! $hito_tiene_cuadro ) {
 				continue;
 			}
 
@@ -190,6 +194,10 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 							<div class="cronologia-editorial__texto">
 								<?php echo wp_kses_post( wpautop( $texto ) ); ?>
 							</div>
+						<?php endif; ?>
+
+						<?php if ( $hito_tiene_cuadro && function_exists( 'fiflp_render_cuadro' ) ) : ?>
+							<?php fiflp_render_cuadro( $cuadro_hito_id, array( 'context' => 'cronologia' ) ); ?>
 						<?php endif; ?>
 
 						<?php if ( $has_galeria_masonry ) : ?>

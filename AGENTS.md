@@ -17,6 +17,16 @@ ARCHITECTURE:
 - assets/js/editorial.js
 - style.css
 
+CUADRO EDITORIAL (CPT reutilizable):
+- CPT `fiflp_cuadro` (menú «Cuadros editoriales»): el contenido se define una vez; se referencia donde haga falta.
+- ACF del CPT: `acf-json/group_fiflp_cuadro.json` (columnas 2–4, filas cifra/texto, intro, tipografía y colores).
+- Inserción: layout flexible `cuadro_editorial` en `group_bloques_editoriales.json` (páginas) y en `group_secciones_onepage.json` (módulos onepage; opcional submenú). En cronología: campo `cuadro` en cada hito (`group_cronologias_editoriales.json`), opcional; en front va tras el texto del hito y antes de la galería masonry.
+- PHP: `fiflp_render_cuadro( $post_id, $args )` y helpers `fiflp_cuadro_normalize_px_pair` / `fiflp_cuadro_clamp_font_size` en `functions.php` (clamp CSS con min ≤ max). Plantillas `template-parts/bloques/cuadro-editorial.php` (bloque/módulo) y `cuadro-markup.php` (marcado único). Estilos: `.fiflp-cuadro*` en `style.css`.
+- Tras desplegar JSON: sincronizar grupos ACF en WP si hace falta.
+
+LIGHTBOX:
+- `footer.php`: contenedor `.lightbox-viewport`, botón `.lightbox-zoom` (ampliar/restaurar). `editorial.js`: zoom con recentrado del viewport; selectores acotados al `#lightbox`. Estilos en `style.css` (`.lightbox--zoomed`, etc.).
+
 OBJECTIVE:
 Sistema editorial tipo libro:
 - menú lateral

@@ -799,16 +799,62 @@ document.addEventListener("DOMContentLoaded", function () {
     // LIGHTBOX
     // =========================
     const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.querySelector('.lightbox-img');
-    const lightboxCaption = document.querySelector('.lightbox-caption');
-    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxViewport = lightbox ? lightbox.querySelector('.lightbox-viewport') : null;
+    const lightboxImg = lightbox ? lightbox.querySelector('.lightbox-img') : null;
+    const lightboxCaption = lightbox ? lightbox.querySelector('.lightbox-caption') : null;
+    const lightboxClose = lightbox ? lightbox.querySelector('.lightbox-close') : null;
+    const lightboxZoom = lightbox ? lightbox.querySelector('.lightbox-zoom') : null;
 
     if (lightbox && lightboxImg && lightboxClose) {
+        const LIGHTBOX_ZOOM_FACTOR = 1.5;
+
+        const centerLightboxViewport = () => {
+            if (!lightboxViewport) {
+                return;
+            }
+            const dx = lightboxViewport.scrollWidth - lightboxViewport.clientWidth;
+            const dy = lightboxViewport.scrollHeight - lightboxViewport.clientHeight;
+            lightboxViewport.scrollLeft = dx > 0 ? dx / 2 : 0;
+            lightboxViewport.scrollTop = dy > 0 ? dy / 2 : 0;
+        };
+
+        const resetLightboxZoom = () => {
+            lightbox.classList.remove('lightbox--zoomed');
+            if (lightboxZoom) {
+                lightboxZoom.setAttribute('aria-pressed', 'false');
+                lightboxZoom.setAttribute('aria-label', 'Ampliar imagen');
+                lightboxZoom.setAttribute('title', 'Ampliar');
+            }
+            lightboxImg.style.width = '';
+            lightboxImg.style.height = '';
+            lightboxImg.style.maxWidth = '';
+            lightboxImg.style.maxHeight = '';
+            if (lightboxViewport) {
+                lightboxViewport.scrollLeft = 0;
+                lightboxViewport.scrollTop = 0;
+            }
+        };
+
+        const applyLightboxZoomSize = () => {
+            if (!lightbox.classList.contains('lightbox--zoomed')) {
+                return;
+            }
+            if (!(lightboxImg.naturalWidth > 0)) {
+                return;
+            }
+            lightboxImg.style.maxWidth = 'none';
+            lightboxImg.style.maxHeight = 'none';
+            lightboxImg.style.width = Math.round(lightboxImg.naturalWidth * LIGHTBOX_ZOOM_FACTOR) + 'px';
+            lightboxImg.style.height = Math.round(lightboxImg.naturalHeight * LIGHTBOX_ZOOM_FACTOR) + 'px';
+            requestAnimationFrame(centerLightboxViewport);
+        };
+
         const openLightbox = (src, alt = '') => {
             if (!src) {
                 return;
             }
 
+            resetLightboxZoom();
             lightboxImg.src = src;
             lightboxImg.alt = alt;
             if (lightboxCaption) {
@@ -821,6 +867,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const closeLightbox = () => {
             lightbox.style.display = 'none';
             lightbox.setAttribute('aria-hidden', 'true');
+            resetLightboxZoom();
             lightboxImg.setAttribute('src', '');
             lightboxImg.setAttribute('alt', '');
             if (lightboxCaption) {
@@ -844,6 +891,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
         lightboxClose.addEventListener('click', function() {
             closeLightbox();
+        });
+
+        if (lightboxZoom) {
+            lightboxZoom.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const next = !lightbox.classList.contains('lightbox--zoomed');
+                lightbox.classList.toggle('lightbox--zoomed', next);
+                lightboxZoom.setAttribute('aria-pressed', next ? 'true' : 'false');
+                lightboxZoom.setAttribute('aria-label', next ? 'Reducir imagen' : 'Ampliar imagen');
+                lightboxZoom.setAttribute('title', next ? 'Reducir' : 'Ampliar');
+                if (!next) {
+                    resetLightboxZoom();
+                } else {
+                    applyLightboxZoomSize();
+                    if (!lightboxImg.complete || !(lightboxImg.naturalWidth > 0)) {
+                        lightboxImg.addEventListener('load', applyLightboxZoomSize, { once: true });
+                    }
+                }
+            });
+        }
+
+        lightboxImg.addEventListener('load', function() {
+            if (lightbox.classList.contains('lightbox--zoomed')) {
+                applyLightboxZoomSize();
+            }
         });
 
         lightbox.addEventListener('click', function(e) {

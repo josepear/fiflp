@@ -2217,6 +2217,41 @@
                     "min": "",
                     "max": ""
                 },
+                "layout_cuadro_editorial": {
+                    "key": "layout_cuadro_editorial",
+                    "name": "cuadro_editorial",
+                    "label": "Cuadro editorial",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_bloque_cuadro_editorial_cuadro",
+                            "label": "Cuadro",
+                            "name": "cuadro",
+                            "aria-label": "",
+                            "type": "post_object",
+                            "instructions": "Crea y edita el contenido en Cuadros editoriales; aquí solo eliges qué cuadro insertar.",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "post_type": [
+                                "fiflp_cuadro"
+                            ],
+                            "taxonomy": "",
+                            "return_format": "id",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "bidirectional": 0,
+                            "ui": 1,
+                            "bidirectional_target": []
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
                 "layout_seccion_onepage": {
                     "key": "layout_seccion_onepage",
                     "name": "seccion_onepage",
@@ -2539,5 +2574,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1778300400
+    "modified": 1746812400
 }

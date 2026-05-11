@@ -88,6 +88,97 @@ function fiflp_acf_load_field_backfill_underscore_name( $field ) {
 add_filter( 'acf/load_field', 'fiflp_acf_load_field_backfill_underscore_name', 1 );
 
 /**
+ * Ruta canónica de ACF Local JSON: guardado y sincronización apuntan aquí.
+ *
+ * - Tema hijo activo: `acf-json` dentro del stylesheet.
+ * - Solo GeneratePress padre: carpeta `generatepress-child/acf-json` en discos del repo.
+ *
+ * @return string Ruta absoluta sin barra final.
+ */
+function fiflp_acf_local_json_dir() {
+	$stylesheet = (string) get_stylesheet();
+	if ( 'generatepress' !== $stylesheet ) {
+		return wp_normalize_path( untrailingslashit( get_stylesheet_directory() . '/acf-json' ) );
+	}
+
+	return wp_normalize_path(
+		untrailingslashit( trailingslashit( get_theme_root() ) . 'generatepress-child/acf-json' )
+	);
+}
+
+add_filter(
+	'acf/settings/save_json',
+	function () {
+		return fiflp_acf_local_json_dir();
+	},
+	25
+);
+
+add_filter(
+	'acf/json/load_paths',
+	function ( $paths ) {
+		$paths     = is_array( $paths ) ? array_values( array_filter( $paths ) ) : array();
+		$canonical = fiflp_acf_local_json_dir();
+		if ( '' === $canonical ) {
+			return $paths;
+		}
+
+		$n_canonical = wp_normalize_path( $canonical );
+		$out         = array();
+		foreach ( $paths as $p ) {
+			if ( wp_normalize_path( untrailingslashit( (string) $p ) ) === $n_canonical ) {
+				continue;
+			}
+			$out[] = $p;
+		}
+		if ( is_dir( $canonical ) ) {
+			$out[] = $canonical;
+		}
+
+		return $out;
+	},
+	25
+);
+
+add_action(
+	'admin_notices',
+	function () {
+		if ( ! current_user_can( 'manage_options' ) || ! function_exists( 'acf_get_setting' ) ) {
+			return;
+		}
+
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen ) {
+			return;
+		}
+
+		$acf_screen = ( isset( $screen->post_type ) && false !== strpos( (string) $screen->post_type, 'acf' ) )
+			|| ( isset( $screen->id ) && false !== strpos( (string) $screen->id, 'acf' ) );
+		if ( ! $acf_screen ) {
+			return;
+		}
+
+		$dir = fiflp_acf_local_json_dir();
+		if ( is_dir( $dir ) && is_writable( $dir ) ) {
+			return;
+		}
+
+		$msg = is_dir( $dir )
+			? sprintf(
+				__( 'FIFLP: la carpeta ACF JSON no es escribible (%s). El guardado en disco y la sincronización pueden fallar.', 'generatepress-child' ),
+				$dir
+			)
+			: sprintf(
+				__( 'FIFLP: no existe la carpeta ACF JSON (%s). Créala en el servidor con permisos de escritura.', 'generatepress-child' ),
+				$dir
+			);
+
+		echo '<div class="notice notice-warning"><p>' . esc_html( $msg ) . '</p></div>';
+	},
+	11
+);
+
+/**
  * Desactiva por código el grupo duplicado "Contenido Capítulo" (mismo meta `bloques` que el grupo global).
  * Evita dos flexibles `bloques` en una misma pantalla (p. ej. página ID 35), que rompe el guardado ACF.
  * Reversible: quitar este filtro y fusionar layouts en `group_bloques_editoriales` si hiciera falta.
@@ -766,6 +857,18 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 			return $titulo_submenu;
 		}
 
+		$layout_mod = isset( $modulo['acf_fc_layout'] ) ? (string) $modulo['acf_fc_layout'] : '';
+		if ( 'cuadro_editorial' === $layout_mod ) {
+			$cuadro_ref = $modulo['cuadro'] ?? 0;
+			$cuadro_id  = is_numeric( $cuadro_ref ) ? (int) $cuadro_ref : 0;
+			if ( $cuadro_id > 0 ) {
+				$titulo_cuadro = trim( (string) get_the_title( $cuadro_id ) );
+				if ( '' !== $titulo_cuadro ) {
+					return $titulo_cuadro;
+				}
+			}
+		}
+
 		$titulo_crono = fiflp_onepage_cronologia_submenu_label( $modulo );
 		if ( '' !== $titulo_crono ) {
 			return $titulo_crono;
@@ -1042,6 +1145,80 @@ function fiflp_render_editorial_block_layout( $layout ) {
 	}
 
 	return false;
+}
+
+if ( ! function_exists( 'fiflp_cuadro_normalize_px_pair' ) ) {
+	/**
+	 * Garantiza min <= max para escalados tipográficos (evita clamp() CSS inválido).
+	 *
+	 * @param mixed $min_raw Valor mínimo desde ACF.
+	 * @param mixed $max_raw Valor máximo desde ACF.
+	 * @param float $fallback_min Valor por defecto mínimo.
+	 * @param float $fallback_max Valor por defecto máximo.
+	 * @return float[] {0}=min, {1}=max.
+	 */
+	function fiflp_cuadro_normalize_px_pair( $min_raw, $max_raw, $fallback_min, $fallback_max ) {
+		$min = (float) $min_raw;
+		$max = (float) $max_raw;
+
+		if ( $min <= 0 ) {
+			$min = (float) $fallback_min;
+		}
+		if ( $max <= 0 ) {
+			$max = (float) $fallback_max;
+		}
+		if ( $min > $max ) {
+			$tmp = $min;
+			$min = $max;
+			$max = $tmp;
+		}
+
+		return array( $min, $max );
+	}
+}
+
+if ( ! function_exists( 'fiflp_cuadro_clamp_font_size' ) ) {
+	/**
+	 * Genera un clamp() CSS seguro (extremos ordenados).
+	 *
+	 * @param float $min_px Mínimo en px.
+	 * @param float $max_px Máximo en px.
+	 * @param float $vw_mid Punto medio en vw (entre ~2 y 12).
+	 * @return string
+	 */
+	function fiflp_cuadro_clamp_font_size( $min_px, $max_px, $vw_mid = 4.0 ) {
+		list( $a, $b ) = fiflp_cuadro_normalize_px_pair( $min_px, $max_px, 12, 16 );
+		$vw_mid = max( 2.0, min( 12.0, (float) $vw_mid ) );
+
+		return sprintf( 'clamp(%1$.0fpx, %2$.2fvw, %3$.0fpx)', $a, $vw_mid, $b );
+	}
+}
+
+if ( ! function_exists( 'fiflp_render_cuadro' ) ) {
+	/**
+	 * Renderiza un cuadro editorial (CPT fiflp_cuadro) desde una única plantilla.
+	 *
+	 * @param int   $cuadro_id ID del post tipo fiflp_cuadro.
+	 * @param array $args      context: editorial|onepage|cronologia; onepage: bool passthrough.
+	 * @return void
+	 */
+	function fiflp_render_cuadro( $cuadro_id, $args = array() ) {
+		$cuadro_id = (int) $cuadro_id;
+
+		if ( $cuadro_id <= 0 ) {
+			return;
+		}
+
+		if ( 'fiflp_cuadro' !== get_post_type( $cuadro_id ) ) {
+			return;
+		}
+
+		$args                  = is_array( $args ) ? $args : array();
+		$args['cuadro_id']     = $cuadro_id;
+		$args['render_source'] = 'fiflp_render_cuadro';
+
+		get_template_part( 'template-parts/bloques/cuadro-markup', null, $args );
+	}
 }
 
 function fiflp_get_home_hero_data( $page_id = 0 ) {
@@ -1472,6 +1649,29 @@ add_action(
 				'show_in_menu'       => true,
 				'menu_position'      => 63,
 				'menu_icon'          => 'dashicons-index-card',
+				'supports'           => array( 'title' ),
+				'publicly_queryable' => false,
+				'has_archive'        => false,
+				'rewrite'            => false,
+				'show_in_rest'       => false,
+			)
+		);
+
+		register_post_type(
+			'fiflp_cuadro',
+			array(
+				'labels' => array(
+					'name'          => 'Cuadros editoriales',
+					'singular_name' => 'Cuadro editorial',
+					'add_new_item'  => 'Añadir cuadro editorial',
+					'edit_item'     => 'Editar cuadro editorial',
+					'menu_name'     => 'Cuadros editoriales',
+				),
+				'public'             => false,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'menu_position'      => 64,
+				'menu_icon'          => 'dashicons-editor-table',
 				'supports'           => array( 'title' ),
 				'publicly_queryable' => false,
 				'has_archive'        => false,

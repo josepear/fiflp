@@ -4272,6 +4272,117 @@ p.rotulo-editorial__subtitulo {
     }
 }
 
+/* Cuadro editorial (CPT fiflp_cuadro) */
+.fiflp-cuadro {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    width: 100%;
+    max-width: 100%;
+}
+
+.fiflp-cuadro__mensaje {
+    margin: 0 0 0.75rem;
+    font-family: var(--fiflp-font-meta, 'Manrope', sans-serif);
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--fiflp-cuadro-color-texto, #1e1e1e);
+}
+
+.fiflp-cuadro__intro {
+    margin: 0 0 1rem;
+    font-size: var(--fiflp-cuadro-texto-size, 1rem);
+    line-height: 1.55;
+    color: var(--fiflp-cuadro-color-texto, #1e1e1e);
+}
+
+.fiflp-cuadro__intro p:last-child {
+    margin-bottom: 0;
+}
+
+.fiflp-cuadro__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.fiflp-cuadro__fila {
+    display: grid;
+    gap: 1rem 1.5rem;
+    align-items: start;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(30, 30, 30, 0.12);
+}
+
+.fiflp-cuadro__fila:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.fiflp-cuadro--cols-2 .fiflp-cuadro__fila {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fiflp-cuadro--cols-3 .fiflp-cuadro__fila {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fiflp-cuadro--cols-4 .fiflp-cuadro__fila {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.fiflp-cuadro__celda {
+    min-width: 0;
+}
+
+.fiflp-cuadro__cifra {
+    display: block;
+    margin: 0 0 0.35rem;
+    font-size: var(--fiflp-cuadro-cifra-size, clamp(28px, 4vw, 72px));
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--fiflp-cuadro-color-cifra, #1e1e1e);
+}
+
+.fiflp-cuadro--cifra-manrope .fiflp-cuadro__cifra {
+    font-family: 'Manrope', sans-serif;
+}
+
+.fiflp-cuadro__texto {
+    margin: 0;
+    font-size: var(--fiflp-cuadro-texto-size, clamp(14px, 2.75vw, 20px));
+    line-height: 1.45;
+    color: var(--fiflp-cuadro-color-texto, #1e1e1e);
+}
+
+.cronologia-editorial .cronologia-editorial__cuadro {
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo .fiflp-cuadro {
+    width: 100%;
+    max-width: 100%;
+}
+
+@media (max-width: 720px) {
+
+    .fiflp-cuadro--cols-3 .fiflp-cuadro__fila,
+    .fiflp-cuadro--cols-4 .fiflp-cuadro__fila {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+
+    .fiflp-cuadro--cols-2 .fiflp-cuadro__fila,
+    .fiflp-cuadro--cols-3 .fiflp-cuadro__fila,
+    .fiflp-cuadro--cols-4 .fiflp-cuadro__fila {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* =========================
    LIGHTBOX
    ========================= */
@@ -4288,12 +4399,30 @@ p.rotulo-editorial__subtitulo {
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    padding: 56px 16px 20px;
+    box-sizing: border-box;
+}
+
+.lightbox-viewport {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Imagen */
 .lightbox-img {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 100%;
+    max-height: min(85vh, 100%);
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
 .lightbox-caption {
@@ -4324,6 +4453,44 @@ p.rotulo-editorial__subtitulo {
     font-size: 40px;
     color: #fff;
     cursor: pointer;
+}
+
+/* Lupa: ampliar / restaurar (estado en .lightbox--zoomed + JS para tamaño intrínseco) */
+.lightbox-zoom {
+    position: absolute;
+    top: 26px;
+    right: 96px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.lightbox-zoom:hover,
+.lightbox-zoom:focus-visible {
+    background: rgba(255, 255, 255, 0.22);
+    outline: none;
+}
+
+.lightbox-zoom__icon {
+    display: block;
+}
+
+.lightbox--zoomed .lightbox-zoom__bar {
+    opacity: 0;
+}
+
+.lightbox--zoomed .lightbox-zoom {
+    background: rgba(255, 255, 255, 0.28);
 }
 
 .footer-editorial {

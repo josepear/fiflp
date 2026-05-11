@@ -120,9 +120,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php do_action( 'generate_after_footer' ); ?>
 
-<div id="lightbox" class="lightbox">
+<div id="lightbox" class="lightbox" aria-hidden="true">
 	<span class="lightbox-close">&times;</span>
-	<img class="lightbox-img" src="" alt="">
+	<button type="button" class="lightbox-zoom" aria-label="<?php echo esc_attr( 'Ampliar imagen' ); ?>" aria-pressed="false" title="<?php echo esc_attr( 'Ampliar' ); ?>">
+		<svg class="lightbox-zoom__icon" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+			<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2" />
+			<line x1="14.5" y1="14.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+			<line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="lightbox-zoom__bar" />
+		</svg>
+	</button>
+	<div class="lightbox-viewport">
+		<img class="lightbox-img" src="" alt="">
+	</div>
 	<p class="lightbox-caption"></p>
 </div>
 

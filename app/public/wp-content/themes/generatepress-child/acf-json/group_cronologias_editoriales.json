@@ -501,6 +501,32 @@
                     "ajax": 0,
                     "placeholder": "",
                     "parent_repeater": "field_cronologia_editorial_hitos"
+                },
+                {
+                    "key": "field_cronologia_editorial_hito_cuadro",
+                    "label": "Cuadro editorial (opcional)",
+                    "name": "cuadro",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "Opcional. Cuadro reutilizable definido en Cuadros editoriales. Se muestra tras el texto del hito y antes de la galería masonry.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "fiflp-crono-hito-cuadro",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "fiflp_cuadro"
+                    ],
+                    "taxonomy": "",
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 1,
+                    "bidirectional": 0,
+                    "ui": 1,
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_cronologia_editorial_hitos"
                 }
             ]
         }
@@ -524,5 +550,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1778300402
+    "modified": 1746812400
 }
