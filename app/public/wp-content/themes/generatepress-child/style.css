@@ -1687,17 +1687,17 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 
     .site-header .fiflp-centenario-logo img {
-        height: clamp(36px, 9vw, 48px) !important;
-        max-width: min(40vw, 180px) !important;
+        width: 75px !important;
+        height: auto !important;
         display: block;
         transition:
-            height 0.3s var(--fiflp-ease-soft, ease),
+            width 0.3s var(--fiflp-ease-soft, ease),
             filter 0.3s ease;
     }
 
-    /* Compacto: 70% → clamp(25px, 6.3vw, 34px) */
+    /* Compacto: 70% de 75px = ~53px */
     .site-header.is-compact .fiflp-centenario-logo img {
-        height: clamp(25px, 6.3vw, 34px) !important;
+        width: 53px !important;
     }
 
     /* Sección oscura: logo en blanco */
