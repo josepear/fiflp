@@ -66,6 +66,11 @@ Puedes hacer dos cosas:
 
 Pero **no** debes usar `localhost:10003` desde otra máquina, porque ese servicio corre en el MacMini.
 
+### Ver el local desde el móvil (misma Wi‑Fi que el Mac que ejecuta Local)
+- **Live Link** en la app Local (sitio fiflp): suele ser lo más fiable; genera una URL temporal y ábrela en el navegador del teléfono (no depende de IP ni de que nginx escuche en todas las interfaces).
+- **IP y puerto** (`http://<IP-LAN-del-MacMini>:10003`) solo funciona si el servicio escucha en `0.0.0.0` o `*:10003`. En el MacMini: `lsof -nP -iTCP:10003 -sTCP:LISTEN` — si aparece `127.0.0.1:10003`, desde el móvil no entrará hasta usar Live Link o cambiar la configuración de escucha.
+- El teléfono y el Mac deben estar en la **misma Wi‑Fi** (evitar datos móviles o invitados que aíslen clientes). Si no carga, revisar **firewall** del Mac para Local/nginx.
+
 ## Qué URL usar para cada cosa
 
 ### Para trabajar en WordPress y ACF

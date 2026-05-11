@@ -8,7 +8,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const centenarioLogo = document.querySelector('.fiflp-centenario-logo');
 
     if (centenarioLogo) {
+        const mobileLogoQuery = window.matchMedia('(max-width: 782px)');
+
         const updateCentenarioLogoState = () => {
+            if (mobileLogoQuery.matches) {
+                centenarioLogo.style.opacity = '';
+                centenarioLogo.style.transform = '';
+                centenarioLogo.classList.remove('is-fading');
+                return;
+            }
+
             const progress = Math.min(window.scrollY, 180);
             const opacity = Math.max(0.06, 1 - (progress / 180));
             const translateY = -50 - Math.min(progress / 20, 8);
@@ -21,6 +30,12 @@ document.addEventListener("DOMContentLoaded", function () {
         updateCentenarioLogoState();
         window.addEventListener('scroll', updateCentenarioLogoState, { passive: true });
         window.addEventListener('resize', updateCentenarioLogoState);
+
+        if (typeof mobileLogoQuery.addEventListener === 'function') {
+            mobileLogoQuery.addEventListener('change', updateCentenarioLogoState);
+        } else if (typeof mobileLogoQuery.addListener === 'function') {
+            mobileLogoQuery.addListener(updateCentenarioLogoState);
+        }
     }
 
     const fitRotuloText = () => {
@@ -263,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const setMobileNavState = function (isOpen, immediate) {
+        const setMobileNavState = function (isOpen) {
             nav.classList.toggle('is-mobile-open', isOpen);
             toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 
@@ -272,78 +287,30 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if (!mobileQuery.matches) {
+                document.body.classList.remove('fiflp-editorial-nav-open');
                 panel.hidden = false;
-                panel.style.height = 'auto';
-                panel.style.opacity = '1';
-                panel.style.transform = 'translateY(0)';
+                panel.style.height = '';
+                panel.style.opacity = '';
+                panel.style.transform = '';
                 return;
             }
 
-            if (immediate) {
-                panel.hidden = !isOpen;
-                panel.style.height = isOpen ? 'auto' : '0px';
-                panel.style.opacity = isOpen ? '1' : '0';
-                panel.style.transform = isOpen ? 'translateY(0)' : 'translateY(-8px)';
-                return;
-            }
-
-            const finishOpen = function (event) {
-                if (event.propertyName !== 'height') {
-                    return;
-                }
-
-                panel.style.height = 'auto';
-                panel.removeEventListener('transitionend', finishOpen);
-            };
-
-            const finishClose = function (event) {
-                if (event.propertyName !== 'height') {
-                    return;
-                }
-
-                panel.hidden = true;
-                panel.removeEventListener('transitionend', finishClose);
-            };
-
-            if (isOpen) {
-                panel.hidden = false;
-                panel.style.height = '0px';
-                panel.style.opacity = '0';
-                panel.style.transform = 'translateY(-8px)';
-                panel.offsetHeight;
-                panel.addEventListener('transitionend', finishOpen);
-
-                requestAnimationFrame(function () {
-                    panel.style.height = panel.scrollHeight + 'px';
-                    panel.style.opacity = '1';
-                    panel.style.transform = 'translateY(0)';
-                });
-
-                return;
-            }
-
-            panel.hidden = false;
-            panel.style.height = panel.scrollHeight + 'px';
-            panel.style.opacity = '1';
-            panel.style.transform = 'translateY(0)';
-            panel.offsetHeight;
-            panel.addEventListener('transitionend', finishClose);
-
-            requestAnimationFrame(function () {
-                panel.style.height = '0px';
-                panel.style.opacity = '0';
-                panel.style.transform = 'translateY(-8px)';
-            });
+            /* Móvil: overlay a pantalla completa (CSS); sin animación de altura. */
+            document.body.classList.toggle('fiflp-editorial-nav-open', isOpen);
+            panel.style.height = '';
+            panel.style.opacity = '';
+            panel.style.transform = '';
+            panel.hidden = !isOpen;
         };
 
         const syncMobileNav = function () {
             if (mobileQuery.matches) {
-                setMobileNavState(nav.classList.contains('is-mobile-open'), true);
+                setMobileNavState(nav.classList.contains('is-mobile-open'));
                 return;
             }
 
             nav.classList.add('is-mobile-open');
-            setMobileNavState(true, true);
+            setMobileNavState(true);
         };
 
         if (mobileQuery.matches) {
@@ -359,7 +326,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            setMobileNavState(!nav.classList.contains('is-mobile-open'), false);
+            setMobileNavState(!nav.classList.contains('is-mobile-open'));
+        });
+
+        panel.addEventListener('click', function (event) {
+            if (!mobileQuery.matches) {
+                return;
+            }
+
+            if (event.defaultPrevented) {
+                return;
+            }
+
+            const link = event.target.closest('a[href]');
+
+            if (!link) {
+                return;
+            }
+
+            setMobileNavState(false);
         });
 
         if (typeof mobileQuery.addEventListener === 'function') {
@@ -367,6 +352,24 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (typeof mobileQuery.addListener === 'function') {
             mobileQuery.addListener(syncMobileNav);
         }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape' || event.defaultPrevented) {
+            return;
+        }
+
+        if (!window.matchMedia('(max-width: 1024px)').matches) {
+            return;
+        }
+
+        document.querySelectorAll('.menu-lateral[data-mobile-nav].is-mobile-open').forEach(function (nav) {
+            const toggleBtn = nav.querySelector('[data-mobile-nav-toggle]');
+
+            if (toggleBtn) {
+                toggleBtn.click();
+            }
+        });
     });
 
     const menuPanel = document.querySelector('[data-fiflp-menu-panel]');
@@ -493,7 +496,93 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
 
+        const panel = document.querySelector('[data-onepage-sidebar-panel]');
+        let compactExitTimerId = null;
+        let compactExitOnEnd = null;
+
+        const clearCompactExitAnimation = () => {
+            if (compactExitTimerId) {
+                window.clearTimeout(compactExitTimerId);
+                compactExitTimerId = null;
+            }
+            if (panel && compactExitOnEnd) {
+                panel.removeEventListener('transitionend', compactExitOnEnd);
+                compactExitOnEnd = null;
+            }
+        };
+
+        const finishCompactMenuExitDown = () => {
+            if (!document.body.classList.contains('onepage-menu-exit-down')) {
+                return;
+            }
+            clearCompactExitAnimation();
+            document.body.classList.add('onepage-menu-skip-panel-transition');
+            document.body.classList.remove('onepage-menu-open', 'onepage-menu-exit-down');
+            document.body.classList.add('onepage-menu-closed');
+            toggle.setAttribute('aria-expanded', 'false');
+            persistDesktop(false);
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    document.body.classList.remove('onepage-menu-skip-panel-transition');
+                });
+            });
+        };
+
+        const startCompactMenuExitDown = () => {
+            if (document.body.classList.contains('onepage-menu-exit-down')) {
+                return;
+            }
+            if (!panel) {
+                clearCompactExitAnimation();
+                document.body.classList.remove('onepage-menu-exit-down', 'onepage-menu-skip-panel-transition');
+                document.body.classList.remove('onepage-menu-open');
+                document.body.classList.add('onepage-menu-closed');
+                toggle.setAttribute('aria-expanded', 'false');
+                persistDesktop(false);
+                return;
+            }
+            document.body.classList.add('onepage-menu-exit-down');
+            compactExitOnEnd = (event) => {
+                if (event.target !== panel || event.propertyName !== 'transform') {
+                    return;
+                }
+                panel.removeEventListener('transitionend', compactExitOnEnd);
+                compactExitOnEnd = null;
+                if (compactExitTimerId) {
+                    window.clearTimeout(compactExitTimerId);
+                    compactExitTimerId = null;
+                }
+                finishCompactMenuExitDown();
+            };
+            panel.addEventListener('transitionend', compactExitOnEnd);
+            compactExitTimerId = window.setTimeout(() => {
+                compactExitTimerId = null;
+                if (compactExitOnEnd) {
+                    panel.removeEventListener('transitionend', compactExitOnEnd);
+                    compactExitOnEnd = null;
+                }
+                finishCompactMenuExitDown();
+            }, 650);
+        };
+
         const applyState = (open) => {
+            if (!open && document.body.classList.contains('onepage-menu-exit-down')) {
+                return;
+            }
+
+            if (
+                !open &&
+                isCompact() &&
+                !reduceMotion &&
+                document.body.classList.contains('onepage-menu-open') &&
+                !document.body.classList.contains('onepage-menu-exit-down')
+            ) {
+                startCompactMenuExitDown();
+                return;
+            }
+
+            clearCompactExitAnimation();
+            document.body.classList.remove('onepage-menu-exit-down', 'onepage-menu-skip-panel-transition');
             document.body.classList.toggle('onepage-menu-open', open);
             document.body.classList.toggle('onepage-menu-closed', !open);
             toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -523,12 +612,18 @@ document.addEventListener("DOMContentLoaded", function () {
         applyState(initialOpen());
 
         toggle.addEventListener('click', () => {
+            if (document.body.classList.contains('onepage-menu-exit-down')) {
+                return;
+            }
             const next = !document.body.classList.contains('onepage-menu-open');
             applyState(next);
         });
 
         if (overlay) {
             overlay.addEventListener('click', () => {
+                if (document.body.classList.contains('onepage-menu-exit-down')) {
+                    return;
+                }
                 if (isCompact()) {
                     applyState(false);
                 }
@@ -623,6 +718,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            if (document.body.classList.contains('onepage-menu-exit-down')) {
+                return;
+            }
+
             if (isCompact()) {
                 applyState(false);
             }
@@ -638,6 +737,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 lastCompact = compact;
+
+                clearCompactExitAnimation();
+                document.body.classList.remove('onepage-menu-exit-down', 'onepage-menu-skip-panel-transition');
 
                 if (compact) {
                     applyState(false);

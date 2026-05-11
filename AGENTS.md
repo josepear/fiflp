@@ -17,6 +17,16 @@ ARCHITECTURE:
 - assets/js/editorial.js
 - style.css
 
+RESPONSIVE (móvil alineado con escritorio):
+- **No hay “versión móvil” duplicada en el CMS**: el contenido ACF es único; la adaptación es **CSS** (`style.css`: `@media`, `clamp()`, `min()`/`max()`). Guardar cambios = **commits en Git** (rama `main` o ramas cortas por tema, p. ej. `fix/mobile-bloques-padding`, y merge).
+- **Objetivo visual**: mismos bloques y jerarquía que en escritorio; en estrecho se ajustan **padding/margin del contenedor**, **huecos entre bloques** y **rejillas** (no reordenar el libro salvo que sea inevitable).
+- **Breakpoints ya usados en el tema** (referencia al auditar): 520, 640, 720, 768, 782, 900, 1024, 1025px. Preferir reutilizarlos antes de inventar cortes nuevos.
+- **Menú lateral editorial (≤1024px)**: abierto = overlay **pantalla completa** (`.menu-lateral.is-mobile-open`, `z-index: 9995`), lista con scroll; `body.fiflp-editorial-nav-open` bloquea scroll (`editorial.js`). Escape cierra; clic en enlace de navegación cierra (no afecta `preventDefault` del índice plegable).
+- **Menú onepage (≤1024px)**: `template-parts/menu-onepage.php`, `style.css` y `editorial.js` — panel a pantalla completa, capas por encima del header fijo; logo en el panel; animación abrir desde arriba / cerrar hacia abajo (`onepage-menu-exit-down`, `onepage-menu-skip-panel-transition`, `transitionend` + timeout de respaldo).
+- **Cronología editorial (≤900px)**: tipografía compacta en móvil (título del bloque, fecha del hito, cuerpo); imágenes del hito visibles; ajuste fino del eje con `transform` en `.cronologia-editorial__meta::before` solo en ese breakpoint.
+- **Estrategia de trabajo**: ir bloque a bloque (`.bloque.*`, `.layout-editorial`, `main.editorial`, onepage, cronología); revisar reglas que en desktop asumen mucho padding horizontal y en móvil quedan descompensadas; usar variables en `:root` solo si repetimos el mismo valor en muchos sitios (p. ej. `--fiflp-editorial-pad-x`).
+- **No** añadir campos ACF “solo móvil” salvo excepción editorial clara (casi nunca hace falta).
+
 CUADRO EDITORIAL (CPT reutilizable):
 - CPT `fiflp_cuadro` (menú «Cuadros editoriales»): el contenido se define una vez; se referencia donde haga falta.
 - ACF del CPT: `acf-json/group_fiflp_cuadro.json` (columnas 2–4, filas cifra/texto, intro, tipografía y colores).

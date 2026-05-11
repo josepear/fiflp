@@ -10,6 +10,10 @@ if ( empty( $sections ) ) {
 }
 
 $panel_id = 'fiflp-onepage-nav-panel';
+
+$logo_src = get_stylesheet_directory_uri() . '/assets/logo-centenario.svg';
+$logo_alt = esc_attr__( 'Logo centenario FIFLP', 'generatepress' );
+$logo_href = esc_url( home_url( '/' ) );
 ?>
 <div class="fiflp-onepage-sidebar-col">
 	<aside class="fiflp-onepage-sidebar" data-onepage-sidebar aria-label="<?php echo esc_attr__( 'Índice de secciones', 'generatepress' ); ?>">
@@ -32,6 +36,9 @@ $panel_id = 'fiflp-onepage-nav-panel';
 			></div>
 
 			<nav class="fiflp-onepage-sidebar__panel" id="<?php echo esc_attr( $panel_id ); ?>" data-onepage-sidebar-panel>
+				<a class="fiflp-onepage-sidebar__brand" href="<?php echo esc_url( $logo_href ); ?>" aria-label="<?php echo esc_attr( $logo_alt ); ?>">
+					<img src="<?php echo esc_url( $logo_src ); ?>" alt="<?php echo esc_attr( $logo_alt ); ?>" width="360" height="134" decoding="async" loading="lazy" />
+				</a>
 				<p class="fiflp-onepage-sidebar__heading"><?php echo esc_html__( 'Menú', 'generatepress' ); ?></p>
 				<ol class="fiflp-onepage-sidebar__list">
 					<?php foreach ( $sections as $sec ) : ?>
