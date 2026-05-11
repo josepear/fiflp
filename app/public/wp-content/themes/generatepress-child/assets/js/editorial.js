@@ -1445,8 +1445,24 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        function updateHeaderHeight() {
+            if (mqMobile.matches) {
+                document.documentElement.style.setProperty(
+                    '--fiflp-header-height',
+                    header.offsetHeight + 'px'
+                );
+            } else {
+                document.documentElement.style.removeProperty('--fiflp-header-height');
+            }
+        }
+
         window.addEventListener('scroll', syncHeaderSection, { passive: true });
-        mqMobile.addEventListener('change', syncHeaderSection);
+        window.addEventListener('resize', updateHeaderHeight);
+        mqMobile.addEventListener('change', function () {
+            syncHeaderSection();
+            updateHeaderHeight();
+        });
         syncHeaderSection();
+        updateHeaderHeight();
     }());
 });

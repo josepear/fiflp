@@ -1502,11 +1502,13 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         stroke-width: 1px !important;
     }
 
-    /* Titular: sticky arriba, por encima del número (z-index). Orden flex: número → índice. */
+    /* Titular: sticky debajo del header, por encima del número (z-index).
+     * --fiflp-header-height la publica JS (initOnepageHeaderSync) midiendo
+     * el offsetHeight real del .site-header en móvil. */
     .bloque.seccion-onepage .seccion-onepage__shell > aside.seccion-onepage__indice {
         order: 2;
         position: sticky !important;
-        top: max(0px, env(safe-area-inset-top, 0px)) !important;
+        top: var(--fiflp-header-height, 0px) !important;
         align-self: stretch;
         min-height: 0;
         min-width: 0;
@@ -1520,7 +1522,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        padding: max(8px, env(safe-area-inset-top, 0px)) 20px 10px;
+        padding: 8px 20px 10px;
         text-align: center;
         box-sizing: border-box;
         z-index: 100 !important;
