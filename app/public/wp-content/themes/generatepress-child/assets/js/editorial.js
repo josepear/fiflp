@@ -835,6 +835,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     shell.classList.remove('is-onepage-numero-sticky');
                     delete shell._fiflpOnepageMorphScrollY0;
                     delete shell._fiflpShellPadTop;
+                    delete shell._fiflpWasBelow;
                     shell.style.removeProperty('--onepage-numero-sticky-top');
                     shell.classList.add('is-title-visible');
                     shell.classList.add('is-content-visible');
@@ -909,18 +910,39 @@ document.addEventListener("DOMContentLoaded", function () {
                         const shellBottom = rect.top + shell.offsetHeight;
                         const numBottomFixed = stickyTopPx + size;   // = 50vh + size/2
 
+                        /*
+                         * Flag: el número estuvo por debajo del centro del viewport en algún momento.
+                         * Si nunca estuvo abajo (p.ej. prólogo: sección arriba desde la carga de página)
+                         * el fixed no se activa para evitar el salto número-natural → centro.
+                         * En ese caso el morph progresa por posición de la sección (scroll-based).
+                         */
+                        if (!isFixed && nc > centerY + 0.75) {
+                            shell._fiflpWasBelow = true;
+                        }
+                        const wasBelow = shell._fiflpWasBelow === true;
+
                         if (isFixed && (nc > centerY + 2 || shellBottom < numBottomFixed)) {
-                            /* Desactivar: sección volvió atrás O el fondo de la sección pasó por debajo del número */
+                            /* Desactivar: sección volvió atrás O el fondo pasó por debajo del número */
                             morphProgressMobile = 0;
                             shell.classList.remove('is-onepage-numero-sticky');
                             delete shell._fiflpOnepageMorphScrollY0;
                             delete shell._fiflpShellPadTop;
+                            delete shell._fiflpWasBelow;
                             shell.style.removeProperty('--onepage-numero-sticky-top');
                         } else if (!isFixed && nc > centerY + 0.75) {
-                            /* Número aún no ha llegado al centro */
+                            /* Número aún no ha llegado al centro desde abajo */
                             morphProgressMobile = 0;
+                        } else if (!isFixed && !wasBelow) {
+                            /*
+                             * Número ya por encima del centro sin haber llegado desde abajo
+                             * (prólogo u otra sección visible desde la carga de página).
+                             * Morph basado en scroll de la sección; el número no se fija al centro.
+                             */
+                            const morphScrolled = Math.max(0, -rect.top);
+                            const morphSpan = Math.max(vh * 0.42, 280);
+                            morphProgressMobile = Math.max(0, Math.min(1, morphScrolled / morphSpan));
                         } else {
-                            /* Activar o continuar morph */
+                            /* Activar fixed o continuar morph */
                             if (!isFixed) {
                                 shell._fiflpShellPadTop =
                                     parseFloat(window.getComputedStyle(shell).paddingTop) || 30;
@@ -944,6 +966,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         shell.classList.remove('is-onepage-numero-sticky');
                         delete shell._fiflpOnepageMorphScrollY0;
                         delete shell._fiflpShellPadTop;
+                        delete shell._fiflpWasBelow;
                         shell.style.removeProperty('--onepage-numero-sticky-top');
                     }
 
@@ -984,6 +1007,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 shell.classList.remove('is-onepage-numero-sticky');
                 delete shell._fiflpShellPadTop;
+                delete shell._fiflpWasBelow;
                 shell.style.removeProperty('--onepage-numero-sticky-top');
                 shell.style.removeProperty('--onepage-title-opacity');
                 shell.style.removeProperty('--onepage-mobile-title-phase');
@@ -1005,6 +1029,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 shell.classList.remove('is-onepage-numero-sticky');
                 delete shell._fiflpOnepageMorphScrollY0;
                 delete shell._fiflpShellPadTop;
+                delete shell._fiflpWasBelow;
                 shell.style.removeProperty('--onepage-numero-sticky-top');
                 shell.classList.add('is-title-visible');
                 shell.classList.add('is-content-visible');
@@ -1023,6 +1048,7 @@ document.addEventListener("DOMContentLoaded", function () {
             shell.classList.remove('is-onepage-numero-sticky');
             delete shell._fiflpOnepageMorphScrollY0;
             delete shell._fiflpShellPadTop;
+            delete shell._fiflpWasBelow;
             shell.style.removeProperty('--onepage-numero-sticky-top');
             if (mqMobile.matches) {
                 shell.style.setProperty('--onepage-title-opacity', '1');
