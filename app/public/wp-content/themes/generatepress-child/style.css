@@ -1647,6 +1647,13 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         transition: none;
     }
 
+    /* En móvil la regla global .is-content-visible { opacity:1 } interfiere:
+     * la anularmos para que el reveal siga siendo gradual (variable-driven). */
+    .seccion-onepage__shell.seccion-onepage--js.is-content-visible .seccion-onepage__contenido-wrap {
+        opacity: var(--onepage-reveal-progress);
+        transform: translateY(calc((1 - var(--onepage-reveal-progress)) * 10svh));
+    }
+
     .seccion-onepage__shell.seccion-onepage--js .seccion-onepage__item {
         opacity: 1;
         transform: none;
