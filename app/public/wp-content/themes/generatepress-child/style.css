@@ -1397,6 +1397,18 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         min-width: 0;
     }
 
+    /*
+     * Cadena de contenedores GP que pueden tener overflow-x:clip (→ overflow-y:auto por spec)
+     * y recortar el SVG del número por la parte inferior en móvil.
+     */
+    body.fiflp-onepage #page,
+    body.fiflp-onepage #content.site-content,
+    body.fiflp-onepage .inside-article,
+    body.fiflp-onepage .entry-content,
+    body.fiflp-onepage main.editorial {
+        overflow: visible !important;
+    }
+
     /* Columna: stretch; sin padding-bottom:% (WebKit puede hinchar el hueco bajo el número) */
     .seccion-onepage__shell {
         display: flex;
@@ -1466,7 +1478,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         z-index: 15 !important;
         pointer-events: none;
         overflow: visible !important;
-        border-radius: 14px;
+        /* border-radius eliminado: en Safari/WebKit clip a los hijos aunque overflow:visible */
     }
 
     /* Relleno y contorno: mismo cuerpo tipográfico en coords. de usuario (viewBox 2400); HTML usa y=50% en el <text>. */
