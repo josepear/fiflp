@@ -1444,7 +1444,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 
     .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap {
-        z-index: 5;
+        z-index: 30;
     }
 
     /*
@@ -1467,7 +1467,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         margin-left: auto !important;
         margin-right: auto !important;
         margin-top: 0 !important;
-        margin-bottom: 0 !important;
+        margin-bottom: 28px !important;
         padding: 0 !important;
         aspect-ratio: 1 / 1;
         min-width: 0 !important;
@@ -1475,7 +1475,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         flex-shrink: 0 !important;
         align-self: center !important;
         transform: none !important;
-        z-index: 15 !important;
+        z-index: 10 !important;
         pointer-events: none;
         overflow: visible !important;
         /* border-radius eliminado: en Safari/WebKit clip a los hijos aunque overflow:visible */
@@ -1559,13 +1559,11 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         text-align: center;
         box-sizing: border-box;
         z-index: 100 !important;
-        /*
-         * Sin fondo sólido: el shell ya tiene background:var(--onepage-bg),
-         * así que el texto sigue siendo legible y el número SVG no queda tapado
-         * por la banda de color del aside cuando este está sticky.
-         */
-        background: transparent !important;
+        background: var(--onepage-bg, #e9e9e9) !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
+
+    /* Sin dependencia de JS: en móvil el título sticky siempre lleva banda de fondo. */
 
     .seccion-onepage__titulo,
     .seccion-onepage__titulo--left,
@@ -1576,13 +1574,22 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         margin-right: auto;
     }
 
-    /* ~38px → 16px según fase JS (--onepage-mobile-title-phase). */
+    /* Mantiene la escala original: al anclarse arriba llega al tamaño destino habitual. */
     .bloque.seccion-onepage .seccion-onepage__shell > aside.seccion-onepage__indice .seccion-onepage__titulo {
-        font-size: calc(16px + 22px * (1 - var(--onepage-mobile-title-phase, 0))) !important;
+        font-size: calc(18px + 20px * (1 - var(--onepage-mobile-title-phase, 0))) !important;
         line-height: 1.15 !important;
         margin-top: 0;
         padding-top: 0;
+        max-width: 100%;
         transition: font-size 0.08s linear;
+    }
+
+    .bloque.seccion-onepage .seccion-onepage__shell.is-onepage-title-erasing > aside.seccion-onepage__indice .seccion-onepage__titulo {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
     }
 
     .seccion-onepage__shell > .seccion-onepage__contenido-wrap {
@@ -1607,7 +1614,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         left: 50% !important;
         transform: translateX(-50%) !important;
         margin: 0 !important;
-        z-index: 15 !important;
+        z-index: 10 !important;
     }
 
     /*
@@ -1621,6 +1628,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         order: 1;
         width: min(calc(100vw - 40px), 400px);
         height: min(calc(100vw - 40px), 400px);
+        margin-bottom: 28px;
         flex-shrink: 0;
         align-self: center;
         pointer-events: none;
@@ -1699,8 +1707,19 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         position: sticky !important;
         top: 0 !important;
         background: var(--fiflp-header-section-bg, transparent) !important;
-        transition: background-color 0.45s ease !important;
-        padding-top: env(safe-area-inset-top, 0px) !important;
+        transition: background-color 1.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 10px) !important;
+        padding-bottom: 5px !important;
+    }
+
+    /* Onepage móvil: fallback amarillo para cubrir la franja superior
+     * antes de que JS pinte el color exacto de sección activa. */
+    body.fiflp-onepage .site-header,
+    body.fiflp-onepage .site-header .inside-header,
+    body.fiflp-onepage .site-header .inside-header.grid-container,
+    body.fiflp-onepage .site-header .grid-container,
+    body.fiflp-onepage .site-header .site-branding {
+        background: var(--fiflp-header-section-bg, #fde25f) !important;
     }
 
     /* Centrado vertical del contenido dentro del header sticky.
@@ -1734,7 +1753,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 
     .site-header .fiflp-centenario-logo img {
-        width: 75px !important;
+        width: 150px !important;
         height: auto !important;
         display: block;
         transition:
@@ -1744,7 +1763,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
     /* Compacto al hacer scroll */
     .site-header.is-compact .fiflp-centenario-logo img {
-        width: 55px !important;
+        width: 150px !important;
     }
 
     /* Sección oscura: logo en blanco */

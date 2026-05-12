@@ -5,6 +5,32 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+    // Móvil: al recargar, volver al inicio de la página.
+    (function forceTopOnMobileReload() {
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        if (!isMobile) {
+            return;
+        }
+
+        const navEntries = (typeof performance !== 'undefined' && performance.getEntriesByType)
+            ? performance.getEntriesByType('navigation')
+            : [];
+        const navType = navEntries.length ? navEntries[0].type : '';
+        const isReload = navType === 'reload';
+
+        if (!isReload) {
+            return;
+        }
+
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        window.scrollTo(0, 0);
+        requestAnimationFrame(() => window.scrollTo(0, 0));
+        window.setTimeout(() => window.scrollTo(0, 0), 120);
+    })();
+
     const centenarioLogo = document.querySelector('.fiflp-centenario-logo');
 
     if (centenarioLogo) {
@@ -810,6 +836,91 @@ document.addEventListener("DOMContentLoaded", function () {
             const narrativeItems = items.length ? items : moduleItems;
 
             const photos = Array.from(shell.querySelectorAll('[data-onepage-photo]'));
+            const titleEl = shell.querySelector('.seccion-onepage__indice .seccion-onepage__titulo');
+
+            // Devuelve el texto "base" del titular (sin puntos añadidos por la animación).
+            const getBaseTitle = () => {
+                if (!titleEl) {
+                    return '';
+                }
+                if (!titleEl.dataset.fullTitle) {
+                    titleEl.dataset.fullTitle = (titleEl.textContent || '').trim();
+                }
+                return titleEl.dataset.fullTitle;
+            };
+
+            // Encuentra cuántos caracteres del título caben en una línea con "..."
+            const resolveDockedTitleChars = () => {
+                if (!titleEl) {
+                    return 0;
+                }
+                const full = getBaseTitle();
+                if (!full) {
+                    return 0;
+                }
+                const fullLen = full.length;
+                const prevWhiteSpace = titleEl.style.whiteSpace;
+                const prevOverflow = titleEl.style.overflow;
+                const prevDisplay = titleEl.style.display;
+                const prevWidth = titleEl.style.width;
+                const prevTextOverflow = titleEl.style.textOverflow;
+
+                // Medición en "modo una línea real" para calcular dónde cortar.
+                titleEl.style.whiteSpace = 'nowrap';
+                titleEl.style.overflow = 'hidden';
+                titleEl.style.display = 'block';
+                titleEl.style.width = '100%';
+                titleEl.style.textOverflow = 'clip';
+
+                let chars = fullLen;
+                while (chars > 1) {
+                    titleEl.textContent = `${full.slice(0, chars).trimEnd()}...`;
+                    if (titleEl.scrollWidth <= titleEl.clientWidth + 1) {
+                        break;
+                    }
+                    chars -= 1;
+                }
+                titleEl.textContent = full;
+                titleEl.style.whiteSpace = prevWhiteSpace;
+                titleEl.style.overflow = prevOverflow;
+                titleEl.style.display = prevDisplay;
+                titleEl.style.width = prevWidth;
+                titleEl.style.textOverflow = prevTextOverflow;
+                return Math.max(1, chars);
+            };
+
+            // "Máquina de escribir borrando" ligada al scroll extra tras anclarse arriba:
+            // 0 = título completo, 1 = título truncado con "..."
+            const applyTitleTypingByPhase = (phase) => {
+                if (!titleEl) {
+                    return;
+                }
+                const full = getBaseTitle();
+                if (!full) {
+                    return;
+                }
+
+                const clamped = Math.max(0, Math.min(1, phase));
+                if (clamped <= 0.001) {
+                    titleEl.textContent = full;
+                    return;
+                }
+
+                if (typeof shell._fiflpDockedTitleChars !== 'number' || shell._fiflpDockedTitleChars <= 0) {
+                    shell._fiflpDockedTitleChars = resolveDockedTitleChars();
+                }
+
+                const fullLen = full.length;
+                const minLen = Math.max(1, shell._fiflpDockedTitleChars);
+                const dynamicLen = Math.round(fullLen - (fullLen - minLen) * clamped);
+                const visibleLen = Math.max(minLen, Math.min(fullLen, dynamicLen));
+
+                if (visibleLen >= fullLen) {
+                    titleEl.textContent = full;
+                } else {
+                    titleEl.textContent = `${full.slice(0, visibleLen).trimEnd()}...`;
+                }
+            };
 
             const setActiveItem = (target) => {
                 narrativeItems.forEach((item) => {
@@ -991,12 +1102,58 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     const indiceEl = shell.querySelector('.seccion-onepage__indice');
                     let titlePhase = 0;
+                    let titleDeltaToHeader = Number.POSITIVE_INFINITY;
                     if (indiceEl) {
                         const topPx = indiceEl.getBoundingClientRect().top;
+                        const headerEl = document.querySelector('.site-header');
+                        const headerH = headerEl ? headerEl.offsetHeight : 0;
                         const band = Math.max(110, window.innerHeight * 0.2);
-                        titlePhase = 1 - Math.max(0, Math.min(1, topPx / band));
+                        // Fase basada en distancia real al borde inferior del header:
+                        // delta >= band -> 0, delta <= 0 -> 1.
+                        const delta = topPx - headerH;
+                        titleDeltaToHeader = delta;
+                        titlePhase = 1 - Math.max(0, Math.min(1, delta / band));
                     }
-                    shell.style.setProperty('--onepage-mobile-title-phase', titlePhase.toFixed(3));
+                    /*
+                     * Suavizado móvil: evita tirón en los primeros px de scroll del titular sticky.
+                     * Mezcla fase previa y nueva (lerp) para transición más fluida.
+                     */
+                    const prevTitlePhase = typeof shell._fiflpTitlePhaseSmooth === 'number'
+                        ? shell._fiflpTitlePhaseSmooth
+                        : titlePhase;
+                    const smoothFactor = 0.22;
+                    const smoothTitlePhase = prevTitlePhase + (titlePhase - prevTitlePhase) * smoothFactor;
+                    shell._fiflpTitlePhaseSmooth = smoothTitlePhase;
+                    const wasDocked = shell.classList.contains('is-onepage-title-docked');
+                    // Docked en píxeles (más fiable que umbral por fase):
+                    // entra cuando el título está casi pegado al header,
+                    // sale cuando vuelve a separarse claramente.
+                    const enterDockPx = 4;
+                    const exitDockPx = 18;
+                    const isDocked = wasDocked
+                        ? titleDeltaToHeader <= exitDockPx
+                        : titleDeltaToHeader <= enterDockPx;
+                    shell.classList.toggle('is-onepage-title-docked', isDocked);
+
+                    if (isDocked && !wasDocked) {
+                        shell._fiflpTitleDockScrollY = window.scrollY || window.pageYOffset || 0;
+                        shell.classList.remove('is-onepage-title-erasing');
+                        applyTitleTypingByPhase(0); // llega arriba completo
+                    } else if (isDocked) {
+                        const sy = window.scrollY || window.pageYOffset || 0;
+                        const start = typeof shell._fiflpTitleDockScrollY === 'number'
+                            ? shell._fiflpTitleDockScrollY
+                            : sy;
+                        const eraseSpan = 140; // px de scroll para completar el borrado
+                        const erasePhase = Math.max(0, Math.min(1, (sy - start) / eraseSpan));
+                        shell.classList.toggle('is-onepage-title-erasing', erasePhase > 0.02);
+                        applyTitleTypingByPhase(erasePhase);
+                    } else {
+                        delete shell._fiflpTitleDockScrollY;
+                        shell.classList.remove('is-onepage-title-erasing');
+                        applyTitleTypingByPhase(0);
+                    }
+                    shell.style.setProperty('--onepage-mobile-title-phase', smoothTitlePhase.toFixed(3));
                     shell.style.setProperty('--onepage-title-opacity', '1');
 
                     shell.style.setProperty('--onepage-reveal-progress', revealProgress.toFixed(3));
@@ -1006,8 +1163,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 shell.classList.remove('is-onepage-numero-sticky');
+                shell.classList.remove('is-onepage-title-docked');
                 delete shell._fiflpShellPadTop;
                 delete shell._fiflpWasBelow;
+                delete shell._fiflpTitlePhaseSmooth;
+                delete shell._fiflpDockedTitleChars;
+                delete shell._fiflpTitleDockScrollY;
+                shell.classList.remove('is-onepage-title-erasing');
+                if (titleEl) {
+                    titleEl.textContent = getBaseTitle();
+                }
                 shell.style.removeProperty('--onepage-numero-sticky-top');
                 shell.style.removeProperty('--onepage-title-opacity');
                 shell.style.removeProperty('--onepage-mobile-title-phase');
@@ -1017,7 +1182,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 shell.classList.add('is-title-visible');
                 shell.classList.toggle('is-content-visible', revealProgressDesktop > 0.01);
             };
-            shell._fiflpSyncNumberState = syncNumberState;
+            let syncFrame = null;
+            const scheduleSyncNumberState = () => {
+                if (syncFrame !== null) {
+                    return;
+                }
+                syncFrame = window.requestAnimationFrame(() => {
+                    syncFrame = null;
+                    syncNumberState();
+                });
+            };
+
+            shell._fiflpSyncNumberState = scheduleSyncNumberState;
 
             const firstItem = narrativeItems[0];
             if (firstItem) {
@@ -1058,9 +1234,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 shell.style.removeProperty('--onepage-mobile-title-phase');
             }
 
-            syncNumberState();
-            window.addEventListener('scroll', syncNumberState, { passive: true });
-            window.addEventListener('resize', syncNumberState);
+            scheduleSyncNumberState();
+            window.addEventListener('scroll', scheduleSyncNumberState, { passive: true });
+            window.addEventListener('resize', scheduleSyncNumberState);
 
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver(
@@ -1398,6 +1574,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!header || !onepageSections.length) return;
 
+        const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+        const cssColorToRgb = (input) => {
+            if (!input || typeof input !== 'string') {
+                return null;
+            }
+            const probe = document.createElement('span');
+            probe.style.color = input.trim();
+            probe.style.display = 'none';
+            document.body.appendChild(probe);
+            const resolved = window.getComputedStyle(probe).color;
+            probe.remove();
+            const m = resolved.match(/rgba?\(([^)]+)\)/i);
+            if (!m) {
+                return null;
+            }
+            const parts = m[1].split(',').map((p) => parseFloat(p.trim()));
+            if (parts.length < 3 || parts.some(Number.isNaN)) {
+                return null;
+            }
+            return {
+                r: Math.max(0, Math.min(255, parts[0])),
+                g: Math.max(0, Math.min(255, parts[1])),
+                b: Math.max(0, Math.min(255, parts[2])),
+            };
+        };
+
+        const mixRgb = (a, b, t) => {
+            const k = clamp01(t);
+            return {
+                r: Math.round(a.r + (b.r - a.r) * k),
+                g: Math.round(a.g + (b.g - a.g) * k),
+                b: Math.round(a.b + (b.b - a.b) * k),
+            };
+        };
+
+        const rgbToCss = (c) => `rgb(${c.r}, ${c.g}, ${c.b})`;
+        const rgbLuma = (c) => (0.2126 * c.r) + (0.7152 * c.g) + (0.0722 * c.b);
+
+        const getShellForSection = (section) => section ? section.querySelector('[data-onepage-shell]') : null;
+        const getSectionBgRgb = (section) => {
+            const shell = getShellForSection(section);
+            if (!shell) {
+                return null;
+            }
+            const bg = getComputedStyle(shell).getPropertyValue('--onepage-bg').trim();
+            return cssColorToRgb(bg || '');
+        };
+
         function syncHeaderSection() {
             if (!mqMobile.matches) {
                 header.style.removeProperty('--fiflp-header-section-bg');
@@ -1407,36 +1632,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const vh = window.innerHeight;
             const scrollY = window.scrollY || 0;
+            const headerH = header.offsetHeight || 0;
 
             header.classList.toggle('is-compact', scrollY > 40);
 
-            /* Sección que ocupa más área visible del viewport */
-            let bestSection = null;
-            let bestVisible = 0;
+            // 1) Buscamos una zona de transición entre sección i e i+1:
+            //    next.top = vh  -> progreso 0 (color actual al 100)
+            //    next.top = headerH -> progreso 1 (color siguiente al 100)
+            let blended = false;
+            for (let i = 0; i < onepageSections.length - 1; i += 1) {
+                const current = onepageSections[i];
+                const next = onepageSections[i + 1];
+                const nextRect = next.getBoundingClientRect();
+                if (nextRect.top <= vh && nextRect.top >= headerH) {
+                    const a = getSectionBgRgb(current);
+                    const b = getSectionBgRgb(next);
+                    if (a && b) {
+                        const t = clamp01((vh - nextRect.top) / Math.max(1, (vh - headerH)));
+                        const mixed = mixRgb(a, b, t);
+                        header.style.setProperty('--fiflp-header-section-bg', rgbToCss(mixed));
+                        header.classList.toggle('is-dark-section', rgbLuma(mixed) < 145);
+                        blended = true;
+                        break;
+                    }
+                }
+            }
+            if (blended) {
+                return;
+            }
 
-            onepageSections.forEach(function (section) {
+            // 2) Fuera de transición, usamos la sección "anclada" al header.
+            let anchorSection = null;
+            onepageSections.forEach((section) => {
                 const r = section.getBoundingClientRect();
-                const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
-                if (visible > bestVisible) {
-                    bestVisible = visible;
-                    bestSection = section;
+                if (r.top <= headerH && r.bottom > headerH) {
+                    anchorSection = section;
                 }
             });
 
-            if (bestSection) {
-                const shell = bestSection.querySelector('[data-onepage-shell]');
-                if (shell) {
-                    /* --onepage-bg está en inline style: getComputedStyle lo resuelve */
-                    const bg = getComputedStyle(shell)
-                        .getPropertyValue('--onepage-bg')
-                        .trim();
-                    header.style.setProperty(
-                        '--fiflp-header-section-bg',
-                        bg || 'transparent'
-                    );
+            if (!anchorSection) {
+                anchorSection = onepageSections.find((section) => {
+                    const r = section.getBoundingClientRect();
+                    return r.top < vh && r.bottom > 0;
+                }) || onepageSections[0];
+            }
+
+            const anchorShell = getShellForSection(anchorSection);
+            if (anchorShell) {
+                const bg = getComputedStyle(anchorShell).getPropertyValue('--onepage-bg').trim();
+                header.style.setProperty('--fiflp-header-section-bg', bg || 'transparent');
+                const rgb = cssColorToRgb(bg || '');
+                if (rgb) {
+                    header.classList.toggle('is-dark-section', rgbLuma(rgb) < 145);
+                } else {
                     header.classList.toggle(
                         'is-dark-section',
-                        shell.classList.contains('seccion-onepage__shell--dark-bg')
+                        anchorShell.classList.contains('seccion-onepage__shell--dark-bg')
                     );
                 }
             } else {
@@ -1465,4 +1716,5 @@ document.addEventListener("DOMContentLoaded", function () {
         syncHeaderSection();
         updateHeaderHeight();
     }());
+
 });
