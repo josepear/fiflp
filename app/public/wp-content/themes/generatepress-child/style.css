@@ -1507,16 +1507,28 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 
     /*
-     * Morph (igual que escritorio): --onepage-morph-progress 0→1
-     * - Sólido: clip-path inset(0 0 p% 0) → recorta desde abajo (desaparece la masa).
-     * - Contorno: clip-path inset((1-p)% 0 0 0) → revela el trazo desde arriba (la “línea” queda al final).
+     * Morph móvil — clip extendido para cubrir el desbordamiento de glifos.
+     *
+     * El recorte global (inset 0 0 p% 0) se acota al border-box del SVG.
+     * En móvil, el SVG tiene overflow:visible pero la CSS clip-path sigue
+     * referenciando el border-box, cortando los rasgos que asoman por
+     * arriba/abajo del cuadrado.
+     *
+     * Insets negativos (−15%) extienden la región 30% más en altura;
+     * el barrido del morph sigue siendo correcto:
+     *   Sólido  p=0 → inset(−15% −5% −15% −5%)  todo visible incl. overflow
+     *   Sólido  p=1 → inset(−15% −5% 115% −5%)  altura cero → nada visible
+     *   Contorno p=0 → inset(115% −5% −15% −5%)  altura cero → nada visible
+     *   Contorno p=1 → inset(−15% −5% −15% −5%)  todo visible incl. overflow
      */
     .seccion-onepage__numero--solid {
         z-index: 0;
+        clip-path: inset(-15% -5% calc(var(--onepage-morph-progress) * 130% - 15%) -5%) !important;
     }
 
     .seccion-onepage__numero--outline {
         z-index: 1;
+        clip-path: inset(calc(115% - var(--onepage-morph-progress) * 130%) -5% -15% -5%) !important;
     }
 
     .seccion-onepage__numero-text--outline {
