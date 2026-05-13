@@ -5271,28 +5271,52 @@ body.fiflp-lightbox-open {
 }
 
 .footer-editorial__partners-grid {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    --footer-logo-slot-w: clamp(112px, 12vw, 176px);
+    --footer-logo-slot-h: clamp(42px, 5vw, 66px);
+    display: grid;
+    gap: 26px;
+}
+
+.footer-editorial__partners-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(var(--footer-logo-cols, 1), minmax(0, var(--footer-logo-slot-w)));
     justify-content: center;
-    gap: 18px 28px;
+    justify-items: center;
+    align-items: center;
+    column-gap: clamp(10px, 2.1vw, 30px);
+    row-gap: 10px;
+}
+
+.footer-editorial__partner {
+    width: var(--footer-logo-slot-w);
+    height: var(--footer-logo-slot-h);
+    min-height: 0;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
 }
 
 .footer-editorial__partner img {
     display: block;
-    max-height: 72px;
+    max-height: 100%;
     width: auto;
-    max-width: 240px;
+    max-width: 100%;
     object-fit: contain;
+    filter: grayscale(1) saturate(0.2) brightness(0.92);
+    opacity: 0.96;
+    transition: filter 0.28s ease, opacity 0.28s ease;
 }
 
 .footer-editorial__partner-logo {
     display: block;
     width: auto;
     height: auto;
-    max-width: 240px;
-    max-height: 72px;
-    color: var(--fiflp-accent, #0f2d30);
+    max-width: 100%;
+    max-height: 100%;
+    color: #e9e9e9;
+    opacity: 0.96;
+    transition: color 0.28s ease, opacity 0.28s ease;
 }
 
 .footer-editorial__partner,
@@ -5303,16 +5327,21 @@ body.fiflp-lightbox-open {
     justify-content: center;
 }
 
-.footer-editorial__partner {
-    min-height: 0;
-    padding: 0;
-    border-radius: 0;
-    background: transparent;
-}
-
 .footer-editorial__brand {
     display: flex;
     align-items: center;
+}
+
+.footer-editorial__partner:hover img,
+.footer-editorial__partner:focus-within img {
+    filter: none;
+    opacity: 1;
+}
+
+.footer-editorial__partner:hover .footer-editorial__partner-logo,
+.footer-editorial__partner:focus-within .footer-editorial__partner-logo {
+    color: var(--fiflp-accent, #0f2d30);
+    opacity: 1;
 }
 
 .home-hero-main-logo {
@@ -5365,7 +5394,7 @@ body.fiflp-lightbox-open {
 .footer-editorial__copyright,
 .footer-editorial__credit {
     margin: 0;
-    font-family: var(--fiflp-font-body);
+    font-family: "Manrope", var(--fiflp-font-body), sans-serif;
     font-size: 14px;
     line-height: 1.5;
     color: rgba(17, 17, 17, 0.62);
@@ -5405,12 +5434,14 @@ body.fiflp-lightbox-open {
     }
 
     .footer-editorial__partners-grid {
-        gap: 14px 20px;
+        --footer-logo-slot-w: clamp(96px, 26vw, 140px);
+        --footer-logo-slot-h: clamp(34px, 10vw, 50px);
+        gap: 20px;
     }
 
-    .footer-editorial__partner img {
-        max-height: 44px;
-        max-width: 140px;
+    .footer-editorial__partners-row {
+        column-gap: clamp(8px, 3vw, 16px);
+        row-gap: 8px;
     }
 }
 

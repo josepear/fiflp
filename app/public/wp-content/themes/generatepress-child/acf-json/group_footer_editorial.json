@@ -140,6 +140,34 @@
                     "append": ""
                 },
                 {
+                    "key": "field_footer_colaborador_linea",
+                    "label": "Línea",
+                    "name": "linea",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "Elige en qué fila saldrá este logo en el footer.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "15",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "": "Auto",
+                        "primera": "Primera línea",
+                        "segunda": "Segunda línea"
+                    },
+                    "default_value": "",
+                    "return_format": "value",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "allow_in_bindings": 0,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": ""
+                },
+                {
                     "key": "field_footer_colaborador_enlace",
                     "label": "Enlace",
                     "name": "enlace",
@@ -149,7 +177,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "35",
+                        "width": "20",
                         "class": "",
                         "id": ""
                     },
