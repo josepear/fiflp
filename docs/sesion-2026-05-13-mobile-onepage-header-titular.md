@@ -40,3 +40,51 @@ Pulir el comportamiento móvil de la onepage sin tocar escritorio:
 ## Notas
 - Se añadió debug temporal en móvil para diagnosticar estados del titular y se eliminó al cerrar la corrección.
 - No se tocaron reglas de escritorio de forma intencionada; ajustes centrados en flujo móvil onepage.
+
+---
+
+## Update: Lightbox (móvil + general)
+
+### Objetivo
+Refinar UX del lightbox sin romper el flujo editorial:
+- Foto protagonista con esquinas redondeadas.
+- Sin botón lupa visible.
+- Zoom/deszoom con tap en la imagen.
+- Apertura/cierre suaves.
+- Cierre en botón circular (borde 3px), posición estable.
+- Drag en zoom para recorrer la imagen.
+- Sin barra de desplazamiento visible en lateral.
+
+### Cambios aplicados
+1. Estructura visual
+- `lightbox` pasa a estado con transición (`.lightbox--open`) para fade suave al abrir/cerrar.
+- Caption oculto para priorizar imagen.
+- Fondo oscurecido con más transparencia (`rgba(0,0,0,0.68)`).
+
+2. Imagen y zoom
+- Lupa oculta por CSS (`.lightbox-zoom { display:none !important; }`).
+- Click/tap sobre imagen: toggle ampliar/reducir.
+- Zoom suavizado (transición en `width/height/transform`).
+- Deszoom también suavizado (sin salto brusco).
+- Factor de zoom moderado para mejor paneo: `1.25`.
+
+3. Drag/Pan en modo ampliado
+- Cursor `grab/grabbing` en zoom.
+- Arrastre con pointer events para mover la imagen ampliada.
+- Protección anti-click accidental tras drag.
+
+4. Botón cerrar
+- Botón circular con `border: 3px`.
+- Posición fija superior derecha para que no "baile" durante zoom/deszoom.
+- Ajuste de centrado visual del símbolo `×` dentro del círculo.
+
+5. Scrollbars
+- Ocultas en viewport interno del lightbox.
+- Scroll global de `body` bloqueado mientras el lightbox está abierto.
+
+### Ajustes descartados en esta tanda
+- Se probó heredar `multiply` al lightbox para imágenes con blend, pero se retiró por solicitud (se dejó el comportamiento previo en lightbox para ese punto).
+
+### Archivos tocados (update)
+- `app/public/wp-content/themes/generatepress-child/style.css`
+- `app/public/wp-content/themes/generatepress-child/assets/js/editorial.js`
