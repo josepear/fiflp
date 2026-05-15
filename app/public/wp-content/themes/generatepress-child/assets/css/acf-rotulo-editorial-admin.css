@@ -80,6 +80,90 @@
 	}
 }
 
+/* Fallback sin JS: forzar 3 columnas para colores del rótulo */
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_trazo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_fondo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] {
+	display: inline-block !important;
+	width: calc(33.333% - 10px) !important;
+	vertical-align: top;
+	float: none !important;
+	clear: none !important;
+	margin: 0 10px 12px 0 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] {
+	margin-right: 0 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"] .acf-label label,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"] .acf-label label,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"] .acf-label label,
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_trazo"] .acf-label label,
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_fondo"] .acf-label label,
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] .acf-label label {
+	font-size: 13px;
+	line-height: 1.25;
+}
+
+@media (max-width: 1100px) {
+	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"],
+	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"],
+	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"],
+	.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_trazo"],
+	.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_fondo"],
+	.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] {
+		width: 100% !important;
+		margin-right: 0 !important;
+	}
+}
+
+/* Global: cualquier layout ACF con colores de rótulo (incluye Home Hero si esos campos existen) */
+.acf-flexible-content .layout .acf-field[data-name="color_trazo"],
+.acf-flexible-content .layout .acf-field[data-name="color_fondo"],
+.acf-flexible-content .layout .acf-field[data-name="color_texto"],
+.acf-flexible-content .layout .acf-field[data-name="rotulo_color_trazo"],
+.acf-flexible-content .layout .acf-field[data-name="rotulo_color_fondo"],
+.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] {
+	display: inline-block !important;
+	width: calc(33.333% - 10px) !important;
+	vertical-align: top;
+	float: none !important;
+	clear: none !important;
+	margin: 0 10px 12px 0 !important;
+}
+
+.acf-flexible-content .layout .acf-field[data-name="color_texto"],
+.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] {
+	margin-right: 0 !important;
+}
+
+.acf-flexible-content .layout .acf-field[data-name="color_trazo"] .acf-label label,
+.acf-flexible-content .layout .acf-field[data-name="color_fondo"] .acf-label label,
+.acf-flexible-content .layout .acf-field[data-name="color_texto"] .acf-label label,
+.acf-flexible-content .layout .acf-field[data-name="rotulo_color_trazo"] .acf-label label,
+.acf-flexible-content .layout .acf-field[data-name="rotulo_color_fondo"] .acf-label label,
+.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] .acf-label label {
+	font-size: 13px;
+	line-height: 1.25;
+}
+
+@media (max-width: 1100px) {
+	.acf-flexible-content .layout .acf-field[data-name="color_trazo"],
+	.acf-flexible-content .layout .acf-field[data-name="color_fondo"],
+	.acf-flexible-content .layout .acf-field[data-name="color_texto"],
+	.acf-flexible-content .layout .acf-field[data-name="rotulo_color_trazo"],
+	.acf-flexible-content .layout .acf-field[data-name="rotulo_color_fondo"],
+	.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] {
+		width: 100% !important;
+		margin-right: 0 !important;
+	}
+}
+
 .post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater.-block > .acf-table {
 	border-collapse: separate;
 	border-spacing: 0 14px;

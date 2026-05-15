@@ -1434,14 +1434,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (lightboxViewport) {
                 if (wasZoomed) {
                     const onEnd = () => {
-                        lightboxViewport.scrollLeft = 0;
-                        lightboxViewport.scrollTop = 0;
+                        centerLightboxViewport();
                         lightboxImg.removeEventListener('transitionend', onEnd);
                     };
                     lightboxImg.addEventListener('transitionend', onEnd, { once: true });
                 } else {
-                    lightboxViewport.scrollLeft = 0;
-                    lightboxViewport.scrollTop = 0;
+                    requestAnimationFrame(centerLightboxViewport);
                 }
             }
         };
@@ -1482,6 +1480,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 lightboxImg.style.width = `${fitOnOpen.w}px`;
                 lightboxImg.style.height = `${fitOnOpen.h}px`;
             }
+            requestAnimationFrame(centerLightboxViewport);
             if (lightboxCaption) {
                 lightboxCaption.textContent = alt;
             }
@@ -1584,6 +1583,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 lightboxImg.style.width = `${fitOnLoad.w}px`;
                 lightboxImg.style.height = `${fitOnLoad.h}px`;
             }
+            requestAnimationFrame(centerLightboxViewport);
             if (lightbox.classList.contains('lightbox--zoomed')) {
                 applyLightboxZoomSize();
             }

@@ -845,6 +845,32 @@
                             "placeholder": ""
                         },
                         {
+                            "key": "field_onepage_mod_texto_imagen_disposicion_bloque",
+                            "label": "Disposición",
+                            "name": "disposicion_bloque",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Columnas: diseño actual. Ceñido: el texto rodea la imagen y ocupa todo el ancho al pasar su altura.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "columnas": "Columnas",
+                                "cenido": "Ceñido al texto"
+                            },
+                            "default_value": "columnas",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
                             "key": "field_onepage_mod_texto_imagen_tipografia_fk",
                             "label": "Tipografía del texto",
                             "name": "tipografia_fk",
@@ -913,6 +939,33 @@
                                 "derecha": "Derecha"
                             },
                             "default_value": "auto",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_texto_imagen_alineacion_vertical",
+                            "label": "Alineación vertical",
+                            "name": "alineacion_vertical",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Alinea verticalmente texto e imagen dentro del bloque.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "arriba": "Arriba",
+                                "centro": "Centro",
+                                "abajo": "Abajo"
+                            },
+                            "default_value": "centro",
                             "return_format": "value",
                             "multiple": 0,
                             "allow_null": 0,
@@ -1416,7 +1469,7 @@
                                 },
                                 {
                                     "key": "field_onepage_mod_rotulo_titulo_lineas_color_trazo",
-                                    "label": "Color trazo",
+                                    "label": "Color del trazo",
                                     "name": "color_trazo",
                                     "aria-label": "",
                                     "type": "color_picker",
@@ -1424,7 +1477,7 @@
                                     "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
-                                        "width": "25",
+                                        "width": "33",
                                         "class": "",
                                         "id": ""
                                     },
@@ -1438,7 +1491,7 @@
                                 },
                                 {
                                     "key": "field_onepage_mod_rotulo_titulo_lineas_color_fondo",
-                                    "label": "Color relleno/fondo",
+                                    "label": "Color de fondo",
                                     "name": "color_fondo",
                                     "aria-label": "",
                                     "type": "color_picker",
@@ -1446,7 +1499,7 @@
                                     "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
-                                        "width": "25",
+                                        "width": "33",
                                         "class": "",
                                         "id": ""
                                     },
@@ -1460,15 +1513,15 @@
                                 },
                                 {
                                     "key": "field_onepage_mod_rotulo_titulo_lineas_color_texto",
-                                    "label": "Color texto",
+                                    "label": "Color de tipografía",
                                     "name": "color_texto",
                                     "aria-label": "",
                                     "type": "color_picker",
-                                    "instructions": "Opcional. Color del texto del titular SVG (independiente del trazo/relleno).",
+                                    "instructions": "Color del texto del titular SVG (independiente del trazo/relleno).",
                                     "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
-                                        "width": "25",
+                                        "width": "33",
                                         "class": "",
                                         "id": ""
                                     },
@@ -2331,6 +2384,76 @@
                             "conditional_logic": 0,
                             "wrapper": {
                                 "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
+                        },
+                        {
+                            "key": "field_onepage_mod_galeria_masonry_alineacion",
+                            "label": "Alineación del conjunto",
+                            "name": "alineacion_galeria",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Alinea el conjunto de fotos dentro del bloque.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "left": "Izquierda",
+                                "center": "Centro",
+                                "right": "Derecha"
+                            },
+                            "default_value": "left",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_galeria_masonry_caption_global",
+                            "label": "Pie global de galería",
+                            "name": "caption_global",
+                            "aria-label": "",
+                            "type": "textarea",
+                            "instructions": "Opcional. Pie único debajo de toda la galería. Si también hay pies en imágenes, se mostrarán ambos.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "rows": 2,
+                            "placeholder": "",
+                            "new_lines": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_galeria_masonry_imagenes_multiplicar",
+                            "label": "Imágenes en modo multiplicar",
+                            "name": "imagenes_multiplicar",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Aplica mezcla Multiply a las imágenes de esta galería masonry.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
                                 "class": "",
                                 "id": ""
                             },

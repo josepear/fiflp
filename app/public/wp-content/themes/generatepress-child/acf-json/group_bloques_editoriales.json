@@ -728,6 +728,33 @@
                             "placeholder": ""
                         },
                         {
+                            "key": "field_texto_imagen_disposicion_bloque",
+                            "label": "Disposición",
+                            "name": "disposicion_bloque",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Columnas: diseño actual. Ceñido: el texto rodea la imagen y ocupa todo el ancho al pasar su altura.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "columnas": "Columnas",
+                                "cenido": "Ceñido al texto"
+                            },
+                            "default_value": "columnas",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
                             "key": "field_texto_imagen_tipografia_fk",
                             "label": "Tipografía del texto",
                             "name": "tipografia_fk",
@@ -798,6 +825,34 @@
                                 "derecha": "Derecha"
                             },
                             "default_value": "auto",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
+                            "key": "field_texto_imagen_alineacion_vertical",
+                            "label": "Alineación vertical",
+                            "name": "alineacion_vertical",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Alinea verticalmente texto e imagen dentro del bloque.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "arriba": "Arriba",
+                                "centro": "Centro",
+                                "abajo": "Abajo"
+                            },
+                            "default_value": "centro",
                             "return_format": "value",
                             "multiple": 0,
                             "allow_null": 0,
@@ -1811,7 +1866,7 @@
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "25",
+                                "width": "33",
                                 "class": "",
                                 "id": ""
                             },
@@ -1832,7 +1887,7 @@
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "25",
+                                "width": "33",
                                 "class": "",
                                 "id": ""
                             },
@@ -1845,15 +1900,15 @@
                         },
                         {
                             "key": "field_rotulo_editorial_color_texto",
-                            "label": "Color del texto",
+                            "label": "Color de tipografía",
                             "name": "color_texto",
                             "aria-label": "",
                             "type": "color_picker",
-                            "instructions": "Opcional. Solo afecta al texto del rótulo, no al trazo ni al relleno.",
+                            "instructions": "Solo afecta al texto del rótulo, no al trazo ni al relleno.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "25",
+                                "width": "33",
                                 "class": "",
                                 "id": ""
                             },
@@ -2212,6 +2267,76 @@
                             "ui": 1,
                             "ui_on_text": "Sí",
                             "ui_off_text": "No"
+                        },
+                        {
+                            "key": "field_bloque_galeria_masonry_alineacion",
+                            "label": "Alineación del conjunto",
+                            "name": "alineacion_galeria",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Alinea el conjunto de fotos dentro del bloque.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "left": "Izquierda",
+                                "center": "Centro",
+                                "right": "Derecha"
+                            },
+                            "default_value": "left",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": ""
+                        },
+                        {
+                            "key": "field_bloque_galeria_masonry_caption_global",
+                            "label": "Pie global de galería",
+                            "name": "caption_global",
+                            "aria-label": "",
+                            "type": "textarea",
+                            "instructions": "Opcional. Pie único debajo de toda la galería. Si también hay pies en imágenes, se mostrarán ambos.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "maxlength": "",
+                            "allow_in_bindings": 0,
+                            "rows": 2,
+                            "placeholder": "",
+                            "new_lines": ""
+                        },
+                        {
+                            "key": "field_bloque_galeria_masonry_imagenes_multiplicar",
+                            "label": "Imágenes en modo multiplicar",
+                            "name": "imagenes_multiplicar",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "Aplica mezcla Multiply a las imágenes de esta galería masonry.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "allow_in_bindings": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
                         }
                     ],
                     "min": "",
@@ -2541,6 +2666,35 @@
                                     "max_height": 0,
                                     "max_size": 0,
                                     "mime_types": "",
+                                    "parent_repeater": "field_home_hero_logos"
+                                },
+                                {
+                                    "key": "field_home_hero_logos_linea",
+                                    "label": "Línea",
+                                    "name": "linea",
+                                    "aria-label": "",
+                                    "type": "select",
+                                    "instructions": "Elige en qué fila del Home Hero aparecerá este logo.",
+                                    "required": false,
+                                    "conditional_logic": false,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "choices": {
+                                        "": "Auto",
+                                        "primera": "Primera línea",
+                                        "segunda": "Segunda línea"
+                                    },
+                                    "default_value": "",
+                                    "return_format": "value",
+                                    "multiple": false,
+                                    "allow_null": 0,
+                                    "allow_in_bindings": 0,
+                                    "ui": 1,
+                                    "ajax": 0,
+                                    "placeholder": "",
                                     "parent_repeater": "field_home_hero_logos"
                                 }
                             ]

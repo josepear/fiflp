@@ -53,6 +53,66 @@ if ( empty( $imagen_data['url'] ) && empty( $video_fondo ) && empty( $color_fond
 	return;
 }
 
+$hero_logo_items = array();
+$hero_logo_row_1 = array();
+$hero_logo_row_2 = array();
+$hero_logo_auto  = array();
+
+if ( is_array( $logos ) ) {
+	foreach ( $logos as $item ) {
+		$item_logo = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $item['imagen'] ?? null, 'full', '' ) : array();
+		$item_svg  = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $item['imagen'] ?? null, array( 'class' => 'footer-editorial__partner-logo', 'alt' => $item_logo['alt'] ?? '' ) ) : '';
+		$item_url  = isset( $item_logo['url'] ) ? (string) $item_logo['url'] : '';
+		$item_alt  = isset( $item_logo['alt'] ) ? (string) $item_logo['alt'] : '';
+		$item_row  = isset( $item['linea'] ) ? strtolower( trim( (string) $item['linea'] ) ) : '';
+
+		if ( '' === $item_url && '' === $item_svg ) {
+			continue;
+		}
+
+		$hero_logo_items[] = array(
+			'url'   => $item_url,
+			'alt'   => $item_alt,
+			'svg'   => $item_svg,
+			'linea' => $item_row,
+		);
+	}
+}
+
+foreach ( $hero_logo_items as $item ) {
+	if ( in_array( $item['linea'], array( '1', 'linea_1', 'primera', 'first' ), true ) ) {
+		$hero_logo_row_1[] = $item;
+		continue;
+	}
+	if ( in_array( $item['linea'], array( '2', 'linea_2', 'segunda', 'second' ), true ) ) {
+		$hero_logo_row_2[] = $item;
+		continue;
+	}
+	$hero_logo_auto[] = $item;
+}
+
+foreach ( $hero_logo_auto as $item ) {
+	if ( count( $hero_logo_row_1 ) < 6 ) {
+		$hero_logo_row_1[] = $item;
+		continue;
+	}
+	if ( count( $hero_logo_row_2 ) < 6 ) {
+		$hero_logo_row_2[] = $item;
+		continue;
+	}
+	break;
+}
+
+$hero_logo_row_1 = array_slice( $hero_logo_row_1, 0, 6 );
+$hero_logo_row_2 = array_slice( $hero_logo_row_2, 0, 6 );
+$hero_logo_rows  = array();
+if ( ! empty( $hero_logo_row_1 ) ) {
+	$hero_logo_rows[] = $hero_logo_row_1;
+}
+if ( ! empty( $hero_logo_row_2 ) ) {
+	$hero_logo_rows[] = $hero_logo_row_2;
+}
+
 $bg_rules = array();
 
 if ( ! empty( $color_fondo ) ) {
@@ -124,22 +184,20 @@ $bg_style = ! empty( $bg_rules ) ? 'style="' . esc_attr( implode( '; ', $bg_rule
 		</div>
 	</div>
 
-	<?php if ( is_array( $logos ) && ! empty( $logos ) ) : ?>
-		<div class="home-hero-logos home-hero__reveal home-hero__reveal--logos">
-			<?php foreach ( $logos as $item ) : ?>
-				<?php
-				$item_logo = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $item['imagen'] ?? null, 'full', '' ) : array();
-				$item_svg  = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $item['imagen'] ?? null, array( 'class' => 'home-hero-logo__svg', 'alt' => $item_logo['alt'] ?? '' ) ) : '';
-				?>
-				<?php if ( ! empty( $item_logo['url'] ) ) : ?>
-					<div class="home-hero-logo">
-						<?php if ( $item_svg ) : ?>
-							<?php echo $item_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-						<?php else : ?>
-							<img src="<?php echo esc_url( $item_logo['url'] ); ?>" alt="<?php echo esc_attr( $item_logo['alt'] ?? '' ); ?>" />
-						<?php endif; ?>
-					</div>
-				<?php endif; ?>
+	<?php if ( ! empty( $hero_logo_rows ) ) : ?>
+		<div class="home-hero-logos home-hero__reveal home-hero__reveal--logos footer-editorial__partners-grid">
+			<?php foreach ( $hero_logo_rows as $row ) : ?>
+				<div class="footer-editorial__partners-row" style="--footer-logo-cols: <?php echo esc_attr( (string) count( $row ) ); ?>;">
+					<?php foreach ( $row as $item ) : ?>
+						<div class="footer-editorial__partner home-hero-logo">
+							<?php if ( $item['svg'] ) : ?>
+								<?php echo $item['svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php else : ?>
+								<img src="<?php echo esc_url( $item['url'] ); ?>" alt="<?php echo esc_attr( $item['alt'] ); ?>" />
+							<?php endif; ?>
+						</div>
+					<?php endforeach; ?>
+				</div>
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>

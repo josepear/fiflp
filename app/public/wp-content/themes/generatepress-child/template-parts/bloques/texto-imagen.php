@@ -90,6 +90,26 @@ if ( isset( $align_map[ $alineacion ] ) ) {
 	$clases[] = $align_map[ $alineacion ];
 }
 
+$alineacion_vertical = strtolower( trim( (string) $gf( 'alineacion_vertical', 'centro' ) ) );
+
+$valign_map = array(
+	'arriba' => 'texto-imagen--valign-top',
+	'centro' => 'texto-imagen--valign-center',
+	'abajo'  => 'texto-imagen--valign-bottom',
+);
+
+if ( isset( $valign_map[ $alineacion_vertical ] ) ) {
+	$clases[] = $valign_map[ $alineacion_vertical ];
+}
+
+$disposicion_bloque = strtolower( trim( (string) $gf( 'disposicion_bloque', 'columnas' ) ) );
+if ( ! in_array( $disposicion_bloque, array( 'columnas', 'cenido' ), true ) ) {
+	$disposicion_bloque = 'columnas';
+}
+if ( 'cenido' === $disposicion_bloque ) {
+	$clases[] = 'texto-imagen--wrap';
+}
+
 $espaciado_letras = strtolower( trim( (string) $gf( 'espaciado_letras', 'auto' ) ) );
 
 $tracking_map = array(
@@ -125,6 +145,9 @@ if ( '100' !== $escala_visual_imagen ) {
 $clases[] = 'texto-imagen--grid-' . $escala_visual_imagen;
 
 $clases_col_imagen = array( 'col', 'imagen', 'texto-imagen__imagen', 'texto-imagen__imagen--escala-' . $escala_visual_imagen );
+if ( 'cenido' === $disposicion_bloque ) {
+	$clases_col_imagen[] = $invertido ? 'texto-imagen__imagen--wrap-left' : 'texto-imagen__imagen--wrap-right';
+}
 
 /* Pie de foto (mismos campos y criterios que template-parts/bloques/imagen.php) */
 $caption                    = trim( (string) $gf( 'caption', '' ) );
@@ -213,43 +236,84 @@ $rotulo_classes = array(
 
 <section class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>" style="--ti-img-scale: <?php echo esc_attr( $ti_img_scale_css ); ?>;">
 
-	<?php if ( $contenido ) : ?>
-		<div class="col texto">
-			<?php echo wp_kses_post( $contenido ); ?>
-		</div>
-	<?php endif; ?>
+	<?php if ( 'cenido' === $disposicion_bloque ) : ?>
+		<?php if ( '' !== $imagen_url ) : ?>
+			<div class="<?php echo esc_attr( implode( ' ', $clases_col_imagen ) ); ?>">
+				<figure class="texto-imagen__figure">
+					<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
+						<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
+					</a>
 
-	<?php if ( '' !== $imagen_url ) : ?>
-		<div class="<?php echo esc_attr( implode( ' ', $clases_col_imagen ) ); ?>">
-			<figure class="texto-imagen__figure">
-				<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
-					<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
-				</a>
-
-				<?php if ( '' !== $titulo_editorial_imagen ) : ?>
-					<figcaption class="imagen-meta imagen-meta--disposicion-<?php echo esc_attr( $disposicion_titulo_imagen ); ?> imagen-meta--alineacion-<?php echo esc_attr( $alineacion_titulo_imagen ); ?> imagen-meta--ancho-<?php echo esc_attr( $ancho_titulo_imagen ); ?>">
-						<div class="<?php echo esc_attr( implode( ' ', $rotulo_classes ) ); ?>" style="<?php echo esc_attr( implode( '; ', $style_titulo ) ); ?>">
-							<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
-								<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_titulo ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-									<polygon class="<?php echo esc_attr( $clase_marco_titulo ); ?>" points="<?php echo esc_attr( $puntos_titulo ); ?>"></polygon>
-								</svg>
-								<p class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo_editorial_imagen ); ?></p>
+					<?php if ( '' !== $titulo_editorial_imagen ) : ?>
+						<figcaption class="imagen-meta imagen-meta--disposicion-<?php echo esc_attr( $disposicion_titulo_imagen ); ?> imagen-meta--alineacion-<?php echo esc_attr( $alineacion_titulo_imagen ); ?> imagen-meta--ancho-<?php echo esc_attr( $ancho_titulo_imagen ); ?>">
+							<div class="<?php echo esc_attr( implode( ' ', $rotulo_classes ) ); ?>" style="<?php echo esc_attr( implode( '; ', $style_titulo ) ); ?>">
+								<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
+									<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_titulo ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+										<polygon class="<?php echo esc_attr( $clase_marco_titulo ); ?>" points="<?php echo esc_attr( $puntos_titulo ); ?>"></polygon>
+									</svg>
+									<p class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo_editorial_imagen ); ?></p>
+								</div>
 							</div>
-						</div>
 
-						<?php if ( '' !== $caption ) : ?>
-							<p class="imagen-meta__caption imagen-meta__caption--tamano-<?php echo esc_attr( $tamano_pie_imagen ); ?> imagen-meta__caption--tipografia-<?php echo esc_attr( $tipografia_pie_imagen ); ?>">
-								<?php echo esc_html( $caption ); ?>
-							</p>
-						<?php endif; ?>
-					</figcaption>
-				<?php elseif ( '' !== $caption ) : ?>
-					<figcaption class="imagen-meta__caption imagen-meta__caption--tamano-<?php echo esc_attr( $tamano_pie_imagen ); ?> imagen-meta__caption--tipografia-<?php echo esc_attr( $tipografia_pie_imagen ); ?>">
-						<?php echo esc_html( $caption ); ?>
-					</figcaption>
-				<?php endif; ?>
-			</figure>
-		</div>
+							<?php if ( '' !== $caption ) : ?>
+								<p class="imagen-meta__caption imagen-meta__caption--tamano-<?php echo esc_attr( $tamano_pie_imagen ); ?> imagen-meta__caption--tipografia-<?php echo esc_attr( $tipografia_pie_imagen ); ?>">
+									<?php echo esc_html( $caption ); ?>
+								</p>
+							<?php endif; ?>
+						</figcaption>
+					<?php elseif ( '' !== $caption ) : ?>
+						<figcaption class="imagen-meta__caption imagen-meta__caption--tamano-<?php echo esc_attr( $tamano_pie_imagen ); ?> imagen-meta__caption--tipografia-<?php echo esc_attr( $tipografia_pie_imagen ); ?>">
+							<?php echo esc_html( $caption ); ?>
+						</figcaption>
+					<?php endif; ?>
+				</figure>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $contenido ) : ?>
+			<div class="col texto">
+				<?php echo wp_kses_post( $contenido ); ?>
+			</div>
+		<?php endif; ?>
+	<?php else : ?>
+		<?php if ( $contenido ) : ?>
+			<div class="col texto">
+				<?php echo wp_kses_post( $contenido ); ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( '' !== $imagen_url ) : ?>
+			<div class="<?php echo esc_attr( implode( ' ', $clases_col_imagen ) ); ?>">
+				<figure class="texto-imagen__figure">
+					<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
+						<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
+					</a>
+
+					<?php if ( '' !== $titulo_editorial_imagen ) : ?>
+						<figcaption class="imagen-meta imagen-meta--disposicion-<?php echo esc_attr( $disposicion_titulo_imagen ); ?> imagen-meta--alineacion-<?php echo esc_attr( $alineacion_titulo_imagen ); ?> imagen-meta--ancho-<?php echo esc_attr( $ancho_titulo_imagen ); ?>">
+							<div class="<?php echo esc_attr( implode( ' ', $rotulo_classes ) ); ?>" style="<?php echo esc_attr( implode( '; ', $style_titulo ) ); ?>">
+								<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
+									<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $viewbox_titulo ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+										<polygon class="<?php echo esc_attr( $clase_marco_titulo ); ?>" points="<?php echo esc_attr( $puntos_titulo ); ?>"></polygon>
+									</svg>
+									<p class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo_editorial_imagen ); ?></p>
+								</div>
+							</div>
+
+							<?php if ( '' !== $caption ) : ?>
+								<p class="imagen-meta__caption imagen-meta__caption--tamano-<?php echo esc_attr( $tamano_pie_imagen ); ?> imagen-meta__caption--tipografia-<?php echo esc_attr( $tipografia_pie_imagen ); ?>">
+									<?php echo esc_html( $caption ); ?>
+								</p>
+							<?php endif; ?>
+						</figcaption>
+					<?php elseif ( '' !== $caption ) : ?>
+						<figcaption class="imagen-meta__caption imagen-meta__caption--tamano-<?php echo esc_attr( $tamano_pie_imagen ); ?> imagen-meta__caption--tipografia-<?php echo esc_attr( $tipografia_pie_imagen ); ?>">
+							<?php echo esc_html( $caption ); ?>
+						</figcaption>
+					<?php endif; ?>
+				</figure>
+			</div>
+		<?php endif; ?>
 	<?php endif; ?>
 
 </section>

@@ -14,6 +14,7 @@
 		'variante',
 		'color_trazo',
 		'color_fondo',
+		'color_texto',
 		'interlineado',
 		'espaciado_letras'
 	];
