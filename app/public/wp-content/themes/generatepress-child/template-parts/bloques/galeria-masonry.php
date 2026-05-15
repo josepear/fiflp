@@ -54,6 +54,8 @@ if ( ! in_array( $alineacion_galeria, array( 'left', 'center', 'right' ), true )
 	$alineacion_galeria = '';
 }
 
+$titulo_rotulo_style = '--rotulo-color:#0f2d30; --rotulo-text-color:#0f2d30;';
+
 $is_cronologia = ( 'cronologia' === $context );
 $tag           = $is_cronologia ? 'div' : 'section';
 
@@ -89,7 +91,16 @@ if ( '' !== $alineacion_galeria ) {
 
 <<?php echo esc_attr( $tag ); ?> class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>">
 	<?php if ( '' !== $titulo ) : ?>
-		<h2 class="galeria-masonry__titulo"><?php echo esc_html( $titulo ); ?></h2>
+		<div class="galeria-masonry__meta">
+			<div class="rotulo-editorial rotulo-editorial--linea rotulo-editorial--tamano-m" style="<?php echo esc_attr( $titulo_rotulo_style ); ?>">
+				<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
+					<svg class="rotulo-editorial__marco" viewBox="0 0 106 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+						<polygon class="rotulo-editorial__marco-shape" points="7,2 106,2 100,98 1,98"></polygon>
+					</svg>
+					<p class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $titulo ); ?></p>
+				</div>
+			</div>
+		</div>
 	<?php endif; ?>
 
 	<div class="galeria-masonry__grid" role="list">
@@ -125,6 +136,8 @@ if ( '' !== $alineacion_galeria ) {
 		<?php endforeach; ?>
 	</div>
 	<?php if ( '' !== $caption_global ) : ?>
-		<p class="galeria-masonry__caption-global imagen-meta__caption imagen-meta__caption--tamano-m imagen-meta__caption--tipografia-body"><?php echo esc_html( $caption_global ); ?></p>
+		<div class="galeria-masonry__meta">
+			<div class="galeria-masonry__caption-global imagen-meta__caption imagen-meta__caption--tamano-m imagen-meta__caption--tipografia-body"><?php echo esc_html( $caption_global ); ?></div>
+		</div>
 	<?php endif; ?>
 </<?php echo esc_attr( $tag ); ?>>

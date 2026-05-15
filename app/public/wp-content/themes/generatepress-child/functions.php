@@ -3615,6 +3615,11 @@ add_action(
 				gap: 0;
 			}
 
+			/* Respeta colapsado nativo de ACF (Expand/Collapse All). */
+			.post-type-fiflp_onepage_sec .acf-flexible-content .layout.-collapsed > .acf-fields {
+				display: none !important;
+			}
+
 			.post-type-fiflp_onepage_sec .acf-flexible-content .layout > .acf-fields > .acf-field {
 				float: none !important;
 				clear: none !important;
