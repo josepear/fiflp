@@ -948,7 +948,7 @@ body.fiflp-menu-open #page {
     align-self: start;
     max-width: 100%;
     min-width: 0;
-    z-index: 6;
+    z-index: 30;
 }
 
 .admin-bar .seccion-onepage__indice {
@@ -1029,7 +1029,7 @@ body.fiflp-menu-open #page {
     height: 0;
     min-height: 0;
     overflow: visible;
-    z-index: -1;
+    z-index: 1 !important;
     pointer-events: none;
     user-select: none;
 }
@@ -1100,7 +1100,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     grid-row: 1;
     gap: var(--onepage-gap);
     min-width: 0;
-    z-index: 12;
+    z-index: 3;
     position: relative;
     padding-top: min(100svh, 960px);
 }
@@ -1117,11 +1117,38 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
 .seccion-onepage__contenido--modulos .seccion-onepage__modulo {
     min-width: 0;
+    position: relative;
+    z-index: 3;
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo.seccion-onepage__modulo--has-bg {
+    position: relative;
+    z-index: auto;
+}
+
+.seccion-onepage__contenido--modulos .seccion-onepage__modulo.seccion-onepage__modulo--has-bg::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: -24px;
+    bottom: -24px;
+    left: -100vw;
+    right: calc(50% - 50vw);
+    background: var(--onepage-module-bg, transparent);
+    pointer-events: none;
+}
+
+.seccion-onepage__numero,
+.seccion-onepage__numero--solid,
+.seccion-onepage__numero--outline {
+    z-index: 1;
 }
 
 .seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque {
     margin: 0;
     max-width: 100%;
+    position: relative;
+    z-index: 2;
 }
 
 .seccion-onepage__contenido--modulos .seccion-onepage__modulo > .bloque.fade-in,
@@ -1129,6 +1156,22 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+}
+
+/* Contrato de capas onepage (robusto):
+   fondo sección < fondo módulo < número < contenido */
+.bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__numero-wrap {
+    z-index: 1 !important;
+}
+
+.bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap {
+    position: relative;
+    z-index: 3 !important;
+}
+
+.bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap .seccion-onepage__contenido > * {
+    position: relative;
+    z-index: 3;
 }
 
 /* Ítems del repetidor en columna única; el “2/3 columnas” es flujo tipográfico multicolona (texto que pasa de columna en columna y se equilibra). */
@@ -1480,7 +1523,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         flex-shrink: 0 !important;
         align-self: center !important;
         transform: none !important;
-        z-index: 10 !important;
+        z-index: 1 !important;
         pointer-events: none;
         overflow: visible !important;
         /* border-radius eliminado: en Safari/WebKit clip a los hijos aunque overflow:visible */
@@ -1619,7 +1662,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         left: 50% !important;
         transform: translateX(-50%) !important;
         margin: 0 !important;
-        z-index: 10 !important;
+        z-index: 1 !important;
     }
 
     /*
@@ -1801,6 +1844,54 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     margin-right: auto;
 }
 
+.bloque.cronologia-editorial.cronologia-editorial--with-onepage-number {
+    position: relative;
+    isolation: isolate;
+}
+
+.cronologia-editorial__onepage-number {
+    position: sticky;
+    top: var(--onepage-number-top-vh, 50vh);
+    left: calc(50% - 50vw + var(--onepage-pad-x, clamp(20px, 3.2vw, 48px)));
+    width: calc(100vw - (var(--onepage-pad-x, clamp(20px, 3.2vw, 48px)) * 2));
+    height: 0;
+    overflow: visible;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+}
+
+.bloque.cronologia-editorial.cronologia-editorial--with-onepage-number.is-cron-onepage-number-sticky .cronologia-editorial__onepage-number {
+    position: fixed;
+}
+
+.cronologia-editorial__onepage-number-svg {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: clamp(1200px, calc(var(--onepage-number-size-vh, 260) * 1svh), 5200px);
+    height: auto;
+    transform: translate(calc(var(--onepage-number-offset-x, 36%) - 429px), -50%);
+    opacity: var(--onepage-number-outline-opacity, 1);
+}
+
+.cronologia-editorial__onepage-number-text {
+    font-size: 880px;
+    line-height: 1;
+    fill: transparent;
+    stroke: var(--cron-onepage-number-line-color, #ccb958);
+    stroke-width: var(--cron-onepage-number-stroke-width, 2px);
+    vector-effect: non-scaling-stroke;
+    paint-order: stroke fill;
+    dominant-baseline: alphabetic;
+    text-rendering: geometricPrecision;
+}
+
+.bloque.cronologia-editorial .cronologia-editorial__onepage-number-svg.seccion-onepage__numero--outline {
+    clip-path: none !important;
+    opacity: var(--onepage-number-outline-opacity, 1);
+}
+
 .bloque.cronologia-editorial.cronologia-editorial--texto-estrecho {
     --cron-text-max: 76%;
 }
@@ -1817,6 +1908,12 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     margin-bottom: 36px;
     margin-right: calc(var(--cron-axis-col) + (var(--cron-gap) * 2));
     text-align: right;
+}
+
+.bloque.cronologia-editorial.cronologia-editorial--with-onepage-number .cronologia-editorial__header,
+.bloque.cronologia-editorial.cronologia-editorial--with-onepage-number .cronologia-editorial__lista {
+    position: relative;
+    z-index: 2;
 }
 
 .cronologia-editorial__titulo {
@@ -4160,6 +4257,22 @@ p.rotulo-editorial__subtitulo {
     margin-left: auto;
     margin-right: auto;
     overflow: visible;
+}
+
+/* Full page (solo foto): no afecta al pie de foto ni al ancho del módulo. */
+.bloque.imagen .imagen-full-page-figure,
+.bloque.imagen .imagen-full-page-figure .lightbox-trigger,
+.bloque.imagen .imagen-full-page-figure img {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Onepage: desde el inicio del módulo hacia el margen derecho de viewport. */
+body.fiflp-onepage .bloque.imagen .imagen-full-page-figure {
+    width: calc(100% + (50vw - 50%));
+    max-width: none;
+    margin-right: calc(50% - 50vw);
+    margin-left: 0;
 }
 
 /* En A sangre la escala también aplica sobre el ancho expandido */

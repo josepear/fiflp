@@ -17,6 +17,7 @@ $get_field = static function ( $name, $default = null ) use ( $args ) {
 $imagen  = $get_field( 'imagen', null );
 $caption = trim( (string) $get_field( 'caption', '' ) );
 $full    = $get_field( 'full', false );
+$full_page_imagen = (bool) $get_field( 'full_page_imagen', false );
 $sin_redondeo = (bool) $get_field( 'sin_redondeo', false );
 $imagen_multiplicar = (bool) $get_field( 'imagen_multiplicar', false );
 $escala_visual_imagen = trim( (string) $get_field( 'escala_visual_imagen', '100' ) );
@@ -108,6 +109,7 @@ if ( $full ) {
 	$clases[] = 'imagen-full';
 }
 
+
 if ( $sin_redondeo ) {
 	$clases[] = 'imagen--sin-redondeo';
 }
@@ -162,7 +164,7 @@ if ( $es_relleno_titulo ) {
 
 <section class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>">
 
-	<figure style="<?php echo esc_attr( $image_filter_vars ); ?>">
+	<figure class="<?php echo $full_page_imagen ? 'imagen-full-page-figure' : ''; ?>" style="<?php echo esc_attr( $image_filter_vars ); ?>">
 
 		<a href="<?php echo esc_url( $imagen_url ); ?>" class="<?php echo esc_attr( implode( ' ', $lightbox_classes ) ); ?>" data-caption="<?php echo esc_attr( $caption ?? '' ); ?>">
 			<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>"<?php echo $image_classes ? ' class="' . esc_attr( implode( ' ', $image_classes ) ) . '"' : ''; ?>>

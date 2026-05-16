@@ -175,6 +175,27 @@
                             "ui": 1
                         },
                         {
+                            "key": "field_imagen_full_page",
+                            "label": "Full page",
+                            "name": "full_page_imagen",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "La imagen ocupa todo el ancho de pantalla y mantiene la altura proporcional.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "40",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "allow_in_bindings": 0,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No",
+                            "ui": 1
+                        },
+                        {
                             "key": "field_imagen_sin_redondeo",
                             "label": "Sin redondeo",
                             "name": "sin_redondeo",

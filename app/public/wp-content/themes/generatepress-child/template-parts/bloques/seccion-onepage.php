@@ -183,8 +183,22 @@ if ( in_array( $fondo, array( '#072728', '#1e1e1e' ), true ) ) {
 							$modulo_anchor = fiflp_onepage_module_anchor( $onepage_row_index, $module_index );
 							$modulo_anchor_attr = ' id="' . esc_attr( $modulo_anchor ) . '" data-onepage-subitem="1"';
 						}
+
+						$module_classes = array(
+							'seccion-onepage__modulo',
+							'seccion-onepage__modulo--' . $template_slug,
+						);
+						$module_style_attr = '';
+						$module_bg_color   = '';
+						if ( isset( $modulo['color_fondo_seccion'] ) ) {
+							$module_bg_color = trim( (string) $modulo['color_fondo_seccion'] );
+						}
+						if ( '' !== $module_bg_color ) {
+							$module_classes[] = 'seccion-onepage__modulo--has-bg';
+							$module_style_attr = ' style="--onepage-module-bg:' . esc_attr( $module_bg_color ) . ';"';
+						}
 						?>
-						<div class="seccion-onepage__modulo seccion-onepage__modulo--<?php echo esc_attr( $template_slug ); ?>" role="listitem"<?php echo $modulo_anchor_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+						<div class="<?php echo esc_attr( implode( ' ', $module_classes ) ); ?>" role="listitem"<?php echo $modulo_anchor_attr . $module_style_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 							<?php get_template_part( $template_path, null, array( 'module' => $modulo, 'onepage' => true, 'onepage_section_id' => $seccion_id ) ); ?>
 						</div>
 					<?php endforeach; ?>

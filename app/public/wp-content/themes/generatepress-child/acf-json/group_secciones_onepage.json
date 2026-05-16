@@ -537,6 +537,26 @@
                             "ui_off_text": "No"
                         },
                         {
+                            "key": "field_onepage_mod_imagen_full_page",
+                            "label": "Full page",
+                            "name": "full_page_imagen",
+                            "aria-label": "",
+                            "type": "true_false",
+                            "instructions": "La imagen ocupa todo el ancho de pantalla y mantiene la altura proporcional.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "25",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "",
+                            "default_value": 0,
+                            "ui": 1,
+                            "ui_on_text": "Sí",
+                            "ui_off_text": "No"
+                        },
+                        {
                             "key": "field_onepage_mod_imagen_sin_redondeo",
                             "label": "Sin redondeo",
                             "name": "sin_redondeo",
@@ -1941,6 +1961,56 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_cronologia_color_fondo_seccion",
+                            "label": "Color de sección (full page)",
+                            "name": "color_fondo_seccion",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Opcional. Si eliges color, pinta el fondo de este módulo a todo el ancho de la ventana.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "#ffffff": "Blanco (#ffffff)",
+                                "#1e1e1e": "Negro (#1e1e1e)",
+                                "#ea4142": "Rojo (#ea4142)",
+                                "#fde25f": "Amarillo (#fde25f)",
+                                "#072728": "Verde oscuro (#072728)",
+                                "#e9e9e9": "Gris claro (#e9e9e9)",
+                                "#73c3b6": "Verde agua (#73c3b6)"
+                            },
+                            "default_value": "",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 1,
+                            "allow_in_bindings": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": "Sin color (hereda fondo de sección)"
+                        },
+                        {
+                            "key": "field_onepage_mod_cronologia_color_trazo_svg",
+                            "label": "Color trazo SVG cronología",
+                            "name": "color_trazo_svg_cronologia",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "Opcional. Si eliges color, sustituye el color de trazo heredado del número de sección.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "100",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "enable_opacity": 0,
+                            "return_format": "string"
                         },
                         {
                             "key": "field_onepage_mod_cronologia_submenu_toggle",
