@@ -1476,7 +1476,9 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 
     .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap {
-        z-index: 30;
+        position: relative !important;
+        z-index: 30 !important;
+        background: transparent !important;
     }
 
     /*
@@ -1507,7 +1509,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         flex-shrink: 0 !important;
         align-self: center !important;
         transform: none !important;
-        z-index: 10 !important;
+        z-index: 20 !important;
         pointer-events: none;
         overflow: visible !important;
         /* border-radius eliminado: en Safari/WebKit clip a los hijos aunque overflow:visible */
@@ -1559,8 +1561,8 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 
     .seccion-onepage__numero--outline {
-        z-index: 1;
-        clip-path: inset(calc(115% - var(--onepage-morph-progress) * 130%) -5% -15% -5%) !important;
+        z-index: 1 !important;
+        clip-path: none !important;
     }
 
     .seccion-onepage__numero-text--outline {
@@ -1632,6 +1634,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         margin-top: 0;
         padding: clamp(6px, 2vw, 18px) 20px 0;
         box-sizing: border-box;
+        background: transparent !important;
     }
 
     /*
@@ -1646,7 +1649,15 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         left: 50% !important;
         transform: translateX(-50%) !important;
         margin: 0 !important;
-        z-index: 10 !important;
+        z-index: 20 !important;
+    }
+
+    .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap .seccion-onepage__contenido,
+    .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap .seccion-onepage__contenido > *,
+    .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__contenido-wrap .seccion-onepage__modulo {
+        position: relative !important;
+        z-index: 30 !important;
+        background: transparent !important;
     }
 
     /*
@@ -1722,6 +1733,26 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
 
     .seccion-onepage__foto-stage-item {
         transition: none;
+    }
+}
+
+@media (max-width: 767px) {
+    section.bloque.texto-imagen {
+        padding-left: 0 !important;
+        gap: 0 !important;
+        justify-items: start !important;
+    }
+
+    section.bloque.texto-imagen .col.imagen {
+        width: 90% !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    section.bloque.texto-imagen .col.imagen img {
+        margin-left: 0 !important;
+        margin-right: auto !important;
     }
 }
 
@@ -2834,6 +2865,51 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     body.admin-bar.fiflp-onepage .fiflp-onepage-sidebar__panel {
         top: calc(30px + 56px + 32px);
         max-height: calc(100svh - 142px);
+    }
+}
+
+@media (max-width: 768px) {
+    /* Móvil: ocultar títulos/rótulos editoriales y mantener pie de foto */
+    .rotulo-editorial,
+    .bloque.rotulo-editorial-bloque,
+    .seccion-onepage__modulo--rotulo-editorial {
+        display: none !important;
+    }
+
+    .imagen-meta__caption,
+    .bloque.imagen .imagen-meta__caption,
+    .bloque.texto-imagen .texto-imagen__figure .imagen-meta__caption,
+    .galeria-masonry .imagen-meta__caption {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Móvil: escala única del bloque texto (evita reducción en cascada) */
+    .bloque.texto-imagen .texto {
+        font-size: 98.828125% !important;
+        line-height: 1.25 !important;
+    }
+
+    .bloque.texto-imagen .texto :where(h1, h2, h3, h4, h5, h6, p, li, blockquote, a, span, strong, em, small) {
+        font-size: inherit !important;
+        line-height: inherit !important;
+    }
+
+    /* Móvil: imagen del módulo imagen+texto un 20% más pequeña */
+    .bloque.texto-imagen .texto-imagen__imagen {
+        width: 60% !important;
+        max-width: 60% !important;
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    .bloque.texto-imagen .texto {
+        margin-left: 0 !important;
+    }
+
+    .bloque.texto-imagen {
+        column-gap: clamp(4px, 1vw, 8px) !important;
     }
 }
 

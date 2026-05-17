@@ -998,7 +998,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         shell.querySelector('.seccion-onepage__contenido-wrap .seccion-onepage__contenido > *');
 
                     const numeroWrap = shell.querySelector('.seccion-onepage__numero-wrap');
-                    let morphProgressMobile = morphProgress;
+                    let morphProgressMobile = 0;
                     if (numeroWrap) {
                         const wrap = numeroWrap;
                         const vh = window.innerHeight;
@@ -1045,13 +1045,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             morphProgressMobile = 0;
                         } else if (!isFixed && !wasBelow) {
                             /*
-                             * Número ya por encima del centro sin haber llegado desde abajo
-                             * (prólogo u otra sección visible desde la carga de página).
-                             * Morph basado en scroll de la sección; el número no se fija al centro.
+                             * Móvil: antes de centrar el número se mantiene sólido.
+                             * El barrido empieza únicamente cuando el número entra en sticky.
                              */
-                            const morphScrolled = Math.max(0, -rect.top);
-                            const morphSpan = Math.max(vh * 0.42, 280);
-                            morphProgressMobile = Math.max(0, Math.min(1, morphScrolled / morphSpan));
+                            morphProgressMobile = 0;
                         } else {
                             /* Activar fixed o continuar morph */
                             if (!isFixed) {
@@ -1079,9 +1076,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         delete shell._fiflpShellPadTop;
                         delete shell._fiflpWasBelow;
                         shell.style.removeProperty('--onepage-numero-sticky-top');
+                        morphProgressMobile = 0;
                     }
 
                     shell.style.setProperty('--onepage-morph-progress', morphProgressMobile.toFixed(3));
+                    shell.style.setProperty('--onepage-morph-progress-inverse', (1 - morphProgressMobile).toFixed(3));
 
                     let revealProgress = revealProgressDesktop;
 
