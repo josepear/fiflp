@@ -74,6 +74,21 @@
 	line-height: 1.45;
 }
 
+/* Etiqueta de contexto visible dentro de cada módulo ACF */
+.acf-flexible-content .layout > .acf-fields > .fiflp-layout-context-title {
+	grid-column: 1 / -1 !important;
+	display: block;
+	margin: 0 !important;
+	padding: 10px 14px !important;
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #1f2937 !important;
+	background: #eef2f7;
+	border-bottom: 1px solid #d8dee8;
+}
+
 /* Inputs */
 .acf-field input[type="text"],
 .acf-field input[type="number"],
@@ -108,6 +123,32 @@
 .acf-field textarea {
 	min-height: 140px;
 	resize: vertical;
+}
+
+/* Previews ACF más compactos (solo admin) */
+.acf-image-uploader .image-wrap {
+	max-width: 180px !important;
+	max-height: 120px !important;
+}
+
+.acf-image-uploader .image-wrap img {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+}
+
+.acf-file-uploader .file-icon img,
+.acf-file-uploader .file-icon .icon {
+	max-width: 64px !important;
+	max-height: 64px !important;
+}
+
+.acf-gallery .acf-gallery-attachments .acf-gallery-attachment .thumbnail {
+	height: 90px !important;
+}
+
+.acf-gallery .acf-gallery-attachments .acf-gallery-attachment .thumbnail img {
+	object-fit: cover !important;
 }
 
 /* Botones */
@@ -164,6 +205,25 @@
 	color: #fff !important;
 }
 
+.fiflp-acf-collapse-toolbar {
+	display: flex;
+	gap: 8px;
+	margin: 0 0 10px 0;
+}
+
+.fiflp-acf-collapse-toolbar .button {
+	min-height: 32px !important;
+	height: 32px !important;
+	padding: 0 12px !important;
+	border-radius: 8px !important;
+	line-height: 30px !important;
+}
+
+/* Regla global: si ACF marca un layout como colapsado, SIEMPRE se ocultan sus campos */
+.acf-flexible-content .layout.-collapsed > .acf-fields {
+	display: none !important;
+}
+
 /* Módulo imagen (ACF admin): preview fijo 150x150 */
 .post-type-page .layout[data-layout="imagen"] .acf-field[data-name="imagen"] .acf-image-uploader .image-wrap,
 .post-type-fiflp_onepage_sec .layout[data-layout="imagen"] .acf-field[data-name="imagen"] .acf-image-uploader .image-wrap {
@@ -199,4 +259,45 @@
 	.acf-repeater.-block > .acf-table > tbody > tr.acf-row > td.acf-fields > .acf-field {
 		padding: 14px 14px !important;
 	}
+}
+
+/* Home Hero (options): formulario completo en 2 columnas */
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .inside > .acf-fields,
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .acf-fields.-top,
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .inside > .acf-fields,
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .acf-fields.-top {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	align-items: flex-start !important;
+	gap: 0 !important;
+}
+
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .inside > .acf-fields > .acf-field,
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .acf-fields.-top > .acf-field,
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .inside > .acf-fields > .acf-field,
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .acf-fields.-top > .acf-field {
+	float: none !important;
+	clear: none !important;
+	width: 50% !important;
+	max-width: 50% !important;
+	flex: 0 0 50% !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+	box-sizing: border-box !important;
+}
+
+/* Campos largos a ancho completo dentro de Home Hero */
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="textarea"],
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="wysiwyg"],
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="repeater"],
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="gallery"],
+body.toplevel_page_fiflp-home-hero #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="message"],
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="textarea"],
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="wysiwyg"],
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="repeater"],
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="gallery"],
+body[class*="fiflp-home-hero"] #acf-group_home_hero_portada .acf-fields > .acf-field[data-type="message"] {
+	width: 100% !important;
+	max-width: 100% !important;
+	flex-basis: 100% !important;
 }

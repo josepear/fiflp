@@ -2309,6 +2309,52 @@ add_action(
 	20
 );
 
+add_action(
+	'admin_enqueue_scripts',
+	function ( $hook_suffix ) {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		if ( ! $screen ) {
+			return;
+		}
+
+		$is_post_editor = in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true );
+		$is_fiflp_options = false !== strpos( (string) $screen->id, 'fiflp-' );
+
+		if ( ! $is_post_editor && ! $is_fiflp_options ) {
+			return;
+		}
+
+		$js_path = get_stylesheet_directory() . '/assets/js/acf-admin-module-titles.js';
+		if ( ! is_readable( $js_path ) ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'fiflp-acf-admin-module-titles',
+			get_stylesheet_directory_uri() . '/assets/js/acf-admin-module-titles.js',
+			array( 'jquery', 'acf-input' ),
+			(string) filemtime( $js_path ),
+			true
+		);
+
+		$collapse_js_path = get_stylesheet_directory() . '/assets/js/acf-admin-collapse-expand.js';
+		if ( is_readable( $collapse_js_path ) ) {
+			wp_enqueue_script(
+				'fiflp-acf-admin-collapse-expand',
+				get_stylesheet_directory_uri() . '/assets/js/acf-admin-collapse-expand.js',
+				array( 'jquery', 'acf-input' ),
+				(string) filemtime( $collapse_js_path ),
+				true
+			);
+		}
+	},
+	25
+);
+
 add_filter(
 	'acf/load_field',
 	function ( $field ) {
@@ -2939,49 +2985,6 @@ add_action(
 
 				.layout[data-layout="imagen"] > .acf-fields > .acf-field,
 				.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"] {
-					grid-column: 1 !important;
-					grid-row: auto !important;
-					border-right: none !important;
-				}
-			}
-
-			/* Imagen (bloques editoriales + onepage): grid robusto y consistente */
-			.post-type-page .layout[data-layout="imagen"] > .acf-fields,
-			.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields {
-				display: grid;
-				grid-template-columns: 340px repeat(6, minmax(0, 1fr));
-				gap: 0;
-				align-items: start;
-			}
-
-			.post-type-page .layout[data-layout="imagen"] > .acf-fields > .acf-field,
-			.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields > .acf-field {
-				float: none !important;
-				clear: none !important;
-				width: auto !important;
-				margin: 0 !important;
-				padding: 8px 10px !important;
-				box-sizing: border-box;
-				border-top: 1px solid #e7e9ee !important;
-			}
-
-			@media (max-width: 1240px) {
-				.post-type-page .layout[data-layout="imagen"] > .acf-fields,
-				.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields {
-					grid-template-columns: 280px repeat(6, minmax(0, 1fr));
-				}
-			}
-
-			@media (max-width: 960px) {
-				.post-type-page .layout[data-layout="imagen"] > .acf-fields,
-				.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields {
-					grid-template-columns: 1fr;
-				}
-
-				.post-type-page .layout[data-layout="imagen"] > .acf-fields > .acf-field,
-				.post-type-page .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"],
-				.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields > .acf-field,
-				.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="imagen"] {
 					grid-column: 1 !important;
 					grid-row: auto !important;
 					border-right: none !important;
@@ -3661,6 +3664,11 @@ add_action(
 				.post-type-fiflp_onepage_sec .acf-flexible-content .layout:not([data-layout="imagen"]) > .acf-fields {
 					grid-template-columns: 1fr;
 				}
+			}
+
+			/* Regla global final: respetar SIEMPRE colapsado nativo de ACF */
+			.acf-flexible-content .layout.-collapsed > .acf-fields {
+				display: none !important;
 			}
 
 			/* Regla global ACF admin: ocultar descripciones y mostrarlas como tooltip */

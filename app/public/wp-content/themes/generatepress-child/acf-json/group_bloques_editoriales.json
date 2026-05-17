@@ -1409,7 +1409,7 @@
                             },
                             "layout": "block",
                             "pagination": 0,
-                            "min": 1,
+                            "min": 0,
                             "max": "",
                             "collapsed": "field_rotulo_editorial_titulo_lineas_texto",
                             "button_label": "Añadir línea",
@@ -1422,7 +1422,7 @@
                                     "aria-label": "",
                                     "type": "text",
                                     "instructions": "Máximo 34 caracteres (incluyendo espacios).",
-                                    "required": 1,
+                                    "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
                                         "width": "50",
@@ -1444,7 +1444,7 @@
                                     "aria-label": "",
                                     "type": "button_group",
                                     "instructions": "",
-                                    "required": 1,
+                                    "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
                                         "width": "25",
@@ -1468,7 +1468,7 @@
                                     "aria-label": "",
                                     "type": "button_group",
                                     "instructions": "Define relleno y sesgado/geométrica de la línea.",
-                                    "required": 1,
+                                    "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
                                         "width": "25",

@@ -300,3 +300,99 @@
 	text-overflow: ellipsis;
 	opacity: 1;
 }
+
+/* =======================================================
+   ORDEN GLOBAL DE RÓTULOS EDITORIALES (solo admin)
+   Aplica a:
+   - Bloque "rotulo_editorial" en páginas
+   - Bloque "rotulo_editorial" en onepage
+   - Repeater de rótulo del Home Hero (options)
+   ======================================================= */
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields,
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields {
+	display: grid !important;
+	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	gap: 0 12px !important;
+}
+
+/* Respeta colapsado nativo ACF en cada módulo */
+.post-type-page .layout[data-layout="rotulo_editorial"].-collapsed > .acf-fields,
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"].-collapsed > .acf-fields {
+	display: none !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field,
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field {
+	float: none !important;
+	clear: none !important;
+	width: auto !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+	box-sizing: border-box !important;
+}
+
+/* Campos largos de cabecera del módulo */
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="supertitulo"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="subtitulo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="supertitulo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="subtitulo"] {
+	grid-column: 1 / -1 !important;
+}
+
+/* Fila de colores estable en 3 columnas */
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"],
+.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"] {
+	width: auto !important;
+	max-width: none !important;
+	margin: 0 !important;
+}
+
+/* Repeaters de líneas de rótulo: rejilla interna unificada */
+.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields,
+.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields,
+.acf-field[data-key="field_home_hero_portada_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields {
+	display: grid !important;
+	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	gap: 10px 12px !important;
+}
+
+.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field,
+.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field,
+.acf-field[data-key="field_home_hero_portada_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field {
+	float: none !important;
+	clear: none !important;
+	width: auto !important;
+	margin: 0 !important;
+}
+
+/* Textos largos a ancho completo dentro del repeater */
+.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="texto"],
+.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="titulo"],
+.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="supertitulo"],
+.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="subtitulo"],
+.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="texto"],
+.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="titulo"],
+.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="supertitulo"],
+.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="subtitulo"],
+.acf-field[data-key="field_home_hero_portada_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="titulo"],
+.acf-field[data-key="field_home_hero_portada_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="supertitulo"],
+.acf-field[data-key="field_home_hero_portada_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="subtitulo"] {
+	grid-column: 1 / -1 !important;
+}
+
+@media (max-width: 1100px) {
+	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields,
+	.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] > .acf-fields,
+	.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields,
+	.acf-field[data-key="field_onepage_mod_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields,
+	.acf-field[data-key="field_home_hero_portada_rotulo_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields {
+		grid-template-columns: 1fr !important;
+	}
+}
