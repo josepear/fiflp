@@ -6,8 +6,13 @@
 	var rootSelector = '.layout[data-layout="rotulo_editorial"] .acf-field[data-key="' + fieldKey + '"]';
 	var configFieldNames = [
 		'subtitulo',
+		'tamano_subtitulo',
+		'color_subtitulo',
+		'interlineado_subtitulo',
+		'espaciado_letras_subtitulo',
 		'ancho_subtitulo',
 		'alineacion_subtitulo',
+		'alineacion_rotulo',
 		'fuente_rotulo',
 		'etiqueta_html',
 		'tamano',
@@ -31,6 +36,13 @@
 			if (!$group.length) {
 				$group = $('<div class="fiflp-rotulo-config-group" />');
 				$layoutFields.append($group);
+			}
+
+			// Limpieza robusta: si existia una fila auxiliar, devolvemos sus campos al grupo principal.
+			var $legacyMetricsRow = $group.children('.fiflp-rotulo-row-metrics');
+			if ($legacyMetricsRow.length) {
+				$legacyMetricsRow.children('.acf-field').appendTo($group);
+				$legacyMetricsRow.remove();
 			}
 
 			configFieldNames.forEach(function (name) {
@@ -99,6 +111,11 @@
 			});
 	}
 
+	function renameFieldLabels() {
+		$('.post-type-page .layout[data-layout="rotulo_editorial"] .fiflp-rotulo-config-group .acf-field[data-name="fuente_rotulo"] .acf-label label').text('Fuente del subtítulo');
+		$('.post-type-page .layout[data-layout="rotulo_editorial"] .fiflp-rotulo-config-group .acf-field[data-name="tamano"] .acf-label label').text('Tamaño subtítulo');
+	}
+
 	function setCollapsedTitle($td) {
 		var value = '';
 		var $input = $td.find('.acf-field[data-name="texto"] input[type="text"]').first();
@@ -111,6 +128,7 @@
 	function setupRows() {
 		organizeLayoutFields();
 		applyButtonTooltips();
+		renameFieldLabels();
 
 		var $repeater = $(rootSelector);
 		if (!$repeater.length) {

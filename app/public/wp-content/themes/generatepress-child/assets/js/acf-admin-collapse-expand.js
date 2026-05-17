@@ -1,71 +1,40 @@
 (function () {
 	'use strict';
 
-	function getFlexibleRoot(el) {
-		return el.closest('.acf-field-flexible-content');
-	}
-
-	function setAllRowsState(fieldWrap, expand) {
-		if (!fieldWrap) {
-			return;
-		}
-
-		var rows = fieldWrap.querySelectorAll('> .acf-input > .acf-flexible-content > .values > .layout');
-		rows.forEach(function (row) {
-			var handle = row.querySelector(':scope > .acf-fc-layout-handle');
-			if (!handle) {
-				return;
-			}
-			var isCollapsed = row.classList.contains('-collapsed');
-			if (expand && isCollapsed) {
-				handle.click();
-			}
-			if (!expand && !isCollapsed) {
-				handle.click();
-			}
+	function removeCustomToolbars(scope) {
+		var root = scope || document;
+		root.querySelectorAll('.fiflp-acf-collapse-toolbar').forEach(function (toolbar) {
+			toolbar.remove();
 		});
 	}
 
-	function ensureToolbar(fieldWrap) {
-		if (!fieldWrap || fieldWrap.dataset.fiflpCollapseReady === '1') {
-			return;
-		}
+	function enhanceNativeToolbar(scope) {
+		var root = scope || document;
+		root.querySelectorAll('.acf-flexible-content .acf-actions.-hover').forEach(function (actions) {
+			actions.classList.add('fiflp-acf-native-toolbar');
 
-		var input = fieldWrap.querySelector(':scope > .acf-input');
-		if (!input) {
-			return;
-		}
+			actions.querySelectorAll('a, button').forEach(function (control) {
+				var label = String(control.textContent || '').trim().toLowerCase();
 
-		var toolbar = document.createElement('div');
-		toolbar.className = 'fiflp-acf-collapse-toolbar';
+				if (label === 'expand all' || label === 'expandir todo') {
+					control.textContent = 'Expandir todo';
+					control.classList.add('fiflp-acf-native-collapse-btn');
+					control.classList.add('is-expand');
+				}
 
-		var expandBtn = document.createElement('button');
-		expandBtn.type = 'button';
-		expandBtn.className = 'button button-secondary';
-		expandBtn.textContent = 'Expandir todo';
-		expandBtn.addEventListener('click', function () {
-			setAllRowsState(fieldWrap, true);
+				if (label === 'collapse all' || label === 'colapsar todo') {
+					control.textContent = 'Colapsar todo';
+					control.classList.add('fiflp-acf-native-collapse-btn');
+					control.classList.add('is-collapse');
+				}
+			});
 		});
-
-		var collapseBtn = document.createElement('button');
-		collapseBtn.type = 'button';
-		collapseBtn.className = 'button button-secondary';
-		collapseBtn.textContent = 'Colapsar todo';
-		collapseBtn.addEventListener('click', function () {
-			setAllRowsState(fieldWrap, false);
-		});
-
-		toolbar.appendChild(expandBtn);
-		toolbar.appendChild(collapseBtn);
-		input.insertBefore(toolbar, input.firstChild);
-
-		fieldWrap.dataset.fiflpCollapseReady = '1';
 	}
 
 	function boot(root) {
 		var scope = root || document;
-		var fields = scope.querySelectorAll('.acf-field-flexible-content');
-		fields.forEach(ensureToolbar);
+		removeCustomToolbars(scope);
+		enhanceNativeToolbar(scope);
 	}
 
 	function init() {

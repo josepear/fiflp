@@ -2,13 +2,12 @@
  * Admin ACF — "zapato" para repeater de lineas en Rotulo editorial.
  */
 
-/* Dos columnas del módulo: izquierda líneas, derecha configuración */
+/* Estructura base del módulo (sin grid global) */
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr);
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 0 14px;
 	align-items: start;
-	align-content: start;
 }
 
 /* Nuevo criterio: ocultar "Título por líneas" en rótulo editorial normal. */
@@ -22,19 +21,44 @@
 	clear: none !important;
 	width: auto !important;
 	margin: 0 !important;
+	padding: 14px 18px !important;
+	box-sizing: border-box !important;
 }
 
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo_lineas"] {
-	grid-column: 1;
+/* Cabecera informativa del modulo arriba del todo */
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-type="message"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-type="tab"] {
+	grid-column: 1 / -1;
 	grid-row: 1;
+}
+
+/* Distribucion 2 y 2 */
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo"] {
+	grid-column: 1;
+	grid-row: 2;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="variante_titulo"] {
+	grid-column: 2;
+	grid-row: 2;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="supertitulo"] {
+	grid-column: 1;
+	grid-row: 3;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="variante_supertitulo"] {
+	grid-column: 2;
+	grid-row: 3;
 }
 
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group {
-	grid-column: 1;
-	grid-row: 1;
+	grid-column: 1 / -1;
+	grid-row: 4;
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 10px 14px;
+	grid-template-columns: repeat(20, minmax(0, 1fr));
+	gap: 12px 14px;
 	padding: 0 !important;
 	background: transparent;
 	border: 0;
@@ -42,6 +66,7 @@
 	box-sizing: border-box;
 	align-self: start;
 	margin: 0 !important;
+	overflow-x: visible;
 }
 
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group:empty {
@@ -52,23 +77,176 @@
 	float: none !important;
 	clear: none !important;
 	width: auto !important;
-	margin: 0 0 2px !important;
-	padding-top: 0 !important;
+	margin: 0 !important;
+	padding: 14px 10px !important;
+	padding-right: 0 !important;
+	grid-column: auto / span 1;
+	box-sizing: border-box !important;
 }
 
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field + .acf-field {
-	border-top: 1.5px solid #1e1e1e !important;
-	padding-top: 10px !important;
+	border-top: 0 !important;
 }
 
 .post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="subtitulo"] {
-	grid-column: 1 / -1;
-	padding-top: 18px !important;
+	grid-column: 1 / 11 !important;
+	grid-row: 1 !important;
+	padding-top: 14px !important;
 }
 
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="ancho_subtitulo"] { grid-column: 1; }
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="alineacion_subtitulo"] { grid-column: 2; }
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="fuente_rotulo"] { grid-column: 3; }
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field .acf-label,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field .acf-label {
+	margin: 0 0 8px !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field .acf-input,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field .acf-input {
+	margin: 0 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="tamano_subtitulo"] {
+	grid-column: 11 / 15 !important;
+	grid-row: 1 !important;
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="color_subtitulo"] {
+	grid-column: 15 / 18 !important;
+	grid-row: 1 !important;
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="etiqueta_html"] {
+	grid-column: 18 / 21 !important;
+	grid-row: 1 !important;
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="tamano_subtitulo"] .acf-input,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="color_subtitulo"] .acf-input,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="etiqueta_html"] .acf-input {
+	display: flex;
+	justify-content: center;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="interlineado_subtitulo"] {
+	grid-column: 1 / 6 !important;
+	grid-row: 2 !important;
+	min-width: 240px;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] {
+	grid-column: 6 / 11 !important;
+	grid-row: 2 !important;
+	min-width: 280px;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="ancho_subtitulo"] {
+	grid-column: 11 / 16 !important;
+	grid-row: 2 !important;
+	min-width: 0;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="alineacion_subtitulo"] {
+	grid-column: 16 / 21 !important;
+	grid-row: 2 !important;
+	min-width: 280px;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="interlineado_subtitulo"] .acf-label label,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] .acf-label label,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="ancho_subtitulo"] .acf-label label,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="alineacion_subtitulo"] .acf-label label {
+	white-space: nowrap !important;
+	line-height: 1.2 !important;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="interlineado_subtitulo"] input[type="number"],
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] input[type="number"] {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] .acf-input .acf-input-wrap {
+	display: flex !important;
+	flex-direction: row !important;
+	align-items: center;
+	width: 100%;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] .acf-input .acf-input-wrap input[type="number"] {
+	order: 1;
+	flex: 1 1 auto;
+	height: 52px !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] .acf-input .acf-input-wrap .acf-input-prepend {
+	order: 1 !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="interlineado_subtitulo"] .acf-input,
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] .acf-input {
+	display: flex;
+	align-items: center;
+	min-height: 52px;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras_subtitulo"] .acf-input .acf-input-append {
+	order: 2 !important;
+	height: 52px;
+	display: inline-flex;
+	align-items: center;
+}
+
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="fuente_rotulo"] {
+	grid-column: 1 / 5;
+	grid-row: 3;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="color_texto"] {
+	grid-column: 9 / 13;
+	grid-row: 3;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="tamano"] {
+	grid-column: 5 / 9;
+	grid-row: 3;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="variante"] {
+	display: none !important;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="color_trazo"] {
+	grid-column: 13 / 17;
+	grid-row: 3;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="color_fondo"] {
+	grid-column: 17 / 21;
+	grid-row: 3;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="alineacion_rotulo"] {
+	grid-column: 1 / 9;
+	grid-row: 4;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="interlineado"] {
+	grid-column: 9 / 15;
+	grid-row: 4;
+}
+
+.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .fiflp-rotulo-config-group > .acf-field[data-name="espaciado_letras"] {
+	grid-column: 15 / 21;
+	grid-row: 4;
+}
 
 @media (max-width: 1024px) {
 	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields {
@@ -80,89 +258,6 @@
 	}
 }
 
-/* Fallback sin JS: forzar 3 columnas para colores del rótulo */
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"],
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"],
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"],
-.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_trazo"],
-.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_fondo"],
-.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] {
-	display: inline-block !important;
-	width: calc(33.333% - 10px) !important;
-	vertical-align: top;
-	float: none !important;
-	clear: none !important;
-	margin: 0 10px 12px 0 !important;
-}
-
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"],
-.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] {
-	margin-right: 0 !important;
-}
-
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"] .acf-label label,
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"] .acf-label label,
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"] .acf-label label,
-.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_trazo"] .acf-label label,
-.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_fondo"] .acf-label label,
-.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] .acf-label label {
-	font-size: 13px;
-	line-height: 1.25;
-}
-
-@media (max-width: 1100px) {
-	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"],
-	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"],
-	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"],
-	.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_trazo"],
-	.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_fondo"],
-	.post-type-fiflp_onepage_sec .layout[data-layout="rotulo_editorial"] .acf-field[data-name="color_texto"] {
-		width: 100% !important;
-		margin-right: 0 !important;
-	}
-}
-
-/* Global: cualquier layout ACF con colores de rótulo (incluye Home Hero si esos campos existen) */
-.acf-flexible-content .layout .acf-field[data-name="color_trazo"],
-.acf-flexible-content .layout .acf-field[data-name="color_fondo"],
-.acf-flexible-content .layout .acf-field[data-name="color_texto"],
-.acf-flexible-content .layout .acf-field[data-name="rotulo_color_trazo"],
-.acf-flexible-content .layout .acf-field[data-name="rotulo_color_fondo"],
-.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] {
-	display: inline-block !important;
-	width: calc(33.333% - 10px) !important;
-	vertical-align: top;
-	float: none !important;
-	clear: none !important;
-	margin: 0 10px 12px 0 !important;
-}
-
-.acf-flexible-content .layout .acf-field[data-name="color_texto"],
-.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] {
-	margin-right: 0 !important;
-}
-
-.acf-flexible-content .layout .acf-field[data-name="color_trazo"] .acf-label label,
-.acf-flexible-content .layout .acf-field[data-name="color_fondo"] .acf-label label,
-.acf-flexible-content .layout .acf-field[data-name="color_texto"] .acf-label label,
-.acf-flexible-content .layout .acf-field[data-name="rotulo_color_trazo"] .acf-label label,
-.acf-flexible-content .layout .acf-field[data-name="rotulo_color_fondo"] .acf-label label,
-.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] .acf-label label {
-	font-size: 13px;
-	line-height: 1.25;
-}
-
-@media (max-width: 1100px) {
-	.acf-flexible-content .layout .acf-field[data-name="color_trazo"],
-	.acf-flexible-content .layout .acf-field[data-name="color_fondo"],
-	.acf-flexible-content .layout .acf-field[data-name="color_texto"],
-	.acf-flexible-content .layout .acf-field[data-name="rotulo_color_trazo"],
-	.acf-flexible-content .layout .acf-field[data-name="rotulo_color_fondo"],
-	.acf-flexible-content .layout .acf-field[data-name="rotulo_color_texto"] {
-		width: 100% !important;
-		margin-right: 0 !important;
-	}
-}
 
 .post-type-page .layout[data-layout="rotulo_editorial"] .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater.-block > .acf-table {
 	border-collapse: separate;
@@ -299,80 +394,4 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	opacity: 1;
-}
-
-/* =======================================================
-   ORDEN GLOBAL DE RÓTULOS EDITORIALES (solo admin)
-   Aplica a:
-   - Bloque "rotulo_editorial" en páginas
-   - Bloque "rotulo_editorial" en onepage
-   - Repeater de rótulo del Home Hero (options)
-   ======================================================= */
-
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields {
-	display: grid !important;
-	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-	gap: 0 12px !important;
-}
-
-/* Respeta colapsado nativo ACF en cada módulo */
-.post-type-page .layout[data-layout="rotulo_editorial"].-collapsed > .acf-fields,
-.post-type-page .layout[data-layout="rotulo_editorial"].-collapsed > .acf-fields {
-	display: none !important;
-}
-
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field {
-	float: none !important;
-	clear: none !important;
-	width: auto !important;
-	min-width: 0 !important;
-	margin: 0 !important;
-	box-sizing: border-box !important;
-}
-
-/* Campos largos de cabecera del módulo */
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="titulo"],
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="supertitulo"],
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="subtitulo"] {
-	grid-column: 1 / -1 !important;
-}
-
-/* Fila de colores estable en 3 columnas */
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_trazo"],
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_fondo"],
-.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields > .acf-field[data-name="color_texto"] {
-	width: auto !important;
-	max-width: none !important;
-	margin: 0 !important;
-}
-
-/* Repeaters de líneas de rótulo: rejilla interna unificada */
-.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields,
-.post-type-page .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields {
-	display: grid !important;
-	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-	gap: 10px 12px !important;
-}
-
-.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field,
-.post-type-page .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field {
-	float: none !important;
-	clear: none !important;
-	width: auto !important;
-	margin: 0 !important;
-}
-
-/* Textos largos a ancho completo dentro del repeater */
-.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="texto"],
-.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="titulo"],
-.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="supertitulo"],
-.acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields > .acf-field[data-name="subtitulo"] {
-	grid-column: 1 / -1 !important;
-}
-
-@media (max-width: 1100px) {
-	.post-type-page .layout[data-layout="rotulo_editorial"] > .acf-fields,
-	.post-type-page .acf-field[data-key="field_rotulo_editorial_titulo_lineas"] .acf-repeater .acf-row > td.acf-fields {
-		grid-template-columns: 1fr !important;
-	}
 }

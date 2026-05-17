@@ -2310,7 +2310,16 @@ add_action(
 				);
 			}
 
-			// $rotulo_js desactivado temporalmente por estabilidad de guardado en editor.
+			$rotulo_js = get_stylesheet_directory() . '/assets/js/acf-rotulo-editorial-admin.js';
+			if ( 'page' === $screen->post_type && is_readable( $rotulo_js ) ) {
+				wp_enqueue_script(
+					'fiflp-acf-rotulo-editorial-admin',
+					get_stylesheet_directory_uri() . '/assets/js/acf-rotulo-editorial-admin.js',
+					array( 'jquery', 'acf-input' ),
+					(string) filemtime( $rotulo_js ),
+					true
+				);
+			}
 		}
 	},
 	20

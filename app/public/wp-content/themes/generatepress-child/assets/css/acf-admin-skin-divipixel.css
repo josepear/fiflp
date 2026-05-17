@@ -219,6 +219,32 @@
 	line-height: 30px !important;
 }
 
+/* Botones nativos ACF (derecha) con estetica unificada */
+.acf-flexible-content .acf-actions.-hover.fiflp-acf-native-toolbar .fiflp-acf-native-collapse-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px !important;
+	padding: 0 24px !important;
+	border: 2px solid #2271b1 !important;
+	border-radius: 999px !important;
+	background: #fff !important;
+	color: #2271b1 !important;
+	font-size: 18px !important;
+	line-height: 1 !important;
+	font-weight: 600 !important;
+	text-decoration: none !important;
+	margin: 0 8px 0 0 !important;
+	box-shadow: none !important;
+}
+
+.acf-flexible-content .acf-actions.-hover.fiflp-acf-native-toolbar .fiflp-acf-native-collapse-btn:hover,
+.acf-flexible-content .acf-actions.-hover.fiflp-acf-native-toolbar .fiflp-acf-native-collapse-btn:focus {
+	background: #f0f6fc !important;
+	color: #135e96 !important;
+	border-color: #135e96 !important;
+}
+
 /* Regla global: si ACF marca un layout como colapsado, SIEMPRE se ocultan sus campos */
 .acf-flexible-content .layout.-collapsed > .acf-fields {
 	display: none !important;
