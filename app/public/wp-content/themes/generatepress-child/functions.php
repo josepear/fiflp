@@ -1131,6 +1131,13 @@ function fiflp_render_editorial_block_layout( $layout ) {
 		return false;
 	}
 
+	// Permite evolucionar el rótulo de Página sin afectar otros contextos
+	// (onepage/home hero/imagen siguen usando su ruta actual).
+	if ( 'rotulo_editorial' === $layout && locate_template( 'template-parts/bloques/rotulo-editorial-page.php', false, false ) ) {
+		get_template_part( 'template-parts/bloques/rotulo-editorial-page' );
+		return true;
+	}
+
 	$template    = str_replace( '_', '-', $layout );
 	$template_id = 'template-parts/bloques/' . $template;
 

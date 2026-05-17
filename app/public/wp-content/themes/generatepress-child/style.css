@@ -3676,6 +3676,12 @@ body.fiflp-editorial-nav-open {
     max-width: 1080px;
 }
 
+/* Solo Página: la fila del rótulo ocupa full width. */
+.bloque.rotulo-editorial-bloque.rotulo-editorial-bloque--page {
+    max-width: none;
+    width: 100%;
+}
+
 .rotulo-editorial {
     --rotulo-color: #0f2d30;
     --rotulo-bg: #fcfcf8;
@@ -3979,6 +3985,88 @@ body.fiflp-editorial-nav-open {
 .rotulo-editorial--linea .rotulo-editorial__texto--principal,
 .rotulo-editorial--relleno .rotulo-editorial__texto--principal {
     font-family: var(--fiflp-font-display-slanted);
+}
+
+/* Solo Página: en variante relleno usamos Slanted de forma explícita. */
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno .rotulo-editorial__texto--principal {
+    font-family: var(--fiflp-font-display-slanted);
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--linea_inversa .rotulo-editorial__texto--principal {
+    font-family: var(--fiflp-font-display-backslanted);
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno_inverso .rotulo-editorial__texto--principal {
+    font-family: var(--fiflp-font-display-backslanted);
+}
+
+/* Solo Página: el supertítulo manda su propia tipografía (sin arrastre del título). */
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--superior-relleno .rotulo-editorial__texto--superior {
+    font-family: var(--fiflp-font-display-slanted) !important;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--superior-linea .rotulo-editorial__texto--superior {
+    font-family: var(--fiflp-font-display-slanted) !important;
+}
+
+/* Solo Página: la alineación debe funcionar también fuera de contenedores flex. */
+.rotulo-editorial-bloque--page .rotulo-editorial-lineas {
+    width: 100%;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page {
+    display: inline-flex;
+    width: 100%;
+    max-width: 100%;
+}
+
+.rotulo-editorial-bloque--page > .rotulo-editorial,
+.rotulo-editorial-bloque--page > .rotulo-editorial-lineas {
+    width: 100%;
+    max-width: 100%;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-left {
+    align-items: flex-start !important;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center {
+    align-items: center !important;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-right {
+    align-items: flex-end !important;
+}
+
+/* Solo Página: centrado real (sin desplazamientos internos a un lado). */
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__cabecera {
+    align-items: center;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__franja--superior,
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__franja--principal,
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__franja--superior.is-inversa,
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__franja--principal.is-inversa {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Solo Página: en este módulo el orden es título -> supertítulo.
+   La línea superior del supertítulo se monta sobre la línea inferior del título. */
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--superior {
+    margin-top: calc(var(--rotulo-border) * -1) !important;
+}
+
+/* Solo Página: en variantes rellenas mantenemos unión visual continua. */
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno .rotulo-editorial__marco-shape,
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno_inverso .rotulo-editorial__marco-shape {
+    stroke: var(--rotulo-color);
+    stroke-width: var(--rotulo-border);
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno .rotulo-editorial__franja--superior,
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno_inverso .rotulo-editorial__franja--superior {
+    margin-top: calc((var(--rotulo-border) + 1px) * -1) !important;
 }
 
 .rotulo-editorial__subtitulo {
