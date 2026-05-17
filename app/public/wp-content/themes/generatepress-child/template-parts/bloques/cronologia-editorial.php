@@ -13,65 +13,6 @@ $titulo        = '';
 $titulo_modulo = trim( (string) $get_field( 'titulo_cronologia', '' ) );
 $ancho_texto   = strtolower( trim( (string) $get_field( 'ancho_texto_cronologia', 'normal' ) ) );
 $hitos         = array();
-$onepage       = ! empty( $args['onepage'] );
-$onepage_section_id = isset( $args['onepage_section_id'] ) ? (int) $args['onepage_section_id'] : 0;
-$decor_numero  = '';
-$decor_numero_font = 'slanted';
-$decor_numero_line_color = '#ccb958';
-$decor_numero_stroke_width = 2.0;
-$decor_numero_opacity = 1.0;
-$decor_numero_size_vh = 260.0;
-$decor_numero_offset_x = 36.0;
-$decor_numero_top_vh = 50.0;
-$decor_stroke_override = '';
-
-if ( $onepage && $onepage_section_id > 0 ) {
-	$numero_raw = get_field( 'numero_seccion', $onepage_section_id );
-	$decor_numero = function_exists( 'fiflp_format_onepage_section_number' )
-		? fiflp_format_onepage_section_number( $numero_raw )
-		: trim( (string) $numero_raw );
-
-	$font_raw = strtolower( trim( (string) get_field( 'tipografia_numero_onepage', $onepage_section_id ) ) );
-	if ( in_array( $font_raw, array( 'slanted', 'upright', 'backslanted' ), true ) ) {
-		$decor_numero_font = $font_raw;
-	}
-
-	$line_color_raw = sanitize_hex_color( (string) get_field( 'numero_color_linea', $onepage_section_id ) );
-	if ( '' !== $line_color_raw ) {
-		$decor_numero_line_color = $line_color_raw;
-	}
-
-	$stroke_width_raw = (float) get_field( 'numero_grosor_linea', $onepage_section_id );
-	if ( $stroke_width_raw > 0 ) {
-		$decor_numero_stroke_width = max( 1, min( 12, $stroke_width_raw ) );
-	}
-
-	$opacity_raw = (float) get_field( 'numero_opacidad_linea', $onepage_section_id );
-	$opacity_raw_field = get_field( 'numero_opacidad_linea', $onepage_section_id );
-	if ( '' !== (string) $opacity_raw_field ) {
-		$decor_numero_opacity = max( 0, min( 1, $opacity_raw ) );
-	}
-
-	$size_vh_raw = (float) get_field( 'numero_escala_vh', $onepage_section_id );
-	if ( $size_vh_raw > 0 ) {
-		$decor_numero_size_vh = max( 40, min( 400, $size_vh_raw ) );
-	}
-
-	$offset_x_raw = get_field( 'numero_offset_x', $onepage_section_id );
-	if ( '' !== (string) $offset_x_raw ) {
-		$decor_numero_offset_x = max( -40, min( 80, (float) str_replace( ',', '.', (string) $offset_x_raw ) ) );
-	}
-
-	$top_vh_raw = get_field( 'numero_top_vh', $onepage_section_id );
-	if ( '' !== (string) $top_vh_raw ) {
-		$decor_numero_top_vh = max( 0, min( 120, (float) str_replace( ',', '.', (string) $top_vh_raw ) ) );
-	}
-}
-
-$decor_stroke_override = sanitize_hex_color( (string) $get_field( 'color_trazo_svg_cronologia', '' ) );
-if ( '' !== $decor_stroke_override ) {
-	$decor_numero_line_color = $decor_stroke_override;
-}
 
 if ( ! in_array( $ancho_texto, array( 'estrecho', 'normal', 'ancho' ), true ) ) {
 	$ancho_texto = 'normal';
@@ -96,14 +37,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 }
 ?>
 
-<section class="bloque cronologia-editorial cronologia-editorial--texto-<?php echo esc_attr( $ancho_texto ); ?><?php echo '' !== $decor_numero ? ' cronologia-editorial--with-onepage-number seccion-onepage__numero-font--' . esc_attr( $decor_numero_font ) : ''; ?>"<?php echo '' !== $decor_numero ? ' style="--cron-onepage-number-line-color:' . esc_attr( $decor_numero_line_color ) . '; --cron-onepage-number-stroke-width:' . esc_attr( (string) $decor_numero_stroke_width ) . 'px; --cron-onepage-number-opacity:' . esc_attr( (string) $decor_numero_opacity ) . '; --cron-onepage-number-size-vh:' . esc_attr( (string) $decor_numero_size_vh ) . '; --cron-onepage-number-offset-x:' . esc_attr( (string) $decor_numero_offset_x ) . '%; --cron-onepage-number-top-vh:' . esc_attr( (string) $decor_numero_top_vh ) . 'vh; --onepage-number-outline-color:' . esc_attr( $decor_numero_line_color ) . '; --onepage-number-stroke-width:' . esc_attr( (string) $decor_numero_stroke_width ) . 'px; --onepage-number-outline-opacity:' . esc_attr( (string) $decor_numero_opacity ) . '; --onepage-number-size-vh:' . esc_attr( (string) $decor_numero_size_vh ) . '; --onepage-number-offset-x:' . esc_attr( (string) $decor_numero_offset_x ) . '%; --onepage-number-top-vh:' . esc_attr( (string) $decor_numero_top_vh ) . 'vh;"' : ''; ?>>
-	<?php if ( '' !== $decor_numero ) : ?>
-		<div class="cronologia-editorial__onepage-number" aria-hidden="true">
-			<svg class="seccion-onepage__numero seccion-onepage__numero--outline cronologia-editorial__onepage-number-svg" viewBox="0 0 2400 2400" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
-				<text class="seccion-onepage__numero-text seccion-onepage__numero-text--outline cronologia-editorial__onepage-number-text" x="50%" y="64%" text-anchor="middle"><?php echo esc_html( $decor_numero ); ?></text>
-			</svg>
-		</div>
-	<?php endif; ?>
+<section class="bloque cronologia-editorial cronologia-editorial--texto-<?php echo esc_attr( $ancho_texto ); ?>">
 
 	<?php if ( '' !== trim( (string) $titulo ) ) : ?>
 		<header class="cronologia-editorial__header">

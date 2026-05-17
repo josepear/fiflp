@@ -1995,24 +1995,6 @@
                             "placeholder": "Sin color (hereda fondo de sección)"
                         },
                         {
-                            "key": "field_onepage_mod_cronologia_color_trazo_svg",
-                            "label": "Color trazo SVG cronología",
-                            "name": "color_trazo_svg_cronologia",
-                            "aria-label": "",
-                            "type": "color_picker",
-                            "instructions": "Opcional. Si eliges color, sustituye el color de trazo heredado del número de sección.",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "100",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "enable_opacity": 0,
-                            "return_format": "string"
-                        },
-                        {
                             "key": "field_onepage_mod_cronologia_submenu_toggle",
                             "label": "Mostrar en submenú",
                             "name": "mostrar_en_submenu",

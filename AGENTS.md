@@ -51,6 +51,13 @@ PRIORITY:
 2. Que sea limpio
 3. Que no rompa nada existente
 
+ONEPAGE MÓVIL — NÚMERO SVG (morph sólido→trazo, referencia `9e17754`):
+- Lógica en `editorial.js` → `initOnepageNarrative` / `syncNumberState` (solo rama `max-width: 768px`). Sin `sessionStorage`, sin `_fiflpOutlined` ni lock persistente entre secciones.
+- Por shell: `is-onepage-numero-sticky`, `_fiflpOnepageMorphScrollY0`, `_fiflpShellPadTop`, `_fiflpWasBelow`; progreso solo vía `--onepage-morph-progress` (0..1) según posición + scroll.
+- Prólogo (sección visible al cargar sin `wasBelow`): morph por scroll de sección, sin fijar número al centro.
+- CSS móvil: clip-path extendido en `.seccion-onepage__numero--solid` / `--outline`; capas: número detrás (`z-index` -1 / 10 móvil), contenido encima (12 / 30 móvil). No mezclar número onepage en cronología.
+- Doc detallada: `docs/sesion-2026-05-17-onepage-morph-restore.md`.
+
 CRONOLOGÍA EDITORIAL (hitos, multiply):
 - Plantilla: `template-parts/bloques/cronologia-editorial.php` — campos `imagen_multiplicar_1` / `imagen_multiplicar_2`; fallback legacy `imagen_multiplicar` para ambas imágenes si no existen los nuevos.
 - HTML: clase `is-multiply` en `<a>` e `<img>`; el `<figure>` recibe `cronologia-editorial__media--multiply` si alguna imagen del hito activa multiply.
