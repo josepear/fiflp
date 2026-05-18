@@ -1046,9 +1046,48 @@ function fiflp_onepage_body_class( $classes ) {
 		$classes[] = 'fiflp-onepage';
 	}
 
+	if ( function_exists( 'fiflp_is_front_page_landing_gate_active' ) && fiflp_is_front_page_landing_gate_active( $page_id ) ) {
+		$classes[] = 'fiflp-landing-gate';
+	}
+
 	return $classes;
 }
 add_filter( 'body_class', 'fiflp_onepage_body_class', 15 );
+
+if ( ! function_exists( 'fiflp_is_front_page_landing_gate_active' ) ) {
+	/**
+	 * Determina si la portada debe comportarse como Landing Gate.
+	 *
+	 * Regla:
+	 * - Si no hay Portada Hero referenciada: false.
+	 * - Si existe y el campo modo_pantalla_entrada está vacío/no inicializado: true (fallback seguro).
+	 * - Si existe y tiene valor: respetar true/false.
+	 */
+	function fiflp_is_front_page_landing_gate_active( $front_page_id = 0 ) {
+		if ( ! function_exists( 'get_field' ) || ! is_front_page() ) {
+			return false;
+		}
+
+		$front_page_id = (int) $front_page_id;
+		if ( $front_page_id <= 0 ) {
+			$front_page_id = (int) get_queried_object_id();
+		}
+		if ( $front_page_id <= 0 ) {
+			$front_page_id = (int) get_option( 'page_on_front' );
+		}
+		if ( $front_page_id <= 0 ) {
+			return false;
+		}
+
+		$portada_hero_ref_id = (int) get_field( 'portada_hero_referencia', $front_page_id );
+		if ( $portada_hero_ref_id <= 0 || 'fiflp_portada_hero' !== get_post_type( $portada_hero_ref_id ) ) {
+			return false;
+		}
+
+		// Regla operativa actual: si hay Portada Hero en portada, se comporta como Entry Screen completa.
+		return true;
+	}
+}
 
 function fiflp_render_editorial_block_layout( $layout ) {
 	$layout = (string) $layout;
@@ -1894,12 +1933,65 @@ add_action(
 							'default_value' => 'center',
 						),
 						array(
+							'key' => 'field_fiflp_portada_hero_rotulo_color_trazo',
+							'label' => 'Titular: color de línea',
+							'name' => 'rotulo_color_trazo',
+							'type' => 'color_picker',
+							'default_value' => '#0f2d30',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_rotulo_color_fondo',
+							'label' => 'Titular: color de relleno',
+							'name' => 'rotulo_color_fondo',
+							'type' => 'color_picker',
+							'default_value' => '#fcfcf8',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_rotulo_color_texto',
+							'label' => 'Titular: color de letra',
+							'name' => 'rotulo_color_texto',
+							'type' => 'color_picker',
+							'default_value' => '#0f2d30',
+						),
+						array(
 							'key' => 'field_fiflp_portada_hero_subtitulo_simple',
 							'label' => 'Subtítulo de portada',
 							'name' => 'subtitulo_portada',
 							'type' => 'textarea',
 							'rows' => 3,
 							'new_lines' => 'br',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_subtitulo_color',
+							'label' => 'Subtítulo: color',
+							'name' => 'subtitulo_color',
+							'type' => 'color_picker',
+							'default_value' => '#ffffff',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_subtitulo_alineacion',
+							'label' => 'Subtítulo: alineación',
+							'name' => 'subtitulo_alineacion',
+							'type' => 'button_group',
+							'choices' => array(
+								'left' => 'Izquierda',
+								'center' => 'Centro',
+								'right' => 'Derecha',
+							),
+							'default_value' => 'center',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_subtitulo_tipografia',
+							'label' => 'Subtítulo: tipografía',
+							'name' => 'subtitulo_tipografia',
+							'type' => 'button_group',
+							'choices' => array(
+								'body' => 'Texto base',
+								'meta' => 'Meta editorial',
+								'slanted' => 'FK Slanted',
+								'backslanted' => 'FK Backslanted',
+							),
+							'default_value' => 'body',
 						),
 						array(
 							'key' => 'field_fiflp_portada_hero_btn_central_texto',

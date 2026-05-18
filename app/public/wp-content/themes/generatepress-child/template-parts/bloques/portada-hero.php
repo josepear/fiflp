@@ -47,8 +47,14 @@ $rotulo_variante_titulo     = trim( (string) $get( 'rotulo_variante_titulo' ) );
 $rotulo_variante_supertitle = trim( (string) $get( 'rotulo_variante_supertitulo' ) );
 $rotulo_tamano              = trim( (string) $get( 'rotulo_tamano' ) );
 $rotulo_align               = trim( (string) $get( 'rotulo_alineacion_rotulo' ) );
+$rotulo_color_trazo         = sanitize_hex_color( (string) $get( 'rotulo_color_trazo' ) );
+$rotulo_color_fondo         = sanitize_hex_color( (string) $get( 'rotulo_color_fondo' ) );
+$rotulo_color_texto         = sanitize_hex_color( (string) $get( 'rotulo_color_texto' ) );
 
 $subtitulo_portada = trim( (string) $get( 'subtitulo_portada' ) );
+$subtitulo_color = sanitize_hex_color( (string) $get( 'subtitulo_color' ) );
+$subtitulo_alineacion = strtolower( trim( (string) $get( 'subtitulo_alineacion' ) ) );
+$subtitulo_tipografia = strtolower( trim( (string) $get( 'subtitulo_tipografia' ) ) );
 
 $boton_central_texto = trim( (string) $get( 'boton_central_texto' ) );
 $boton_central_url   = trim( (string) $get( 'boton_central_url' ) );
@@ -114,10 +120,25 @@ $rotulo_module = array(
 	'variante_supertitulo' => $rotulo_variante_supertitle,
 	'tamano' => $rotulo_tamano,
 	'alineacion_rotulo' => $rotulo_align,
+	'color_trazo' => $rotulo_color_trazo,
+	'color_fondo' => $rotulo_color_fondo,
+	'color_texto' => $rotulo_color_texto,
 	'etiqueta_html' => 'h2',
 );
 
 $has_rotulo = '' !== $rotulo_titulo || '' !== $rotulo_supertitulo || '' !== $rotulo_subtitulo;
+?>
+<?php
+if ( ! in_array( $subtitulo_alineacion, array( 'left', 'center', 'right' ), true ) ) {
+	$subtitulo_alineacion = 'center';
+}
+if ( ! in_array( $subtitulo_tipografia, array( 'body', 'meta', 'slanted', 'backslanted' ), true ) ) {
+	$subtitulo_tipografia = 'body';
+}
+$subtitulo_style = '';
+if ( $subtitulo_color ) {
+	$subtitulo_style = ' style="--portada-hero-subtitulo-color:' . esc_attr( $subtitulo_color ) . ';"';
+}
 ?>
 <section
 	class="portada-hero"
@@ -161,7 +182,7 @@ $has_rotulo = '' !== $rotulo_titulo || '' !== $rotulo_supertitulo || '' !== $rot
 		<?php endif; ?>
 
 		<?php if ( '' !== $subtitulo_portada ) : ?>
-			<p class="portada-hero__subtitulo"><?php echo wp_kses_post( nl2br( esc_html( $subtitulo_portada ) ) ); ?></p>
+			<p class="portada-hero__subtitulo portada-hero__subtitulo--align-<?php echo esc_attr( $subtitulo_alineacion ); ?> portada-hero__subtitulo--font-<?php echo esc_attr( $subtitulo_tipografia ); ?>"<?php echo $subtitulo_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo wp_kses_post( nl2br( esc_html( $subtitulo_portada ) ) ); ?></p>
 		<?php endif; ?>
 
 		<div class="portada-hero__acciones">

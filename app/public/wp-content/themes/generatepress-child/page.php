@@ -3,8 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-get_header();
-
 global $bloque_index;
 $bloque_index = 0;
 
@@ -29,11 +27,50 @@ $current_children     = get_pages(
 );
 $selected_prologo_item = null;
 $portada_hero_ref_id = ( is_front_page() && function_exists( 'get_field' ) ) ? (int) get_field( 'portada_hero_referencia', $current_page_id ) : 0;
-$portada_hero_es_entrada = false;
 
-if ( $portada_hero_ref_id > 0 && function_exists( 'get_field' ) ) {
-	$portada_hero_es_entrada = (bool) get_field( 'modo_pantalla_entrada', $portada_hero_ref_id );
+if ( is_front_page() && $portada_hero_ref_id <= 0 && is_array( $bloques_data ) ) {
+	foreach ( $bloques_data as $bloque ) {
+		if ( ! is_array( $bloque ) ) {
+			continue;
+		}
+		$layout = isset( $bloque['acf_fc_layout'] ) ? (string) $bloque['acf_fc_layout'] : '';
+		if ( 'portada_hero' !== $layout ) {
+			continue;
+		}
+		if ( isset( $bloque['portada_hero'] ) && is_numeric( $bloque['portada_hero'] ) ) {
+			$portada_hero_ref_id = (int) $bloque['portada_hero'];
+		}
+		break;
+	}
 }
+
+$portada_hero_es_entrada = function_exists( 'fiflp_is_front_page_landing_gate_active' )
+	? fiflp_is_front_page_landing_gate_active( $current_page_id )
+	: false;
+
+if ( is_front_page() && $portada_hero_ref_id > 0 ) {
+	$portada_hero_es_entrada = true;
+}
+
+if ( $portada_hero_es_entrada && $portada_hero_ref_id > 0 ) {
+	?><!doctype html>
+	<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="<?php bloginfo( 'charset' ); ?>">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class(); ?>>
+		<?php wp_body_open(); ?>
+		<?php get_template_part( 'template-parts/bloques/portada-hero', null, array( 'portada_hero_id' => $portada_hero_ref_id ) ); ?>
+		<?php wp_footer(); ?>
+	</body>
+	</html>
+	<?php
+	return;
+}
+
+get_header();
 
 if ( ! empty( $prologo_items ) ) {
 	$selected_prologo_item = $prologo_items[ min( $selected_prologo, count( $prologo_items ) - 1 ) ];
@@ -43,11 +80,6 @@ if ( ! empty( $prologo_items ) ) {
 
 <?php if ( $portada_hero_ref_id > 0 ) : ?>
 	<?php get_template_part( 'template-parts/bloques/portada-hero', null, array( 'portada_hero_id' => $portada_hero_ref_id ) ); ?>
-<?php endif; ?>
-
-<?php if ( $portada_hero_es_entrada ) : ?>
-	<?php get_footer(); ?>
-	<?php return; ?>
 <?php endif; ?>
 
 <div class="layout-editorial<?php echo $has_onepage_nav ? ' layout-editorial--onepage' : ''; ?>"<?php echo $has_onepage_nav ? ' data-onepage-layout="1"' : ''; ?>>

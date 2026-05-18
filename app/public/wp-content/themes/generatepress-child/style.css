@@ -3681,13 +3681,14 @@ body.fiflp-editorial-nav-open {
     --rotulo-page-overlap-line-inversa: 4px;
     --rotulo-page-overlap-fill: 4px;
     --rotulo-page-overlap-fill-inverso: 5px;
+    --rotulo-super-titulo-gap: 2px;
     --rotulo-font-size: clamp(2.15rem, 4.2vw, 4.65rem);
     --rotulo-line-height: 0.86;
     --rotulo-letter-spacing: 0.01em;
     --rotulo-superior-pad-y: 11px;
-    --rotulo-superior-pad-x: 30px;
+    --rotulo-superior-pad-x: 24px;
     --rotulo-principal-pad-y: 11px;
-    --rotulo-principal-pad-x: 30px;
+    --rotulo-principal-pad-x: 24px;
     --rotulo-superior-max-width: none;
     --rotulo-principal-max-width: none;
     --rotulo-principal-min-width: 0;
@@ -3908,9 +3909,9 @@ body.fiflp-editorial-nav-open {
 .rotulo-editorial--tamano-s {
     --rotulo-font-size: clamp(1.65rem, 3.2vw, 3rem);
     --rotulo-superior-pad-y: 8px;
-    --rotulo-superior-pad-x: 24px;
+    --rotulo-superior-pad-x: 20px;
     --rotulo-principal-pad-y: 9px;
-    --rotulo-principal-pad-x: 19px;
+    --rotulo-principal-pad-x: 15px;
     --rotulo-page-overlap-line: 3px;
     --rotulo-page-overlap-line-inversa: 4px;
     --rotulo-page-overlap-fill: 3px;
@@ -3920,9 +3921,9 @@ body.fiflp-editorial-nav-open {
 .rotulo-editorial--tamano-m {
     --rotulo-font-size: clamp(2.05rem, 4.15vw, 4.35rem);
     --rotulo-superior-pad-y: 11px;
-    --rotulo-superior-pad-x: 27px;
+    --rotulo-superior-pad-x: 23px;
     --rotulo-principal-pad-y: 12px;
-    --rotulo-principal-pad-x: 24px;
+    --rotulo-principal-pad-x: 20px;
     --rotulo-page-overlap-line: 4px;
     --rotulo-page-overlap-line-inversa: 5px;
     --rotulo-page-overlap-fill: 4px;
@@ -3932,17 +3933,17 @@ body.fiflp-editorial-nav-open {
 .rotulo-editorial--tamano-xs {
     --rotulo-font-size: clamp(1rem, 1.9vw, 1.7rem);
     --rotulo-superior-pad-y: 5px;
-    --rotulo-superior-pad-x: 16px;
+    --rotulo-superior-pad-x: 13px;
     --rotulo-principal-pad-y: 6px;
-    --rotulo-principal-pad-x: 14px;
+    --rotulo-principal-pad-x: 11px;
 }
 
 .rotulo-editorial--tamano-l {
     --rotulo-font-size: clamp(2.45rem, 5vw, 5.35rem);
     --rotulo-superior-pad-y: 14px;
-    --rotulo-superior-pad-x: 30px;
+    --rotulo-superior-pad-x: 26px;
     --rotulo-principal-pad-y: 14px;
-    --rotulo-principal-pad-x: 30px;
+    --rotulo-principal-pad-x: 26px;
     --rotulo-page-overlap-line: 5px;
     --rotulo-page-overlap-line-inversa: 6px;
     --rotulo-page-overlap-fill: 5px;
@@ -3952,9 +3953,9 @@ body.fiflp-editorial-nav-open {
 .rotulo-editorial--tamano-xl {
     --rotulo-font-size: clamp(2.8rem, 5.8vw, 6.15rem);
     --rotulo-superior-pad-y: 16px;
-    --rotulo-superior-pad-x: 34px;
+    --rotulo-superior-pad-x: 30px;
     --rotulo-principal-pad-y: 16px;
-    --rotulo-principal-pad-x: 34px;
+    --rotulo-principal-pad-x: 30px;
     --rotulo-page-overlap-line: 6px;
     --rotulo-page-overlap-line-inversa: 7px;
     --rotulo-page-overlap-fill: 6px;
@@ -4062,13 +4063,13 @@ body.fiflp-editorial-nav-open {
 /* Solo Página: en este módulo el orden es título -> supertítulo.
    La línea superior del supertítulo se monta sobre la línea inferior del título. */
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--superior {
-    margin-top: calc(var(--rotulo-page-overlap-line) * -1) !important;
+    margin-top: calc((var(--rotulo-page-overlap-line) - var(--rotulo-super-titulo-gap)) * -1) !important;
     transform: translateY(1px);
 }
 
 /* Solo Página: ajuste exacto para supertítulo en variante inversa */
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--superior-linea_inversa .rotulo-editorial__franja--superior {
-    margin-top: calc(var(--rotulo-page-overlap-line-inversa) * -1) !important;
+    margin-top: calc((var(--rotulo-page-overlap-line-inversa) - var(--rotulo-super-titulo-gap)) * -1) !important;
 }
 
 /* Solo Página: en variantes rellenas mantenemos unión visual continua. */
@@ -4080,12 +4081,12 @@ body.fiflp-editorial-nav-open {
 
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno .rotulo-editorial__franja--superior,
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--relleno_inverso .rotulo-editorial__franja--superior {
-    margin-top: calc(var(--rotulo-page-overlap-fill) * -1) !important;
+    margin-top: calc((var(--rotulo-page-overlap-fill) - var(--rotulo-super-titulo-gap)) * -1) !important;
 }
 
 /* Solo Página: ajuste exacto para relleno inverso en supertítulo */
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--superior-relleno_inverso .rotulo-editorial__franja--superior {
-    margin-top: calc(var(--rotulo-page-overlap-fill-inverso) * -1) !important;
+    margin-top: calc((var(--rotulo-page-overlap-fill-inverso) - var(--rotulo-super-titulo-gap)) * -1) !important;
 }
 
 .rotulo-editorial__subtitulo {
@@ -6232,6 +6233,42 @@ body.home.front-page .layout-editorial {
     margin-top: 64px;
 }
 
+/* Landing Gate real: solo pantalla de entrada, sin cabecera/título/scroll. */
+html:has(body.fiflp-landing-gate),
+body.fiflp-landing-gate {
+    height: 100svh;
+    overflow: hidden;
+}
+
+body.fiflp-landing-gate #masthead,
+body.fiflp-landing-gate .site-header,
+body.fiflp-landing-gate .main-navigation,
+body.fiflp-landing-gate .entry-header,
+body.fiflp-landing-gate .page-header,
+body.fiflp-landing-gate .entry-title,
+body.fiflp-landing-gate .site-footer,
+body.fiflp-landing-gate footer.site-info {
+    display: none !important;
+}
+
+body.fiflp-landing-gate #content.site-content,
+body.fiflp-landing-gate .site-content,
+body.fiflp-landing-gate .content-area,
+body.fiflp-landing-gate #primary,
+body.fiflp-landing-gate .inside-article {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 100svh;
+}
+
+body.fiflp-landing-gate .portada-hero,
+body.fiflp-landing-gate .portada-hero__content {
+    min-height: 100svh;
+    height: 100svh;
+}
+
 .portada-hero__bg,
 .portada-hero__video {
     position: absolute;
@@ -6305,7 +6342,35 @@ body.home.front-page .layout-editorial {
     font-family: var(--fiflp-font-body);
     font-size: clamp(1.02rem, 1.9vw, 1.24rem);
     line-height: 1.55;
-    color: rgba(255, 255, 255, 0.95);
+    color: var(--portada-hero-subtitulo-color, rgba(255, 255, 255, 0.95));
+}
+
+.portada-hero__subtitulo--align-left {
+    text-align: left;
+}
+
+.portada-hero__subtitulo--align-center {
+    text-align: center;
+}
+
+.portada-hero__subtitulo--align-right {
+    text-align: right;
+}
+
+.portada-hero__subtitulo--font-body {
+    font-family: var(--fiflp-font-body);
+}
+
+.portada-hero__subtitulo--font-meta {
+    font-family: var(--fiflp-font-meta);
+}
+
+.portada-hero__subtitulo--font-slanted {
+    font-family: var(--fiflp-font-display-slanted);
+}
+
+.portada-hero__subtitulo--font-backslanted {
+    font-family: var(--fiflp-font-display-backslanted);
 }
 
 .portada-hero__acciones {
