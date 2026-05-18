@@ -6307,8 +6307,8 @@ body.fiflp-landing-gate .portada-hero__content {
 }
 
 .portada-hero__bg {
-    background-size: cover;
-    background-position: center;
+    background-size: cover !important;
+    background-position: center center !important;
     background-repeat: no-repeat;
 }
 
@@ -6325,7 +6325,7 @@ body.fiflp-landing-gate .portada-hero__content {
     min-height: 100svh;
     width: min(1400px, 100%);
     margin: 0 auto;
-    padding: clamp(72px, 9vh, 130px) clamp(18px, 3vw, 36px) 34px;
+    padding: var(--ph-desktop-content-pt, clamp(72px, 9vh, 130px)) var(--ph-desktop-content-px, clamp(18px, 3vw, 36px)) 34px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6339,13 +6339,13 @@ body.fiflp-landing-gate .portada-hero__content {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: var(--ph-desktop-logo-mb, 40px);
 }
 
 .portada-hero__logo img,
 .portada-hero__logo-svg {
     display: block;
-    max-width: min(52vw, 360px);
+    max-width: min(52vw, var(--ph-desktop-logo-max-width, 360px));
     max-height: 110px;
     width: auto;
     height: auto;
@@ -6353,7 +6353,7 @@ body.fiflp-landing-gate .portada-hero__content {
 }
 
 .portada-hero__rotulo {
-    width: min(1120px, 100%);
+    width: min(var(--ph-desktop-rotulo-max-width, 1120px), 100%);
 }
 
 .portada-hero__rotulo > .bloque.rotulo-editorial-bloque--page {
@@ -6365,7 +6365,7 @@ body.fiflp-landing-gate .portada-hero__content {
 
 .portada-hero__subtitulo {
     margin: 4px 0 0;
-    padding-top: 24px;
+    padding-top: var(--ph-desktop-subtitulo-pt, 24px);
     width: min(920px, 100%);
     font-family: var(--fiflp-font-body);
     font-size: clamp(1.02rem, 1.9vw, 1.24rem);
@@ -6403,7 +6403,7 @@ body.fiflp-landing-gate .portada-hero__content {
 
 .portada-hero__acciones {
     margin-top: 8px;
-    padding-top: 48px;
+    padding-top: var(--ph-desktop-acciones-pt, 48px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6463,6 +6463,8 @@ body.fiflp-landing-gate .portada-hero__content {
     padding: 0.39rem 0.75rem;
     font-size: 0.675rem;
     font-weight: 600;
+    transform: scale(var(--ph-desktop-btn-sec-scale, 1));
+    transform-origin: center;
 }
 
 .portada-hero__boton:hover,
@@ -6492,6 +6494,139 @@ body.fiflp-landing-gate .portada-hero__content {
     opacity: 1;
 }
 
+.portada-hero--cinematic::after {
+    content: "";
+    position: absolute;
+    inset: -18% -24%;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 50% 18%, rgba(253, 226, 95, 0.2) 0%, rgba(253, 226, 95, 0.06) 28%, rgba(253, 226, 95, 0) 62%);
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.9s ease;
+    z-index: 1;
+}
+
+.portada-hero--cinematic.is-ready::after {
+    opacity: 1;
+    transform: none;
+}
+
+.portada-hero--cinematic .hero-intro-item {
+    opacity: 0;
+    transform: translateY(10px);
+    will-change: transform, opacity;
+}
+
+.portada-hero--cinematic.is-ready .hero-intro-item {
+    animation: portadaHeroFadeSlide 1400ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
+}
+
+.portada-hero--cinematic .portada-hero__rotulo {
+    opacity: 0;
+    transform: scale(1.38);
+    transform-origin: center center;
+    pointer-events: auto;
+}
+
+.portada-hero--cinematic.is-ready .portada-hero__rotulo {
+    animation: portadaHeroRotuloInPlace 2200ms cubic-bezier(0.22, 0.03, 0.1, 0.99) both;
+}
+
+.portada-hero--cinematic .hero-intro-slot-logo {
+    transform: translateY(-20px);
+}
+
+.portada-hero--cinematic .hero-intro-slot-subtitulo {
+    transform: translateY(20px);
+}
+
+.portada-hero--cinematic .hero-intro-slot-btn-main {
+    transform: translateX(-24px);
+}
+
+.portada-hero--cinematic .hero-intro-slot-btn-sec {
+    transform: translateX(24px);
+}
+
+.portada-hero--cinematic .hero-intro-slot-logos {
+    transform: translateY(22px);
+}
+
+.portada-hero--cinematic.is-ready .hero-intro-slot-logo {
+    animation-delay: 2000ms;
+}
+
+.portada-hero--cinematic.is-ready .hero-intro-slot-subtitulo {
+    animation-delay: 3000ms;
+}
+
+.portada-hero--cinematic.is-ready .hero-intro-slot-btn-main {
+    animation-delay: 4000ms;
+}
+
+.portada-hero--cinematic.is-ready .hero-intro-slot-btn-sec,
+.portada-hero--cinematic.is-ready .hero-intro-slot-logos {
+    animation-delay: 5000ms;
+}
+
+@keyframes portadaHeroFadeSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes portadaHeroRotuloInPlace {
+    0% {
+        opacity: 0;
+        transform: scale(1.38);
+    }
+    8% {
+        opacity: 1;
+        transform: scale(1.38);
+    }
+    72% {
+        opacity: 1;
+        transform: scale(1.38);
+    }
+    92% {
+        opacity: 1;
+        transform: scale(1.008);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .portada-hero--cinematic::after {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .portada-hero--cinematic .hero-intro-item,
+    .portada-hero--cinematic.is-ready .hero-intro-item {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    .portada-hero--cinematic .portada-hero__rotulo,
+    .portada-hero--cinematic.is-ready .portada-hero__rotulo {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        pointer-events: auto !important;
+    }
+}
+
 .portada-hero__bg--tablet,
 .portada-hero__bg--mobile,
 .portada-hero__video--tablet,
@@ -6515,7 +6650,34 @@ body.fiflp-landing-gate .portada-hero__content {
     }
 
     .portada-hero__content {
-        padding-top: clamp(64px, 10vh, 108px);
+        padding-top: var(--ph-tablet-content-pt, clamp(64px, 10vh, 108px));
+        padding-left: var(--ph-tablet-content-px, 28px);
+        padding-right: var(--ph-tablet-content-px, 28px);
+    }
+
+    .portada-hero__logo {
+        margin-bottom: var(--ph-tablet-logo-mb, var(--ph-desktop-logo-mb, 40px));
+    }
+
+    .portada-hero__logo img,
+    .portada-hero__logo-svg {
+        max-width: min(64vw, var(--ph-tablet-logo-max-width, var(--ph-desktop-logo-max-width, 360px)));
+    }
+
+    .portada-hero__rotulo {
+        width: min(var(--ph-tablet-rotulo-max-width, var(--ph-desktop-rotulo-max-width, 1120px)), 100%);
+    }
+
+    .portada-hero__subtitulo {
+        padding-top: var(--ph-tablet-subtitulo-pt, var(--ph-desktop-subtitulo-pt, 24px));
+    }
+
+    .portada-hero__acciones {
+        padding-top: var(--ph-tablet-acciones-pt, var(--ph-desktop-acciones-pt, 48px));
+    }
+
+    .portada-hero__boton--sec {
+        transform: scale(var(--ph-tablet-btn-sec-scale, var(--ph-desktop-btn-sec-scale, 1)));
     }
 }
 
@@ -6536,12 +6698,38 @@ body.fiflp-landing-gate .portada-hero__content {
 
     .portada-hero__logo img,
     .portada-hero__logo-svg {
-        max-width: min(76vw, 290px);
+        max-width: min(76vw, var(--ph-mobile-logo-max-width, 290px));
         max-height: 92px;
     }
 
     .portada-hero__acciones-sec {
         width: 100%;
+    }
+
+    .portada-hero__logo {
+        margin-bottom: var(--ph-mobile-logo-mb, var(--ph-tablet-logo-mb, var(--ph-desktop-logo-mb, 40px)));
+    }
+
+    .portada-hero__rotulo {
+        width: min(var(--ph-mobile-rotulo-max-width, var(--ph-tablet-rotulo-max-width, 680px)), 100%);
+    }
+
+    .portada-hero__subtitulo {
+        padding-top: var(--ph-mobile-subtitulo-pt, var(--ph-tablet-subtitulo-pt, var(--ph-desktop-subtitulo-pt, 24px)));
+    }
+
+    .portada-hero__acciones {
+        padding-top: var(--ph-mobile-acciones-pt, var(--ph-tablet-acciones-pt, var(--ph-desktop-acciones-pt, 48px)));
+    }
+
+    .portada-hero__boton--sec {
+        transform: scale(var(--ph-mobile-btn-sec-scale, var(--ph-tablet-btn-sec-scale, 1)));
+    }
+
+    .portada-hero__content {
+        padding-top: var(--ph-mobile-content-pt, var(--ph-tablet-content-pt, 72px));
+        padding-left: var(--ph-mobile-content-px, var(--ph-tablet-content-px, 20px));
+        padding-right: var(--ph-mobile-content-px, var(--ph-tablet-content-px, 20px));
     }
 }
 

@@ -34,6 +34,49 @@ $desktop_color = sanitize_hex_color( (string) $get( 'desktop_color_fondo' ) );
 $tablet_color  = sanitize_hex_color( (string) $get( 'tablet_color_fondo' ) );
 $mobile_color  = sanitize_hex_color( (string) $get( 'mobile_color_fondo' ) );
 
+$to_num = static function( $value, $default = 0, $min = null, $max = null ) {
+	$num = is_numeric( $value ) ? (float) $value : (float) $default;
+	if ( null !== $min ) {
+		$num = max( (float) $min, $num );
+	}
+	if ( null !== $max ) {
+		$num = min( (float) $max, $num );
+	}
+	return $num;
+};
+
+$desktop_logo_max_width    = $to_num( $get( 'desktop_logo_max_width' ), 360, 80, 2000 );
+$tablet_logo_max_width_raw = $get( 'tablet_logo_max_width' );
+$mobile_logo_max_width_raw = $get( 'mobile_logo_max_width' );
+
+$desktop_logo_margin_bottom    = $to_num( $get( 'desktop_logo_margin_bottom' ), 40, 0, 400 );
+$tablet_logo_margin_bottom_raw = $get( 'tablet_logo_margin_bottom' );
+$mobile_logo_margin_bottom_raw = $get( 'mobile_logo_margin_bottom' );
+
+$desktop_rotulo_max_width    = $to_num( $get( 'desktop_rotulo_max_width' ), 1120, 180, 2600 );
+$tablet_rotulo_max_width_raw = $get( 'tablet_rotulo_max_width' );
+$mobile_rotulo_max_width_raw = $get( 'mobile_rotulo_max_width' );
+
+$desktop_subtitulo_padding_top    = $to_num( $get( 'desktop_subtitulo_padding_top' ), 24, 0, 300 );
+$tablet_subtitulo_padding_top_raw = $get( 'tablet_subtitulo_padding_top' );
+$mobile_subtitulo_padding_top_raw = $get( 'mobile_subtitulo_padding_top' );
+
+$desktop_acciones_padding_top    = $to_num( $get( 'desktop_acciones_padding_top' ), 48, 0, 360 );
+$tablet_acciones_padding_top_raw = $get( 'tablet_acciones_padding_top' );
+$mobile_acciones_padding_top_raw = $get( 'mobile_acciones_padding_top' );
+
+$desktop_boton_sec_scale    = $to_num( $get( 'desktop_boton_sec_scale' ), 1, 0.4, 3 );
+$tablet_boton_sec_scale_raw = $get( 'tablet_boton_sec_scale' );
+$mobile_boton_sec_scale_raw = $get( 'mobile_boton_sec_scale' );
+
+$desktop_content_padding_top    = $to_num( $get( 'desktop_content_padding_top' ), 96, 0, 300 );
+$tablet_content_padding_top_raw = $get( 'tablet_content_padding_top' );
+$mobile_content_padding_top_raw = $get( 'mobile_content_padding_top' );
+
+$desktop_content_padding_x    = $to_num( $get( 'desktop_content_padding_x' ), 36, 0, 220 );
+$tablet_content_padding_x_raw = $get( 'tablet_content_padding_x' );
+$mobile_content_padding_x_raw = $get( 'mobile_content_padding_x' );
+
 $logo_principal = $get( 'logo_principal' );
 $logo_data      = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $logo_principal, 'full', get_the_title( $portada_hero_id ) ) : array();
 $logo_url       = isset( $logo_data['url'] ) ? (string) $logo_data['url'] : '';
@@ -102,6 +145,23 @@ if ( '' === $mobile_color ) {
 	$mobile_color = $tablet_color ? $tablet_color : $desktop_color;
 }
 
+$tablet_logo_max_width    = $to_num( $tablet_logo_max_width_raw, $desktop_logo_max_width, 80, 2000 );
+$mobile_logo_max_width    = $to_num( $mobile_logo_max_width_raw, $tablet_logo_max_width, 80, 2000 );
+$tablet_logo_margin_bottom = $to_num( $tablet_logo_margin_bottom_raw, $desktop_logo_margin_bottom, 0, 400 );
+$mobile_logo_margin_bottom = $to_num( $mobile_logo_margin_bottom_raw, $tablet_logo_margin_bottom, 0, 400 );
+$tablet_rotulo_max_width   = $to_num( $tablet_rotulo_max_width_raw, $desktop_rotulo_max_width, 180, 2600 );
+$mobile_rotulo_max_width   = $to_num( $mobile_rotulo_max_width_raw, $tablet_rotulo_max_width, 180, 2600 );
+$tablet_subtitulo_padding_top = $to_num( $tablet_subtitulo_padding_top_raw, $desktop_subtitulo_padding_top, 0, 300 );
+$mobile_subtitulo_padding_top = $to_num( $mobile_subtitulo_padding_top_raw, $tablet_subtitulo_padding_top, 0, 300 );
+$tablet_acciones_padding_top  = $to_num( $tablet_acciones_padding_top_raw, $desktop_acciones_padding_top, 0, 360 );
+$mobile_acciones_padding_top  = $to_num( $mobile_acciones_padding_top_raw, $tablet_acciones_padding_top, 0, 360 );
+$tablet_boton_sec_scale    = $to_num( $tablet_boton_sec_scale_raw, $desktop_boton_sec_scale, 0.4, 3 );
+$mobile_boton_sec_scale    = $to_num( $mobile_boton_sec_scale_raw, $tablet_boton_sec_scale, 0.4, 3 );
+$tablet_content_padding_top = $to_num( $tablet_content_padding_top_raw, $desktop_content_padding_top, 0, 300 );
+$mobile_content_padding_top = $to_num( $mobile_content_padding_top_raw, $tablet_content_padding_top, 0, 300 );
+$tablet_content_padding_x   = $to_num( $tablet_content_padding_x_raw, $desktop_content_padding_x, 0, 220 );
+$mobile_content_padding_x   = $to_num( $mobile_content_padding_x_raw, $tablet_content_padding_x, 0, 220 );
+
 $boton_pdf_url  = $file_url( $boton_pdf_raw );
 $boton_epub_url = $file_url( $boton_epub_raw );
 
@@ -142,7 +202,7 @@ if ( $subtitulo_color ) {
 ?>
 <section
 	class="portada-hero"
-	style="--portada-hero-color-desktop: <?php echo esc_attr( $desktop_color ? $desktop_color : '#0f2d30' ); ?>; --portada-hero-color-tablet: <?php echo esc_attr( $tablet_color ? $tablet_color : '#0f2d30' ); ?>; --portada-hero-color-mobile: <?php echo esc_attr( $mobile_color ? $mobile_color : '#0f2d30' ); ?>;"
+	style="--portada-hero-color-desktop: <?php echo esc_attr( $desktop_color ? $desktop_color : '#0f2d30' ); ?>; --portada-hero-color-tablet: <?php echo esc_attr( $tablet_color ? $tablet_color : '#0f2d30' ); ?>; --portada-hero-color-mobile: <?php echo esc_attr( $mobile_color ? $mobile_color : '#0f2d30' ); ?>; --ph-desktop-logo-max-width: <?php echo esc_attr( $desktop_logo_max_width ); ?>px; --ph-tablet-logo-max-width: <?php echo esc_attr( $tablet_logo_max_width ); ?>px; --ph-mobile-logo-max-width: <?php echo esc_attr( $mobile_logo_max_width ); ?>px; --ph-desktop-logo-mb: <?php echo esc_attr( $desktop_logo_margin_bottom ); ?>px; --ph-tablet-logo-mb: <?php echo esc_attr( $tablet_logo_margin_bottom ); ?>px; --ph-mobile-logo-mb: <?php echo esc_attr( $mobile_logo_margin_bottom ); ?>px; --ph-desktop-rotulo-max-width: <?php echo esc_attr( $desktop_rotulo_max_width ); ?>px; --ph-tablet-rotulo-max-width: <?php echo esc_attr( $tablet_rotulo_max_width ); ?>px; --ph-mobile-rotulo-max-width: <?php echo esc_attr( $mobile_rotulo_max_width ); ?>px; --ph-desktop-subtitulo-pt: <?php echo esc_attr( $desktop_subtitulo_padding_top ); ?>px; --ph-tablet-subtitulo-pt: <?php echo esc_attr( $tablet_subtitulo_padding_top ); ?>px; --ph-mobile-subtitulo-pt: <?php echo esc_attr( $mobile_subtitulo_padding_top ); ?>px; --ph-desktop-acciones-pt: <?php echo esc_attr( $desktop_acciones_padding_top ); ?>px; --ph-tablet-acciones-pt: <?php echo esc_attr( $tablet_acciones_padding_top ); ?>px; --ph-mobile-acciones-pt: <?php echo esc_attr( $mobile_acciones_padding_top ); ?>px; --ph-desktop-btn-sec-scale: <?php echo esc_attr( $desktop_boton_sec_scale ); ?>; --ph-tablet-btn-sec-scale: <?php echo esc_attr( $tablet_boton_sec_scale ); ?>; --ph-mobile-btn-sec-scale: <?php echo esc_attr( $mobile_boton_sec_scale ); ?>; --ph-desktop-content-pt: <?php echo esc_attr( $desktop_content_padding_top ); ?>px; --ph-tablet-content-pt: <?php echo esc_attr( $tablet_content_padding_top ); ?>px; --ph-mobile-content-pt: <?php echo esc_attr( $mobile_content_padding_top ); ?>px; --ph-desktop-content-px: <?php echo esc_attr( $desktop_content_padding_x ); ?>px; --ph-tablet-content-px: <?php echo esc_attr( $tablet_content_padding_x ); ?>px; --ph-mobile-content-px: <?php echo esc_attr( $mobile_content_padding_x ); ?>px;"
 	data-bg-type-desktop="<?php echo esc_attr( 'video' === $desktop_tipo ? 'video' : 'imagen' ); ?>"
 	data-bg-type-tablet="<?php echo esc_attr( 'video' === $tablet_tipo ? 'video' : 'imagen' ); ?>"
 	data-bg-type-mobile="<?php echo esc_attr( 'video' === $mobile_tipo ? 'video' : 'imagen' ); ?>"

@@ -157,6 +157,53 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     })();
 
+    const initPortadaHeroCinematicIntro = () => {
+        const hero = document.querySelector('.portada-hero');
+
+        if (!hero || hero.dataset.introDone === '1') {
+            return;
+        }
+
+        hero.dataset.introDone = '1';
+        hero.classList.add('portada-hero--cinematic');
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const markItems = (selector, slot) => {
+            hero.querySelectorAll(selector).forEach((el) => {
+                el.classList.add('hero-intro-item');
+                el.classList.add('hero-intro-slot-' + slot);
+            });
+        };
+
+        // Secuencia pedida:
+        // 0s: rótulo entra grande en su sitio (sin recolocación).
+        // 2s: logo
+        // 3s: subtítulo
+        // 4s: botón principal
+        // 5s: botones descarga + logos institucionales juntos
+        markItems('.portada-hero__logo', 'logo');
+        markItems('.portada-hero__subtitulo', 'subtitulo');
+        markItems('.portada-hero__boton--central', 'btn-main');
+        markItems('.portada-hero__acciones-sec .portada-hero__boton', 'btn-sec');
+        markItems('.portada-hero .portada-hero-retaila', 'logos');
+
+        if (reduceMotion) {
+            hero.classList.add('is-ready');
+            return;
+        }
+
+        requestAnimationFrame(() => {
+            hero.classList.add('is-animating');
+            requestAnimationFrame(() => {
+                hero.classList.add('is-ready');
+            });
+        });
+
+        // Reajusta el rótulo tras su transición principal.
+        window.setTimeout(scheduleRotuloFit, 2200);
+    };
+
     const getDisclosureBody = (group) => {
         return Array.from(group.children).find(function (child) {
             return child.classList.contains('children') || child.classList.contains('fiflp-global-index__children');
@@ -1322,6 +1369,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     scheduleRotuloFit();
+    initPortadaHeroCinematicIntro();
 
     if (document.fonts && typeof document.fonts.ready === 'object') {
         document.fonts.ready.then(scheduleRotuloFit).catch(function () {});
