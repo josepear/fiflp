@@ -20,6 +20,11 @@ add_action(
 
 		@ini_set( 'display_errors', '0' );
 		@ini_set( 'html_errors', '0' );
+		// ACF/Flexible con muchos campos: evita que el POST se trunque y el botón quede en "Guardando...".
+		@ini_set( 'max_input_vars', '10000' );
+		@ini_set( 'max_input_nesting_level', '256' );
+		@ini_set( 'max_input_time', '300' );
+		@ini_set( 'max_execution_time', '300' );
 	},
 	1
 );
@@ -34,6 +39,11 @@ add_action(
 function fiflp_acf_backfill_field_internal_names_recursive( array &$field ) {
 	if ( ! empty( $field['name'] ) && ! isset( $field['_name'] ) ) {
 		$field['_name'] = $field['name'];
+	}
+
+	// ACF Select: algunos JSON legados no traen "multiple" y ACF 6.3 lanza warning.
+	if ( isset( $field['type'] ) && 'select' === (string) $field['type'] && ! isset( $field['multiple'] ) ) {
+		$field['multiple'] = 0;
 	}
 
 	if ( ! empty( $field['layouts'] ) && is_array( $field['layouts'] ) ) {
@@ -86,6 +96,30 @@ function fiflp_acf_load_field_backfill_underscore_name( $field ) {
 }
 
 add_filter( 'acf/load_field', 'fiflp_acf_load_field_backfill_underscore_name', 1 );
+
+/**
+ * Blindaje ACF:
+ * - Evita warning "Undefined array key 'multiple'" en campos select.
+ * - Refuerza "_name" en cualquier campo/sublayout que llegue incompleto.
+ */
+function fiflp_acf_harden_field_shape( $field ) {
+	if ( ! is_array( $field ) ) {
+		return $field;
+	}
+
+	// Refuerzo global de _name para evitar notices en flexible/repeater.
+	fiflp_acf_backfill_field_internal_names_recursive( $field );
+
+	$field_type = isset( $field['type'] ) ? (string) $field['type'] : '';
+	if ( 'select' === $field_type && ! isset( $field['multiple'] ) ) {
+		$field['multiple'] = 0;
+	}
+
+	return $field;
+}
+add_filter( 'acf/load_field', 'fiflp_acf_harden_field_shape', 2 );
+add_filter( 'acf/prepare_field', 'fiflp_acf_harden_field_shape', 1 );
+add_filter( 'acf/get_field', 'fiflp_acf_harden_field_shape', 2 );
 
 /**
  * Ruta canónica de ACF Local JSON: guardado y sincronización apuntan aquí.
@@ -230,6 +264,26 @@ function fiflp_acf_force_tenth_step_onepage_offsets( $field ) {
 }
 add_filter( 'acf/load_field/key=field_seccion_onepage_numero_offset_x', 'fiflp_acf_force_tenth_step_onepage_offsets', 20 );
 add_filter( 'acf/load_field/key=field_seccion_onepage_numero_top', 'fiflp_acf_force_tenth_step_onepage_offsets', 20 );
+
+/**
+ * Oculta campos legado del rótulo (variante global, repeater texto/tipografía).
+ * Activo: modelo Página (titulo + supertitulo + rotulo-editorial-page.php).
+ */
+function fiflp_acf_hide_rotulo_legacy_fields( $field ) {
+	$field_key = isset( $field['key'] ) ? (string) $field['key'] : '';
+	$hidden_keys = array(
+		'field_rotulo_editorial_variante',
+		'field_onepage_mod_rotulo_variante',
+		'field_rotulo_editorial_titulo_lineas',
+	);
+
+	if ( in_array( $field_key, $hidden_keys, true ) ) {
+		return false;
+	}
+
+	return $field;
+}
+add_filter( 'acf/prepare_field', 'fiflp_acf_hide_rotulo_legacy_fields', 20 );
 
 add_action(
 	'after_setup_theme',
@@ -594,100 +648,6 @@ function generatepress_child_is_editorial_page( $page = null ) {
 	}
 
 	return false;
-}
-
-function fiflp_normalize_home_hero_button_url( $value ) {
-	$to_relative_url = static function ( $url ) {
-		$url = trim( (string) $url );
-
-		if ( '' === $url ) {
-			return '';
-		}
-
-		$path  = wp_parse_url( $url, PHP_URL_PATH );
-		$query = wp_parse_url( $url, PHP_URL_QUERY );
-		$hash  = wp_parse_url( $url, PHP_URL_FRAGMENT );
-
-		if ( ! is_string( $path ) || '' === $path ) {
-			$path = '/';
-		}
-
-		$relative = $path;
-
-		if ( is_string( $query ) && '' !== $query ) {
-			$relative .= '?' . $query;
-		}
-
-		if ( is_string( $hash ) && '' !== $hash ) {
-			$relative .= '#' . $hash;
-		}
-
-		return $relative;
-	};
-
-	if ( $value instanceof WP_Post ) {
-		$permalink = get_permalink( $value );
-		return $permalink ? $to_relative_url( $permalink ) : '';
-	}
-
-	if ( is_array( $value ) ) {
-		if ( ! empty( $value['url'] ) ) {
-			return fiflp_normalize_home_hero_button_url( $value['url'] );
-		}
-
-		if ( isset( $value['ID'] ) ) {
-			$value = $value['ID'];
-		} elseif ( isset( $value['id'] ) ) {
-			$value = $value['id'];
-		} elseif ( isset( $value[0] ) && ! is_array( $value[0] ) ) {
-			$value = $value[0];
-		}
-	}
-
-	if ( is_numeric( $value ) ) {
-		$permalink = get_permalink( (int) $value );
-		return $permalink ? $to_relative_url( $permalink ) : '';
-	}
-
-	if ( is_string( $value ) ) {
-		$value = trim( $value );
-
-		if ( '' === $value ) {
-			return '';
-		}
-
-		if ( 0 === strpos( $value, '/' ) ) {
-			return $value;
-		}
-
-		$post_id = url_to_postid( $value );
-		if ( $post_id > 0 ) {
-			$permalink = get_permalink( $post_id );
-			if ( $permalink ) {
-				return $to_relative_url( $permalink );
-			}
-		}
-
-		if ( wp_http_validate_url( $value ) ) {
-			$current_host = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
-			$value_host   = wp_parse_url( $value, PHP_URL_HOST );
-
-			$is_same_host = is_string( $current_host )
-				&& is_string( $value_host )
-				&& 0 === strcasecmp( $current_host, $value_host );
-
-			$is_local_link = in_array( $current_host, array( 'localhost', '127.0.0.1' ), true )
-				&& in_array( $value_host, array( 'localhost', '127.0.0.1' ), true );
-
-			if ( $is_same_host || $is_local_link ) {
-				return $to_relative_url( $value );
-			}
-		}
-
-		return $value;
-	}
-
-	return '';
 }
 
 if ( ! function_exists( 'fiflp_collect_prologo_items_from_blocks' ) ) {
@@ -1090,40 +1050,6 @@ function fiflp_onepage_body_class( $classes ) {
 }
 add_filter( 'body_class', 'fiflp_onepage_body_class', 15 );
 
-/**
- * Marca el body cuando la portada renderiza Home Hero como vista exclusiva.
- *
- * @param string[] $classes Clases del body.
- * @return string[]
- */
-function fiflp_home_hero_body_class( $classes ) {
-	if ( ! is_front_page() ) {
-		return $classes;
-	}
-
-	$page_id = (int) get_option( 'page_on_front' );
-	$hero    = function_exists( 'fiflp_get_home_hero_data' ) ? fiflp_get_home_hero_data( $page_id ) : array();
-
-	$has_home_hero = ! empty( $hero['imagen'] )
-		|| ! empty( $hero['video'] )
-		|| ! empty( $hero['color_fondo'] )
-		|| ! empty( $hero['logo_principal'] )
-		|| ! empty( $hero['titulo'] )
-		|| ! empty( $hero['texto'] )
-		|| ! empty( $hero['boton_capitulos_texto'] )
-		|| ! empty( $hero['boton_capitulos_url'] )
-		|| ! empty( $hero['link_pdf'] )
-		|| ! empty( $hero['link_epub'] )
-		|| ! empty( $hero['logos'] );
-
-	if ( $has_home_hero ) {
-		$classes[] = 'fiflp-home-hero-active';
-	}
-
-	return $classes;
-}
-add_filter( 'body_class', 'fiflp_home_hero_body_class', 20 );
-
 function fiflp_render_editorial_block_layout( $layout ) {
 	$layout = (string) $layout;
 
@@ -1131,8 +1057,7 @@ function fiflp_render_editorial_block_layout( $layout ) {
 		return false;
 	}
 
-	// Permite evolucionar el rótulo de Página sin afectar otros contextos
-	// (onepage/home hero/imagen siguen usando su ruta actual).
+	// Rótulo editorial: único template (Página) en todos los contextos.
 	if ( 'rotulo_editorial' === $layout && locate_template( 'template-parts/bloques/rotulo-editorial-page.php', false, false ) ) {
 		get_template_part( 'template-parts/bloques/rotulo-editorial-page' );
 		return true;
@@ -1152,6 +1077,59 @@ function fiflp_render_editorial_block_layout( $layout ) {
 	}
 
 	return false;
+}
+
+if ( ! function_exists( 'fiflp_partition_partner_logo_rows' ) ) {
+	/**
+	 * Divide logos institucionales en dos filas (máx 6 por fila), igual que footer editorial.
+	 *
+	 * @param array $items Logos normalizados.
+	 * @return array
+	 */
+	function fiflp_partition_partner_logo_rows( $items ) {
+		$items = is_array( $items ) ? $items : array();
+		$row_1 = array();
+		$row_2 = array();
+		$auto  = array();
+		$rows  = array();
+
+		foreach ( $items as $item ) {
+			$linea = isset( $item['linea'] ) ? strtolower( trim( (string) $item['linea'] ) ) : '';
+			if ( in_array( $linea, array( '1', 'linea_1', 'primera', 'first' ), true ) ) {
+				$row_1[] = $item;
+				continue;
+			}
+			if ( in_array( $linea, array( '2', 'linea_2', 'segunda', 'second' ), true ) ) {
+				$row_2[] = $item;
+				continue;
+			}
+			$auto[] = $item;
+		}
+
+		foreach ( $auto as $item ) {
+			if ( count( $row_1 ) < 6 ) {
+				$row_1[] = $item;
+				continue;
+			}
+			if ( count( $row_2 ) < 6 ) {
+				$row_2[] = $item;
+				continue;
+			}
+			break;
+		}
+
+		$row_1 = array_slice( $row_1, 0, 6 );
+		$row_2 = array_slice( $row_2, 0, 6 );
+
+		if ( ! empty( $row_1 ) ) {
+			$rows[] = $row_1;
+		}
+		if ( ! empty( $row_2 ) ) {
+			$rows[] = $row_2;
+		}
+
+		return $rows;
+	}
 }
 
 if ( ! function_exists( 'fiflp_cuadro_normalize_px_pair' ) ) {
@@ -1325,170 +1303,6 @@ add_action(
 		echo '</p></div>';
 	}
 );
-
-function fiflp_get_home_hero_data( $page_id = 0 ) {
-	$page_id = (int) $page_id;
-
-	if ( $page_id <= 0 ) {
-		$page_id = (int) get_queried_object_id();
-	}
-
-	$data = array(
-		'imagen'                => null,
-		'video'                => '',
-		'color_fondo'          => '',
-		'logo_principal'        => null,
-		'titulo'                => '',
-		'texto'                 => '',
-		'boton_capitulos_texto' => '',
-		'boton_capitulos_url'   => '',
-		'boton_capitulos_url_libre' => '',
-		'rotulo_titulo_lineas'  => array(),
-		'rotulo_etiqueta_html'  => 'h1',
-		'rotulo_interlineado'   => 0.86,
-		'rotulo_espaciado_letras' => 0.01,
-		'link_pdf'              => '',
-		'link_epub'             => '',
-		'logos'                 => array(),
-		'source'                => '',
-	);
-
-	if ( ! function_exists( 'get_field' ) ) {
-		return $data;
-	}
-
-	$option_hero = array(
-		'imagen'                => get_field( 'home_hero_imagen_fondo', 'option' ),
-		'video'                 => (string) get_field( 'home_hero_video_fondo', 'option' ),
-		'color_fondo'           => (string) get_field( 'home_hero_color_fondo', 'option' ),
-		'logo_principal'        => get_field( 'home_hero_logo_principal', 'option' ),
-		'titulo'                => (string) get_field( 'home_hero_titulo', 'option' ),
-		'texto'                 => (string) get_field( 'home_hero_texto', 'option' ),
-		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', 'option' ),
-		'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( get_field( 'home_hero_boton_capitulos_url', 'option' ) ),
-		'boton_capitulos_url_libre' => trim( (string) get_field( 'home_hero_boton_capitulos_url_libre', 'option' ) ),
-		'rotulo_titulo_lineas'  => get_field( 'home_hero_rotulo_titulo_lineas', 'option' ),
-		'rotulo_etiqueta_html'  => (string) get_field( 'home_hero_rotulo_etiqueta_html', 'option' ),
-		'rotulo_interlineado'   => get_field( 'home_hero_rotulo_interlineado', 'option' ),
-		'rotulo_espaciado_letras' => get_field( 'home_hero_rotulo_espaciado_letras', 'option' ),
-		'link_pdf'              => get_field( 'home_hero_link_pdf', 'option' ),
-		'link_epub'             => get_field( 'home_hero_link_epub', 'option' ),
-		'logos'                 => get_field( 'home_hero_logos', 'option' ),
-	);
-
-	$has_option_content = ! empty( $option_hero['imagen'] )
-		|| '' !== trim( (string) $option_hero['video'] )
-		|| '' !== trim( (string) $option_hero['color_fondo'] )
-		|| ! empty( $option_hero['logo_principal'] )
-		|| '' !== trim( $option_hero['titulo'] )
-		|| '' !== trim( $option_hero['texto'] )
-		|| '' !== trim( $option_hero['boton_capitulos_texto'] )
-		|| '' !== trim( $option_hero['boton_capitulos_url'] )
-		|| '' !== trim( $option_hero['boton_capitulos_url_libre'] )
-		|| ( is_array( $option_hero['rotulo_titulo_lineas'] ) && ! empty( $option_hero['rotulo_titulo_lineas'] ) )
-		|| ! empty( $option_hero['link_pdf'] )
-		|| ! empty( $option_hero['link_epub'] )
-		|| ! empty( $option_hero['logos'] );
-
-	if ( $has_option_content ) {
-		$option_hero['source'] = 'option';
-		return $option_hero;
-	}
-
-	if ( $page_id <= 0 ) {
-		return $data;
-	}
-
-	$legacy_page_hero = array(
-		'imagen'                => get_field( 'home_hero_imagen_fondo', $page_id ),
-		'video'                 => (string) get_field( 'home_hero_video_fondo', $page_id ),
-		'color_fondo'           => (string) get_field( 'home_hero_color_fondo', $page_id ),
-		'logo_principal'        => get_field( 'home_hero_logo_principal', $page_id ),
-		'titulo'                => (string) get_field( 'home_hero_titulo', $page_id ),
-		'texto'                 => (string) get_field( 'home_hero_texto', $page_id ),
-		'boton_capitulos_texto' => (string) get_field( 'home_hero_boton_capitulos_texto', $page_id ),
-		'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( get_field( 'home_hero_boton_capitulos_url', $page_id ) ),
-		'boton_capitulos_url_libre' => trim( (string) get_field( 'home_hero_boton_capitulos_url_libre', $page_id ) ),
-		'rotulo_titulo_lineas'  => get_field( 'home_hero_rotulo_titulo_lineas', $page_id ),
-		'rotulo_etiqueta_html'  => (string) get_field( 'home_hero_rotulo_etiqueta_html', $page_id ),
-		'rotulo_interlineado'   => get_field( 'home_hero_rotulo_interlineado', $page_id ),
-		'rotulo_espaciado_letras' => get_field( 'home_hero_rotulo_espaciado_letras', $page_id ),
-		'link_pdf'              => get_field( 'home_hero_link_pdf', $page_id ),
-		'link_epub'             => get_field( 'home_hero_link_epub', $page_id ),
-		'logos'                 => get_field( 'home_hero_logos', $page_id ),
-	);
-
-	$has_legacy_page_content = ! empty( $legacy_page_hero['imagen'] )
-		|| '' !== trim( (string) $legacy_page_hero['video'] )
-		|| '' !== trim( (string) $legacy_page_hero['color_fondo'] )
-		|| ! empty( $legacy_page_hero['logo_principal'] )
-		|| '' !== trim( $legacy_page_hero['titulo'] )
-		|| '' !== trim( $legacy_page_hero['texto'] )
-		|| '' !== trim( $legacy_page_hero['boton_capitulos_texto'] )
-		|| '' !== trim( $legacy_page_hero['boton_capitulos_url'] )
-		|| '' !== trim( $legacy_page_hero['boton_capitulos_url_libre'] )
-		|| ( is_array( $legacy_page_hero['rotulo_titulo_lineas'] ) && ! empty( $legacy_page_hero['rotulo_titulo_lineas'] ) )
-		|| ! empty( $legacy_page_hero['link_pdf'] )
-		|| ! empty( $legacy_page_hero['link_epub'] )
-		|| ! empty( $legacy_page_hero['logos'] );
-
-	if ( $has_legacy_page_content ) {
-		$legacy_page_hero['source'] = 'page';
-		return $legacy_page_hero;
-	}
-
-	$legacy_blocks = get_field( 'bloques', $page_id );
-
-	if ( is_array( $legacy_blocks ) ) {
-		foreach ( $legacy_blocks as $row ) {
-			$layout = isset( $row['acf_fc_layout'] ) ? (string) $row['acf_fc_layout'] : '';
-
-			if ( 'home_hero' !== $layout && 'home-hero' !== $layout ) {
-				continue;
-			}
-
-			$legacy_flexible_hero = array(
-				'imagen'                => $row['imagen_de_fondo'] ?? ( $row['imagen_fondo'] ?? null ),
-				'video'                 => isset( $row['video_fondo'] ) ? (string) $row['video_fondo'] : '',
-				'color_fondo'           => isset( $row['color_fondo'] ) ? (string) $row['color_fondo'] : '',
-				'logo_principal'        => $row['logo_principal'] ?? null,
-				'titulo'                => isset( $row['titulo'] ) ? (string) $row['titulo'] : '',
-				'texto'                 => isset( $row['texto'] ) ? (string) $row['texto'] : '',
-				'boton_capitulos_texto' => isset( $row['boton_capitulos_texto'] ) ? (string) $row['boton_capitulos_texto'] : '',
-				'boton_capitulos_url'   => fiflp_normalize_home_hero_button_url( $row['boton_capitulos_url'] ?? '' ),
-				'boton_capitulos_url_libre' => isset( $row['boton_capitulos_url_libre'] ) ? trim( (string) $row['boton_capitulos_url_libre'] ) : '',
-				'rotulo_titulo_lineas'  => $row['rotulo_titulo_lineas'] ?? array(),
-				'rotulo_etiqueta_html'  => isset( $row['rotulo_etiqueta_html'] ) ? (string) $row['rotulo_etiqueta_html'] : 'h1',
-				'rotulo_interlineado'   => $row['rotulo_interlineado'] ?? 0.86,
-				'rotulo_espaciado_letras' => $row['rotulo_espaciado_letras'] ?? 0.01,
-				'link_pdf'              => $row['link_pdf'] ?? '',
-				'link_epub'             => $row['link_epub'] ?? '',
-				'logos'                 => isset( $row['logos'] ) && is_array( $row['logos'] ) ? $row['logos'] : array(),
-			);
-
-			$has_legacy_flexible_content = ! empty( $legacy_flexible_hero['imagen'] )
-				|| '' !== trim( (string) $legacy_flexible_hero['video'] )
-				|| '' !== trim( (string) $legacy_flexible_hero['color_fondo'] )
-				|| ! empty( $legacy_flexible_hero['logo_principal'] )
-				|| '' !== trim( $legacy_flexible_hero['titulo'] )
-				|| '' !== trim( $legacy_flexible_hero['texto'] )
-				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_texto'] )
-				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_url'] )
-				|| '' !== trim( $legacy_flexible_hero['boton_capitulos_url_libre'] )
-				|| ( is_array( $legacy_flexible_hero['rotulo_titulo_lineas'] ) && ! empty( $legacy_flexible_hero['rotulo_titulo_lineas'] ) )
-				|| ! empty( $legacy_flexible_hero['link_pdf'] )
-				|| ! empty( $legacy_flexible_hero['link_epub'] )
-				|| ! empty( $legacy_flexible_hero['logos'] );
-
-			if ( $has_legacy_flexible_content ) {
-				$legacy_flexible_hero['source'] = 'flexible_legacy';
-				return $legacy_flexible_hero;
-			}
-		}
-	}
-
-	return $data;
-}
 
 function fiflp_render_single_prologo( $prologo_item ) {
 	$nombre    = isset( $prologo_item['nombre'] ) ? trim( (string) $prologo_item['nombre'] ) : '';
@@ -1786,6 +1600,52 @@ add_action(
 				'show_in_rest'       => false,
 			)
 		);
+
+		register_post_type(
+			'fiflp_portada_hero',
+			array(
+				'labels' => array(
+					'name'          => 'Portadas Hero',
+					'singular_name' => 'Portada Hero',
+					'add_new_item'  => 'Añadir portada hero',
+					'edit_item'     => 'Editar portada hero',
+					'menu_name'     => 'Portada Hero',
+				),
+				'public'             => false,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'menu_position'      => 65,
+				'menu_icon'          => 'dashicons-format-image',
+				'supports'           => array( 'title' ),
+				'publicly_queryable' => false,
+				'has_archive'        => false,
+				'rewrite'            => false,
+				'show_in_rest'       => false,
+			)
+		);
+
+		register_post_type(
+			'fiflp_retaila_logos',
+			array(
+				'labels' => array(
+					'name'          => 'Retailas de logos',
+					'singular_name' => 'Retaila de logos',
+					'add_new_item'  => 'Añadir retaila de logos',
+					'edit_item'     => 'Editar retaila de logos',
+					'menu_name'     => 'Retaila Logos',
+				),
+				'public'             => false,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'menu_position'      => 66,
+				'menu_icon'          => 'dashicons-images-alt2',
+				'supports'           => array( 'title' ),
+				'publicly_queryable' => false,
+				'has_archive'        => false,
+				'rewrite'            => false,
+				'show_in_rest'       => false,
+			)
+		);
 	}
 );
 
@@ -1818,293 +1678,376 @@ add_action(
 			)
 		);
 
-		acf_add_options_page(
-			array(
-				'page_title' => 'Home Hero',
-				'menu_title' => 'Home Hero',
-				'menu_slug'  => 'fiflp-home-hero',
-				'capability' => 'edit_posts',
-				'redirect'   => false,
-				'position'   => 59,
-			)
-		);
-
 		if ( function_exists( 'acf_add_local_field_group' ) ) {
 			acf_add_local_field_group(
 				array(
-					'key' => 'group_home_hero_portada',
-					'title' => 'Home Hero Portada',
+					'key' => 'group_fiflp_front_page_portada_hero',
+					'title' => 'Portada Hero (Portada Principal)',
 					'fields' => array(
 						array(
-							'key' => 'field_home_hero_portada_imagen_fondo',
-							'label' => 'Imagen de fondo',
-							'name' => 'home_hero_imagen_fondo',
-							'type' => 'image',
-							'return_format' => 'array',
-							'preview_size' => 'medium',
+							'key' => 'field_fiflp_front_portada_hero_ref',
+							'label' => 'Portada Hero',
+							'name' => 'portada_hero_referencia',
+							'type' => 'select',
+							'choices' => array(),
+							'allow_null' => 1,
+							'ui' => 1,
+							'return_format' => 'value',
+							'instructions' => 'Selecciona la Portada Hero que se mostrará arriba del contenido de la portada.',
+						),
+					),
+					'location' => array(
+						array(
+							array(
+								'param' => 'page_type',
+								'operator' => '==',
+								'value' => 'front_page',
+							),
+						),
+					),
+					'position' => 'normal',
+					'style' => 'default',
+					'label_placement' => 'top',
+					'instruction_placement' => 'label',
+					'active' => true,
+				)
+			);
+
+			acf_add_local_field_group(
+				array(
+					'key' => 'group_fiflp_portada_hero',
+					'title' => 'Contenido Portada Hero',
+					'fields' => array(
+						array(
+							'key' => 'field_fiflp_portada_hero_tab_desktop',
+							'label' => 'Escritorio',
+							'type' => 'tab',
+							'placement' => 'top',
 						),
 						array(
-							'key' => 'field_home_hero_portada_video_fondo',
-							'label' => 'Vídeo de fondo',
-							'name' => 'home_hero_video_fondo',
+							'key' => 'field_fiflp_portada_hero_desktop_tipo_fondo',
+							'label' => 'Tipo de fondo (escritorio)',
+							'name' => 'desktop_tipo_fondo',
+							'type' => 'button_group',
+							'choices' => array( 'imagen' => 'Imagen', 'video' => 'Video' ),
+							'default_value' => 'imagen',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_desktop_imagen',
+							'label' => 'Imagen fondo (escritorio)',
+							'name' => 'desktop_imagen_fondo',
+							'type' => 'image',
+							'return_format' => 'array',
+							'preview_size' => 'large',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_desktop_video',
+							'label' => 'Video fondo (escritorio)',
+							'name' => 'desktop_video_fondo',
 							'type' => 'file',
-							'instructions' => 'Opcional. Si existe, se muestra como fondo del hero.',
 							'return_format' => 'url',
 							'mime_types' => 'mp4,webm,ogg',
 						),
 						array(
-							'key' => 'field_home_hero_portada_color_fondo',
-							'label' => 'Color de fondo',
-							'name' => 'home_hero_color_fondo',
+							'key' => 'field_fiflp_portada_hero_desktop_color',
+							'label' => 'Color base (escritorio)',
+							'name' => 'desktop_color_fondo',
 							'type' => 'color_picker',
-							'instructions' => 'Se usa cuando no hay imagen, o como base visual del hero.',
 							'default_value' => '#0f2d30',
 						),
 						array(
-							'key' => 'field_home_hero_portada_logo_principal',
+							'key' => 'field_fiflp_portada_hero_tab_tablet',
+							'label' => 'Tablet',
+							'type' => 'tab',
+							'placement' => 'top',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_tablet_tipo_fondo',
+							'label' => 'Tipo de fondo (tablet)',
+							'name' => 'tablet_tipo_fondo',
+							'type' => 'button_group',
+							'choices' => array( 'imagen' => 'Imagen', 'video' => 'Video' ),
+							'default_value' => 'imagen',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_tablet_imagen',
+							'label' => 'Imagen fondo (tablet)',
+							'name' => 'tablet_imagen_fondo',
+							'type' => 'image',
+							'return_format' => 'array',
+							'preview_size' => 'large',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_tablet_video',
+							'label' => 'Video fondo (tablet)',
+							'name' => 'tablet_video_fondo',
+							'type' => 'file',
+							'return_format' => 'url',
+							'mime_types' => 'mp4,webm,ogg',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_tablet_color',
+							'label' => 'Color base (tablet)',
+							'name' => 'tablet_color_fondo',
+							'type' => 'color_picker',
+							'default_value' => '#0f2d30',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_tab_mobile',
+							'label' => 'Móvil',
+							'type' => 'tab',
+							'placement' => 'top',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_mobile_tipo_fondo',
+							'label' => 'Tipo de fondo (móvil)',
+							'name' => 'mobile_tipo_fondo',
+							'type' => 'button_group',
+							'choices' => array( 'imagen' => 'Imagen', 'video' => 'Video' ),
+							'default_value' => 'imagen',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_mobile_imagen',
+							'label' => 'Imagen fondo (móvil)',
+							'name' => 'mobile_imagen_fondo',
+							'type' => 'image',
+							'return_format' => 'array',
+							'preview_size' => 'large',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_mobile_video',
+							'label' => 'Video fondo (móvil)',
+							'name' => 'mobile_video_fondo',
+							'type' => 'file',
+							'return_format' => 'url',
+							'mime_types' => 'mp4,webm,ogg',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_mobile_color',
+							'label' => 'Color base (móvil)',
+							'name' => 'mobile_color_fondo',
+							'type' => 'color_picker',
+							'default_value' => '#0f2d30',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_tab_content',
+							'label' => 'Contenido',
+							'type' => 'tab',
+							'placement' => 'top',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_logo_principal',
 							'label' => 'Logo principal',
-							'name' => 'home_hero_logo_principal',
+							'name' => 'logo_principal',
 							'type' => 'image',
 							'return_format' => 'array',
 							'preview_size' => 'medium',
 						),
 						array(
-							'key' => 'field_home_hero_portada_titulo',
-							'label' => 'Título',
-							'name' => 'home_hero_titulo',
+							'key' => 'field_fiflp_portada_hero_rotulo_titulo',
+							'label' => 'Título rótulo',
+							'name' => 'rotulo_titulo',
 							'type' => 'text',
 						),
 						array(
-							'key' => 'field_home_hero_portada_rotulo_titulo_lineas',
-							'label' => 'Rótulo editorial del título',
-							'name' => 'home_hero_rotulo_titulo_lineas',
-							'type' => 'repeater',
-							'instructions' => 'Si añades filas, sustituye el título simple por rótulo editorial.',
-							'layout' => 'block',
-							'button_label' => 'Añadir línea de rótulo',
-							'sub_fields' => array(
-								array(
-									'key' => 'field_home_hero_rotulo_linea_titulo',
-									'label' => 'Título',
-									'name' => 'titulo',
-									'type' => 'text',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_supertitulo',
-									'label' => 'Supertítulo',
-									'name' => 'supertitulo',
-									'type' => 'text',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_variante_titulo',
-									'label' => 'Variante título',
-									'name' => 'variante_titulo',
-									'type' => 'button_group',
-									'choices' => array( 'linea' => 'Línea', 'relleno' => 'Relleno', 'linea_inversa' => 'Línea In', 'relleno_inverso' => 'Relleno In' ),
-									'default_value' => 'linea',
-									'layout' => 'horizontal',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_variante_supertitulo',
-									'label' => 'Variante supertítulo',
-									'name' => 'variante_supertitulo',
-									'type' => 'button_group',
-									'choices' => array( 'linea' => 'Línea', 'relleno' => 'Relleno', 'linea_inversa' => 'Línea In', 'relleno_inverso' => 'Relleno In' ),
-									'default_value' => 'linea',
-									'layout' => 'horizontal',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_tamano',
-									'label' => 'Tamaño',
-									'name' => 'tamano',
-									'type' => 'button_group',
-									'choices' => array( 's' => 'S', 'm' => 'M', 'l' => 'L', 'xl' => 'XL' ),
-									'default_value' => 'm',
-									'layout' => 'horizontal',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_color_trazo',
-									'label' => 'Color del trazo',
-									'name' => 'color_trazo',
-									'type' => 'color_picker',
-									'default_value' => '#0f2d30',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_color_fondo',
-									'label' => 'Color de fondo',
-									'name' => 'color_fondo',
-									'type' => 'color_picker',
-									'default_value' => '#fcfcf8',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_color_texto',
-									'label' => 'Color del texto',
-									'name' => 'color_texto',
-									'type' => 'color_picker',
-									'instructions' => 'Opcional. Cambia solo el texto del rótulo.',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_alineacion_rotulo',
-									'label' => 'Alineación del rótulo',
-									'name' => 'alineacion_rotulo',
-									'type' => 'button_group',
-									'choices' => array( 'left' => '←', 'center' => '↔', 'right' => '→' ),
-									'default_value' => 'left',
-									'layout' => 'horizontal',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_subtitulo',
-									'label' => 'Subtítulo',
-									'name' => 'subtitulo',
-									'type' => 'text',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_tamano_subtitulo',
-									'label' => 'Tamaño subtítulo',
-									'name' => 'tamano_subtitulo',
-									'type' => 'button_group',
-									'choices' => array( 's' => 'S', 'm' => 'M', 'l' => 'L' ),
-									'default_value' => 'm',
-									'layout' => 'horizontal',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_color_subtitulo',
-									'label' => 'Color subtítulo',
-									'name' => 'color_subtitulo',
-									'type' => 'color_picker',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_alineacion_subtitulo',
-									'label' => 'Alineación subtítulo',
-									'name' => 'alineacion_subtitulo',
-									'type' => 'button_group',
-									'choices' => array( 'left' => '←', 'center' => '↔', 'right' => '→' ),
-									'default_value' => 'left',
-									'layout' => 'horizontal',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_ancho_subtitulo',
-									'label' => 'Ancho subtítulo',
-									'name' => 'ancho_subtitulo',
-									'type' => 'button_group',
-									'choices' => array( 'igual_rotulo' => '=', 'estrecho' => '▭', 'ancho' => '▯' ),
-									'default_value' => 'igual_rotulo',
-									'layout' => 'horizontal',
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_interlineado_subtitulo',
-									'label' => 'Interlineado subtítulo',
-									'name' => 'interlineado_subtitulo',
-									'type' => 'number',
-									'default_value' => 1.6,
-									'step' => 0.05,
-									'min' => 1,
-									'max' => 2.2,
-								),
-								array(
-									'key' => 'field_home_hero_rotulo_linea_espaciado_letras_subtitulo',
-									'label' => 'Espaciado letras subtítulo',
-									'name' => 'espaciado_letras_subtitulo',
-									'type' => 'number',
-									'default_value' => 0,
-									'step' => 0.005,
-									'min' => -0.05,
-									'max' => 0.2,
-								),
-							),
+							'key' => 'field_fiflp_portada_hero_rotulo_supertitulo',
+							'label' => 'Supertítulo rótulo',
+							'name' => 'rotulo_supertitulo',
+							'type' => 'text',
 						),
 						array(
-							'key' => 'field_home_hero_rotulo_etiqueta_html',
-							'label' => 'Etiqueta HTML del rótulo',
-							'name' => 'home_hero_rotulo_etiqueta_html',
-							'type' => 'select',
-							'choices' => array( 'h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4' ),
-							'default_value' => 'h1',
+							'key' => 'field_fiflp_portada_hero_rotulo_subtitulo',
+							'label' => 'Subtítulo rótulo',
+							'name' => 'rotulo_subtitulo',
+							'type' => 'text',
 						),
 						array(
-							'key' => 'field_home_hero_rotulo_interlineado',
-							'label' => 'Interlineado del rótulo',
-							'name' => 'home_hero_rotulo_interlineado',
-							'type' => 'number',
-							'default_value' => 0.86,
-							'step' => 0.01,
-							'min' => 0.6,
-							'max' => 2,
+							'key' => 'field_fiflp_portada_hero_rotulo_variante_titulo',
+							'label' => 'Variante título',
+							'name' => 'rotulo_variante_titulo',
+							'type' => 'button_group',
+							'choices' => array( 'linea' => 'Línea', 'linea_inversa' => 'Línea inversa', 'relleno' => 'Relleno', 'relleno_inverso' => 'Relleno inverso' ),
+							'default_value' => 'linea',
 						),
 						array(
-							'key' => 'field_home_hero_rotulo_espaciado_letras',
-							'label' => 'Espaciado de letras del rótulo',
-							'name' => 'home_hero_rotulo_espaciado_letras',
-							'type' => 'number',
-							'default_value' => 0.01,
-							'step' => 0.005,
-							'min' => -0.05,
-							'max' => 0.2,
+							'key' => 'field_fiflp_portada_hero_rotulo_variante_super',
+							'label' => 'Variante supertítulo',
+							'name' => 'rotulo_variante_supertitulo',
+							'type' => 'button_group',
+							'choices' => array( 'linea' => 'Línea', 'linea_inversa' => 'Línea inversa', 'relleno' => 'Relleno', 'relleno_inverso' => 'Relleno inverso' ),
+							'default_value' => 'linea',
 						),
 						array(
-							'key' => 'field_home_hero_portada_texto',
-							'label' => 'Texto',
-							'name' => 'home_hero_texto',
+							'key' => 'field_fiflp_portada_hero_rotulo_tamano',
+							'label' => 'Tamaño rótulo',
+							'name' => 'rotulo_tamano',
+							'type' => 'button_group',
+							'choices' => array( 's' => 'S', 'm' => 'M', 'l' => 'L', 'xl' => 'XL' ),
+							'default_value' => 'm',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_rotulo_alineacion',
+							'label' => 'Alineación rótulo',
+							'name' => 'rotulo_alineacion_rotulo',
+							'type' => 'button_group',
+							'choices' => array( 'left' => 'Izquierda', 'center' => 'Centro', 'right' => 'Derecha' ),
+							'default_value' => 'center',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_subtitulo_simple',
+							'label' => 'Subtítulo de portada',
+							'name' => 'subtitulo_portada',
 							'type' => 'textarea',
-							'new_lines' => 'br',
 							'rows' => 3,
+							'new_lines' => 'br',
 						),
 						array(
-							'key' => 'field_home_hero_portada_boton_texto',
-							'label' => 'Texto botón capítulos',
-							'name' => 'home_hero_boton_capitulos_texto',
+							'key' => 'field_fiflp_portada_hero_btn_central_texto',
+							'label' => 'Botón central: texto',
+							'name' => 'boton_central_texto',
 							'type' => 'text',
-							'default_value' => 'IR A LOS CAPÍTULOS',
+							'default_value' => 'IR A FIFLP',
 						),
 						array(
-							'key' => 'field_home_hero_portada_boton_url',
-							'label' => 'Página botón capítulos',
-							'name' => 'home_hero_boton_capitulos_url',
-							'type' => 'page_link',
-							'post_type' => array(
-								0 => 'page',
-							),
-							'taxonomy' => array(),
-							'allow_archives' => 0,
-							'multiple' => 0,
-							'allow_null' => 1,
-						),
-						array(
-							'key' => 'field_home_hero_portada_boton_url_libre',
-							'label' => 'URL libre botón capítulos',
-							'name' => 'home_hero_boton_capitulos_url_libre',
+							'key' => 'field_fiflp_portada_hero_btn_central_url',
+							'label' => 'Botón central: URL',
+							'name' => 'boton_central_url',
 							'type' => 'url',
-							'instructions' => 'Opcional. Si lo rellenas, esta URL tiene prioridad sobre la página seleccionada.',
 						),
 						array(
-							'key' => 'field_home_hero_portada_link_pdf',
-							'label' => 'Enlace PDF',
-							'name' => 'home_hero_link_pdf',
+							'key' => 'field_fiflp_portada_hero_modo_entrada',
+							'label' => 'Modo pantalla de entrada (Landing Gate)',
+							'name' => 'modo_pantalla_entrada',
+							'type' => 'true_false',
+							'ui' => 1,
+							'default_value' => 0,
+							'ui_on_text' => 'Activado',
+							'ui_off_text' => 'Desactivado',
+							'instructions' => 'Si está activado, la portada muestra solo este hero y no renderiza los bloques editoriales debajo.',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_destino_capitulos',
+							'label' => 'Página destino de capítulos',
+							'name' => 'destino_capitulos',
+							'type' => 'post_object',
+							'post_type' => array( 'page' ),
+							'return_format' => 'id',
+							'allow_null' => 1,
+							'ui' => 1,
+							'instructions' => 'Opcional. Si se selecciona, el botón central usará esta página como destino.',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_btn_pdf_texto',
+							'label' => 'Botón PDF: texto',
+							'name' => 'boton_pdf_texto',
+							'type' => 'text',
+							'default_value' => 'Descargar PDF',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_btn_pdf_url',
+							'label' => 'Botón PDF: archivo',
+							'name' => 'boton_pdf_url',
 							'type' => 'file',
 							'return_format' => 'url',
+							'library' => 'all',
+							'mime_types' => 'pdf',
 						),
 						array(
-							'key' => 'field_home_hero_portada_link_epub',
-							'label' => 'Enlace EPUB',
-							'name' => 'home_hero_link_epub',
+							'key' => 'field_fiflp_portada_hero_btn_epub_texto',
+							'label' => 'Botón EPUB: texto',
+							'name' => 'boton_epub_texto',
+							'type' => 'text',
+							'default_value' => 'Descargar EPUB',
+						),
+						array(
+							'key' => 'field_fiflp_portada_hero_btn_epub_url',
+							'label' => 'Botón EPUB: archivo',
+							'name' => 'boton_epub_url',
 							'type' => 'file',
 							'return_format' => 'url',
+							'library' => 'all',
+							'mime_types' => 'epub,zip',
 						),
 						array(
-							'key' => 'field_home_hero_portada_logos',
-							'label' => 'Logos inferiores',
-							'name' => 'home_hero_logos',
+							'key' => 'field_fiflp_portada_hero_retaila_ref',
+							'label' => 'Retaila de logos',
+							'name' => 'retaila_logos_referencia',
+							'type' => 'post_object',
+							'post_type' => array( 'fiflp_retaila_logos' ),
+							'return_format' => 'id',
+							'allow_null' => 1,
+							'ui' => 1,
+						),
+					),
+					'location' => array(
+						array(
+							array(
+								'param' => 'post_type',
+								'operator' => '==',
+								'value' => 'fiflp_portada_hero',
+							),
+						),
+					),
+					'position' => 'normal',
+					'style' => 'default',
+					'label_placement' => 'top',
+					'instruction_placement' => 'label',
+					'active' => true,
+				)
+			);
+
+			acf_add_local_field_group(
+				array(
+					'key' => 'group_fiflp_retaila_logos',
+					'title' => 'Retaila de logos',
+					'fields' => array(
+						array(
+							'key' => 'field_fiflp_retaila_titulo',
+							'label' => 'Título de logos',
+							'name' => 'retaila_titulo',
+							'type' => 'text',
+							'default_value' => 'Instituciones colaboradoras',
+						),
+						array(
+							'key' => 'field_fiflp_retaila_items',
+							'label' => 'Logos',
+							'name' => 'retaila_logos_items',
 							'type' => 'repeater',
 							'layout' => 'table',
 							'button_label' => 'Añadir logo',
 							'sub_fields' => array(
 								array(
-									'key' => 'field_home_hero_portada_logos_imagen',
+									'key' => 'field_fiflp_retaila_item_logo',
 									'label' => 'Logo',
-									'name' => 'imagen',
+									'name' => 'logo',
 									'type' => 'image',
 									'return_format' => 'array',
 									'preview_size' => 'thumbnail',
+								),
+								array(
+									'key' => 'field_fiflp_retaila_item_nombre',
+									'label' => 'Nombre',
+									'name' => 'nombre',
+									'type' => 'text',
+								),
+								array(
+									'key' => 'field_fiflp_retaila_item_enlace',
+									'label' => 'Enlace',
+									'name' => 'enlace',
+									'type' => 'url',
+								),
+								array(
+									'key' => 'field_fiflp_retaila_item_linea',
+									'label' => 'Línea',
+									'name' => 'linea',
+									'type' => 'select',
+									'choices' => array(
+										'' => 'Auto',
+										'primera' => 'Primera línea',
+										'segunda' => 'Segunda línea',
+									),
+									'default_value' => '',
+									'ui' => 1,
 								),
 							),
 						),
@@ -2112,9 +2055,9 @@ add_action(
 					'location' => array(
 						array(
 							array(
-								'param' => 'options_page',
+								'param' => 'post_type',
 								'operator' => '==',
-								'value' => 'fiflp-home-hero',
+								'value' => 'fiflp_retaila_logos',
 							),
 						),
 					),
@@ -2310,16 +2253,8 @@ add_action(
 				);
 			}
 
-			$rotulo_js = get_stylesheet_directory() . '/assets/js/acf-rotulo-editorial-admin.js';
-			if ( 'page' === $screen->post_type && is_readable( $rotulo_js ) ) {
-				wp_enqueue_script(
-					'fiflp-acf-rotulo-editorial-admin',
-					get_stylesheet_directory_uri() . '/assets/js/acf-rotulo-editorial-admin.js',
-					array( 'jquery', 'acf-input' ),
-					(string) filemtime( $rotulo_js ),
-					true
-				);
-			}
+			// JS desactivado temporalmente en admin de página:
+			// priorizamos estabilidad de guardado ACF (evitar "Guardando..." infinito).
 		}
 	},
 	20
@@ -2412,6 +2347,235 @@ add_filter(
 		return $field;
 	},
 	20
+);
+
+/**
+ * Inserta el layout "Portada Hero" en el flexible principal de páginas.
+ */
+	add_filter(
+		'acf/load_field/key=field_bloques',
+		function( $field ) {
+			if ( ! is_array( $field ) ) {
+				return $field;
+			}
+
+			$layouts = isset( $field['layouts'] ) && is_array( $field['layouts'] ) ? $field['layouts'] : array();
+
+			$normalize_portada_hero_subfield = static function( $sub_field ) {
+				if ( ! is_array( $sub_field ) ) {
+					return $sub_field;
+				}
+
+				$sub_name = isset( $sub_field['name'] ) ? (string) $sub_field['name'] : '';
+				if ( '' !== $sub_name && ! isset( $sub_field['_name'] ) ) {
+					$sub_field['_name'] = $sub_name;
+				}
+
+				if ( isset( $sub_field['type'] ) && 'select' === (string) $sub_field['type'] && ! isset( $sub_field['multiple'] ) ) {
+					$sub_field['multiple'] = 0;
+				}
+
+				return $sub_field;
+			};
+
+			if ( isset( $layouts['layout_portada_hero'] ) ) {
+				if ( isset( $layouts['layout_portada_hero']['sub_fields'] ) && is_array( $layouts['layout_portada_hero']['sub_fields'] ) ) {
+					foreach ( $layouts['layout_portada_hero']['sub_fields'] as $idx => $sub_field ) {
+						$layouts['layout_portada_hero']['sub_fields'][ $idx ] = $normalize_portada_hero_subfield( $sub_field );
+					}
+					$field['layouts'] = $layouts;
+				}
+				return $field;
+			}
+
+		$layouts = array_merge(
+			array(
+				'layout_portada_hero' => array(
+					'key' => 'layout_portada_hero',
+					'name' => 'portada_hero',
+					'label' => 'Portada Hero',
+					'display' => 'block',
+					'sub_fields' => array(
+							array(
+								'key' => 'field_portada_hero_referencia',
+								'label' => 'Portada Hero',
+								'name' => 'portada_hero',
+								'_name' => 'portada_hero',
+								'type' => 'select',
+								'choices' => array(),
+								'allow_null' => 1,
+								'ui' => 1,
+								'multiple' => 0,
+								'ajax' => 0,
+								'return_format' => 'value',
+								'instructions' => 'Selecciona la portada hero reutilizable.',
+								'wrapper' => array(
+									'width' => '',
+								'class' => '',
+								'id' => '',
+							),
+						),
+					),
+					'min' => '',
+					'max' => '',
+				),
+			),
+			$layouts
+		);
+
+		$field['layouts'] = $layouts;
+		return $field;
+	},
+	30
+);
+
+/**
+ * Rellena los selectores de Portada Hero sin AJAX (estable en admin).
+ */
+if ( ! function_exists( 'fiflp_populate_portada_hero_select_choices' ) ) {
+	function fiflp_populate_portada_hero_select_choices( $field ) {
+		if ( ! is_array( $field ) ) {
+			return $field;
+		}
+
+		// Forzar selector nativo estable (sin AJAX/select2 remoto).
+		$field['type'] = 'select';
+		$field['ui'] = 1;
+		$field['allow_null'] = 1;
+		$field['ajax'] = 0;
+		$field['return_format'] = 'value';
+
+		$field['choices'] = array();
+
+		global $wpdb;
+		$post_type = 'fiflp_portada_hero';
+		$statuses  = array( 'publish', 'private', 'draft', 'future', 'pending' );
+		$in_sql    = "'" . implode( "','", array_map( 'esc_sql', $statuses ) ) . "'";
+
+		$rows = $wpdb->get_results(
+			"SELECT ID, post_title FROM {$wpdb->posts} WHERE post_type = '" . esc_sql( $post_type ) . "' AND post_status IN ({$in_sql}) ORDER BY post_date DESC, ID DESC",
+			ARRAY_A
+		);
+
+		if ( is_array( $rows ) ) {
+			foreach ( $rows as $row ) {
+				$id    = isset( $row['ID'] ) ? (int) $row['ID'] : 0;
+				$title = isset( $row['post_title'] ) ? trim( (string) $row['post_title'] ) : '';
+				if ( $id <= 0 ) {
+					continue;
+				}
+				if ( '' === $title ) {
+					$title = 'Portada Hero #' . $id;
+				}
+				$field['choices'][ (string) $id ] = $title . ' (ID ' . $id . ')';
+			}
+		}
+
+		return $field;
+	}
+}
+
+add_filter( 'acf/load_field/key=field_fiflp_front_portada_hero_ref', 'fiflp_populate_portada_hero_select_choices', 20 );
+add_filter( 'acf/load_field/key=field_portada_hero_referencia', 'fiflp_populate_portada_hero_select_choices', 20 );
+add_filter( 'acf/load_field/name=portada_hero_referencia', 'fiflp_populate_portada_hero_select_choices', 20 );
+add_filter( 'acf/load_field/name=portada_hero', 'fiflp_populate_portada_hero_select_choices', 20 );
+
+/**
+ * Cinturón y tirantes: rellena opciones justo antes de pintar el campo.
+ * Evita que otro filtro previo deje el select vacío en el admin.
+ */
+if ( ! function_exists( 'fiflp_prepare_portada_hero_select_choices' ) ) {
+	function fiflp_prepare_portada_hero_select_choices( $field ) {
+		if ( ! is_array( $field ) ) {
+			return $field;
+		}
+
+		$field_key  = isset( $field['key'] ) ? (string) $field['key'] : '';
+		$field_name = isset( $field['name'] ) ? (string) $field['name'] : '';
+
+		$matches_key = in_array(
+			$field_key,
+			array( 'field_fiflp_front_portada_hero_ref', 'field_portada_hero_referencia' ),
+			true
+		);
+		$matches_name = in_array( $field_name, array( 'portada_hero_referencia', 'portada_hero' ), true );
+
+		if ( ! $matches_key && ! $matches_name ) {
+			return $field;
+		}
+
+		$field['type']          = 'select';
+		$field['ui']            = 1;
+		$field['allow_null']    = 1;
+		$field['ajax']          = 0;
+		$field['return_format'] = 'value';
+		$field['choices']       = array();
+
+		$items = get_posts(
+			array(
+				'post_type'      => 'fiflp_portada_hero',
+				'post_status'    => array( 'publish', 'private', 'draft', 'future', 'pending' ),
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			)
+		);
+
+		if ( is_array( $items ) ) {
+			foreach ( $items as $item_id ) {
+				$item_id = (int) $item_id;
+				if ( $item_id <= 0 ) {
+					continue;
+				}
+				$title = trim( (string) get_the_title( $item_id ) );
+				if ( '' === $title ) {
+					$title = 'Portada Hero #' . $item_id;
+				}
+				$field['choices'][ (string) $item_id ] = $title . ' (ID ' . $item_id . ')';
+			}
+		}
+
+		return $field;
+	}
+}
+add_filter( 'acf/prepare_field', 'fiflp_prepare_portada_hero_select_choices', 20 );
+
+/**
+ * Evita bloqueos de guardado cuando existe un layout "Cuadro editorial"
+ * añadido pero aún sin seleccionar el CPT.
+ *
+ * Nota: no altera el render frontend; solo evita validación bloqueante en admin.
+ */
+add_filter(
+	'acf/load_field/key=field_bloque_cuadro_editorial_cuadro',
+	function ( $field ) {
+		if ( ! is_array( $field ) ) {
+			return $field;
+		}
+
+		$field['required']   = 0;
+		$field['allow_null'] = 1;
+
+		return $field;
+	},
+	30
+);
+
+add_filter(
+	'acf/load_field/key=field_onepage_mod_cuadro_editorial_cuadro',
+	function ( $field ) {
+		if ( ! is_array( $field ) ) {
+			return $field;
+		}
+
+		$field['required']   = 0;
+		$field['allow_null'] = 1;
+
+		return $field;
+	},
+	30
 );
 
 add_action(

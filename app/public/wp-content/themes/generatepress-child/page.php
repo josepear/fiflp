@@ -28,29 +28,27 @@ $current_children     = get_pages(
 	)
 );
 $selected_prologo_item = null;
-$home_hero_data         = is_front_page() ? fiflp_get_home_hero_data( $current_page_id ) : array();
-$home_hero_has_content  = ! empty( $home_hero_data['imagen'] )
-	|| ! empty( $home_hero_data['video'] )
-	|| ! empty( $home_hero_data['color_fondo'] )
-	|| ! empty( $home_hero_data['logo_principal'] )
-	|| ! empty( $home_hero_data['titulo'] )
-	|| ! empty( $home_hero_data['texto'] )
-	|| ! empty( $home_hero_data['boton_capitulos_texto'] )
-	|| ! empty( $home_hero_data['boton_capitulos_url'] )
-	|| ! empty( $home_hero_data['link_pdf'] )
-	|| ! empty( $home_hero_data['link_epub'] )
-	|| ! empty( $home_hero_data['logos'] );
+$portada_hero_ref_id = ( is_front_page() && function_exists( 'get_field' ) ) ? (int) get_field( 'portada_hero_referencia', $current_page_id ) : 0;
+$portada_hero_es_entrada = false;
+
+if ( $portada_hero_ref_id > 0 && function_exists( 'get_field' ) ) {
+	$portada_hero_es_entrada = (bool) get_field( 'modo_pantalla_entrada', $portada_hero_ref_id );
+}
 
 if ( ! empty( $prologo_items ) ) {
 	$selected_prologo_item = $prologo_items[ min( $selected_prologo, count( $prologo_items ) - 1 ) ];
 }
 
-if ( is_front_page() && $home_hero_has_content ) {
-	get_template_part( 'template-parts/bloques/home-hero', null, array( 'hero_data' => $home_hero_data ) );
-	get_footer();
-	return;
-}
 ?>
+
+<?php if ( $portada_hero_ref_id > 0 ) : ?>
+	<?php get_template_part( 'template-parts/bloques/portada-hero', null, array( 'portada_hero_id' => $portada_hero_ref_id ) ); ?>
+<?php endif; ?>
+
+<?php if ( $portada_hero_es_entrada ) : ?>
+	<?php get_footer(); ?>
+	<?php return; ?>
+<?php endif; ?>
 
 <div class="layout-editorial<?php echo $has_onepage_nav ? ' layout-editorial--onepage' : ''; ?>"<?php echo $has_onepage_nav ? ' data-onepage-layout="1"' : ''; ?>>
 	<?php if ( $has_onepage_nav ) : ?>
@@ -74,10 +72,6 @@ if ( is_front_page() && $home_hero_has_content ) {
 					<?php while ( have_rows( 'bloques' ) ) : the_row(); ?>
 						<?php
 						$layout = (string) get_row_layout();
-
-						if ( 'home_hero' === $layout && ! is_front_page() ) {
-							continue;
-						}
 
 						if ( 'prologos' === $layout || 'prologo' === $layout ) {
 							$has_prologos_layout = true;

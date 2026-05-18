@@ -46,9 +46,8 @@ $interlineado_subtitulo_raw = $get_field( 'interlineado_subtitulo', null );
 $espaciado_letras_subtitulo_raw = $get_field( 'espaciado_letras_subtitulo', null );
 $variante_supertitulo = trim( (string) $get_field( 'variante_supertitulo', '' ) );
 $variante_titulo      = trim( (string) $get_field( 'variante_titulo', '' ) );
-$ancho_subtitulo = trim( (string) $get_field( 'ancho_subtitulo', '' ) );
-$alineacion_subtitulo = trim( (string) $get_field( 'alineacion_subtitulo', '' ) );
-$variante    = trim( (string) $get_field( 'variante', '' ) );
+$ancho_subtitulo = strtolower( trim( (string) $get_field( 'ancho_subtitulo', '' ) ) );
+$alineacion_subtitulo = strtolower( trim( (string) $get_field( 'alineacion_subtitulo', '' ) ) );
 $etiqueta    = trim( (string) $get_field( 'etiqueta_html', '' ) );
 $tamano      = trim( (string) $get_field( 'tamano', '' ) );
 $alineacion_rotulo = strtolower( trim( (string) $get_field( 'alineacion_rotulo', '' ) ) );
@@ -59,9 +58,8 @@ $interlineado_raw     = $get_field( 'interlineado', null );
 $espaciado_letras_raw = $get_field( 'espaciado_letras', null );
 $titulo_lineas_raw = $get_field( 'titulo_lineas', null );
 
-// Compatibilidad entre los 3 rótulos editoriales:
+// Compatibilidad entre contextos de rótulo editorial:
 // - Normal/onepage: `titulo_lineas`
-// - Home hero legado: `rotulo_titulo_lineas`
 if ( ! is_array( $titulo_lineas_raw ) || empty( $titulo_lineas_raw ) ) {
 	$titulo_lineas_raw = $get_field( 'rotulo_titulo_lineas', array() );
 }
@@ -131,16 +129,20 @@ $mapa_variante_linea = array(
 	'relleno_in' => 'relleno_inverso',
 );
 
-if ( ! in_array( $variante, $variantes_validas, true ) ) {
-	$variante = 'linea';
-}
-
 if ( ! in_array( $variante_supertitulo, $variantes_validas, true ) ) {
-	$variante_supertitulo = $variante;
+	$variante_supertitulo = 'linea';
 }
 
 if ( ! in_array( $variante_titulo, $variantes_validas, true ) ) {
-	$variante_titulo = $variante;
+	$variante_titulo = 'linea';
+}
+
+if ( in_array( $alineacion_subtitulo, array( 'izquierda', 'izq' ), true ) ) {
+	$alineacion_subtitulo = 'left';
+} elseif ( in_array( $alineacion_subtitulo, array( 'centro', 'centrado' ), true ) ) {
+	$alineacion_subtitulo = 'center';
+} elseif ( in_array( $alineacion_subtitulo, array( 'derecha', 'der' ), true ) ) {
+	$alineacion_subtitulo = 'right';
 }
 
 if ( ! in_array( $etiqueta, $etiquetas_validas, true ) ) {
@@ -150,6 +152,7 @@ if ( ! in_array( $etiqueta, $etiquetas_validas, true ) ) {
 if ( ! in_array( $tamano, $tamanos_validos, true ) ) {
 	$tamano = 'm';
 }
+
 
 if ( ! in_array( $ancho_subtitulo, $anchos_subtitulo_validos, true ) ) {
 	$ancho_subtitulo = 'igual_rotulo';
@@ -333,7 +336,28 @@ if ( is_array( $titulo_lineas_raw ) ) {
 	}
 }
 
-$usar_modelo_lineas = ! empty( $titulo_lineas );
+// Legacy (solo `texto` + tipografía): promover al modelo Página (titulo + variantes).
+if ( ! empty( $titulo_lineas ) && empty( $bloques_rotulo ) ) {
+	$first_linea_legacy = reset( $titulo_lineas );
+
+	if ( is_array( $first_linea_legacy ) && '' !== trim( (string) ( $first_linea_legacy['texto'] ?? '' ) ) ) {
+		if ( '' === $titulo ) {
+			$titulo = trim( (string) $first_linea_legacy['texto'] );
+		}
+
+		if ( 'linea' === $variante_titulo && ! empty( $first_linea_legacy['variante'] ) ) {
+			$variante_linea_legacy = trim( (string) $first_linea_legacy['variante'] );
+
+			if ( isset( $mapa_variante_linea[ $variante_linea_legacy ] ) ) {
+				$variante_titulo = $mapa_variante_linea[ $variante_linea_legacy ];
+			}
+		}
+	}
+
+	$titulo_lineas = array();
+}
+
+$usar_modelo_lineas = false;
 $usar_bloques_rotulo = ! empty( $bloques_rotulo );
 
 if ( ! $usar_modelo_lineas && ! $usar_bloques_rotulo && '' === $titulo && '' === $supertitulo && '' === $subtitulo ) {
@@ -447,36 +471,6 @@ $render_rotulo_full = static function ( $config ) {
 						'etiqueta' => $etiqueta,
 						'geometry' => $row_geometry,
 					) ); ?>
-				</div>
-			<?php endforeach; ?>
-		</div>
-	<?php elseif ( $usar_modelo_lineas ) : ?>
-		<div class="rotulo-editorial-lineas" style="<?php echo esc_attr( implode( '; ', $style_rules ) ); ?>">
-			<?php foreach ( $titulo_lineas as $linea ) : ?>
-				<?php
-				$variante_render = $mapa_variante_linea[ $linea['variante'] ];
-				$linea_es_inverso = in_array( $variante_render, array( 'linea_inversa', 'relleno_inverso' ), true );
-				$linea_es_relleno = in_array( $variante_render, array( 'relleno', 'relleno_inverso' ), true );
-				$linea_viewbox_principal = $linea_es_inverso ? '-6 0 106 100' : '0 0 106 100';
-				$linea_puntos_principal  = $linea_es_inverso ? '-6,2 93,2 99,98 0,98' : '7,2 106,2 100,98 1,98';
-				$linea_clase_marco       = $linea_es_relleno ? 'rotulo-editorial__marco-shape rotulo-editorial__marco-shape--relleno' : 'rotulo-editorial__marco-shape';
-				$linea_clases            = array(
-					'rotulo-editorial',
-					'rotulo-editorial--context-page',
-					'rotulo-editorial--' . $variante_render,
-					'rotulo-editorial--tamano-' . $tamano,
-					'rotulo-editorial--line-tipografia-' . $linea['tipografia'],
-				);
-				?>
-				<div class="<?php echo esc_attr( implode( ' ', $linea_clases ) ); ?>">
-					<div class="rotulo-editorial__cabecera">
-						<div class="rotulo-editorial__franja rotulo-editorial__franja--principal">
-							<svg class="rotulo-editorial__marco" viewBox="<?php echo esc_attr( $linea_viewbox_principal ); ?>" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-								<polygon class="<?php echo esc_attr( $linea_clase_marco ); ?>" points="<?php echo esc_attr( $linea_puntos_principal ); ?>"></polygon>
-							</svg>
-							<p class="rotulo-editorial__texto rotulo-editorial__texto--principal"><?php echo esc_html( $linea['texto'] ); ?></p>
-						</div>
-					</div>
 				</div>
 			<?php endforeach; ?>
 		</div>

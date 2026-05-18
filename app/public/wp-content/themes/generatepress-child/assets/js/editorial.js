@@ -64,6 +64,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    const getRotuloMaxTrackWidth = function (bloque, rotulo) {
+        return Math.max(
+            0,
+            (bloque ? bloque.clientWidth : 0) ||
+            (rotulo && rotulo.parentElement ? rotulo.parentElement.clientWidth : 0) ||
+            Math.floor(window.innerWidth * 0.92)
+        );
+    };
+
     const fitRotuloText = () => {
         document.querySelectorAll('.rotulo-editorial__texto').forEach(function (text) {
             const franja = text.closest('.rotulo-editorial__franja');
@@ -79,12 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const paddingRight = parseFloat(computedFranja.paddingRight) || 0;
             const slantFactor = franja.classList.contains('rotulo-editorial__franja--superior') ? 1.22 : 1.08;
             const slantAllowance = Math.ceil(franja.offsetHeight * slantFactor);
-            const maxTrackWidth = Math.max(
-                0,
-                (bloque ? bloque.clientWidth : 0) ||
-                (rotulo ? rotulo.parentElement.clientWidth : 0) ||
-                Math.floor(window.innerWidth * 0.92)
-            );
+            const maxTrackWidth = getRotuloMaxTrackWidth(bloque, rotulo);
 
             if (!maxTrackWidth) {
                 return;
@@ -108,12 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const cabecera = rotulo.querySelector('.rotulo-editorial__cabecera');
             const subtitulo = rotulo.querySelector('.rotulo-editorial__subtitulo');
             const bloque = rotulo.closest('.rotulo-editorial-bloque');
-            const maxTrackWidth = Math.max(
-                0,
-                (bloque ? bloque.clientWidth : 0) ||
-                (rotulo.parentElement ? rotulo.parentElement.clientWidth : 0) ||
-                Math.floor(window.innerWidth * 0.92)
-            );
+            const maxTrackWidth = getRotuloMaxTrackWidth(bloque, rotulo);
 
             if (cabecera && maxTrackWidth > 0) {
                 cabecera.style.transform = '';
@@ -447,38 +446,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 closeMenu();
             }
         });
-    }
-
-    const homeHero = document.querySelector('[data-editorial-hero]');
-    const homeHeroContent = document.querySelector('[data-editorial-hero-content]');
-
-    if (homeHero) {
-        const activateHero = () => {
-            homeHero.classList.add('is-ready');
-
-            window.setTimeout(() => {
-                homeHero.classList.add('is-content-ready');
-            }, 900);
-        };
-
-        if (document.readyState === 'complete') {
-            requestAnimationFrame(activateHero);
-        } else {
-            window.addEventListener('load', activateHero, { once: true });
-            requestAnimationFrame(activateHero);
-        }
-
-        if (homeHeroContent && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-            window.addEventListener('mousemove', function (event) {
-                const x = (event.clientX / window.innerWidth) - 0.5;
-                const y = (event.clientY / window.innerHeight) - 0.5;
-
-                homeHero.style.setProperty('--hero-pan-x', `${x * 18}px`);
-                homeHero.style.setProperty('--hero-pan-y', `${y * 12}px`);
-                homeHeroContent.style.setProperty('--hero-content-x', `${x * -10}px`);
-                homeHeroContent.style.setProperty('--hero-content-y', `${y * -8}px`);
-            }, { passive: true });
-        }
     }
 
     const initOnepageLayoutNav = () => {
