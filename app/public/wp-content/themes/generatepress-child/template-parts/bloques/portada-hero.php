@@ -191,10 +191,28 @@ if ( $subtitulo_color ) {
 			<?php endif; ?>
 			<div class="portada-hero__acciones-sec">
 				<?php if ( '' !== $boton_pdf_texto && '' !== $boton_pdf_url ) : ?>
-					<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_pdf_url ); ?>"><span><?php echo esc_html( $boton_pdf_texto ); ?></span></a>
+					<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_pdf_url ); ?>">
+						<span class="portada-hero__boton-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="M6 2h8l4 4v16H6z"></path>
+								<path d="M14 2v5h5"></path>
+								<path d="M8 16h8M8 19h8"></path>
+							</svg>
+						</span>
+						<span><?php echo esc_html( $boton_pdf_texto ); ?></span>
+					</a>
 				<?php endif; ?>
 				<?php if ( '' !== $boton_epub_texto && '' !== $boton_epub_url ) : ?>
-					<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_epub_url ); ?>"><span><?php echo esc_html( $boton_epub_texto ); ?></span></a>
+					<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_epub_url ); ?>">
+						<span class="portada-hero__boton-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="M6 3h12v18H6z"></path>
+								<path d="M9 3v18"></path>
+								<path d="M11 8h5M11 12h5M11 16h5"></path>
+							</svg>
+						</span>
+						<span><?php echo esc_html( $boton_epub_texto ); ?></span>
+					</a>
 				<?php endif; ?>
 			</div>
 		</div>

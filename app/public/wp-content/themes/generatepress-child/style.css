@@ -3682,6 +3682,7 @@ body.fiflp-editorial-nav-open {
     --rotulo-page-overlap-fill: 4px;
     --rotulo-page-overlap-fill-inverso: 5px;
     --rotulo-super-titulo-gap: 2px;
+    --rotulo-edge-trim: 6px;
     --rotulo-font-size: clamp(2.15rem, 4.2vw, 4.65rem);
     --rotulo-line-height: 0.86;
     --rotulo-letter-spacing: 0.01em;
@@ -3808,7 +3809,7 @@ body.fiflp-editorial-nav-open {
 
 .rotulo-editorial__franja--superior {
     margin-left: 10px;
-    padding: var(--rotulo-superior-pad-y) var(--rotulo-superior-pad-x) calc(var(--rotulo-superior-pad-y) - 1px);
+    padding: var(--rotulo-superior-pad-y) max(6px, calc(var(--rotulo-superior-pad-x) - var(--rotulo-edge-trim))) calc(var(--rotulo-superior-pad-y) - 1px);
     margin-bottom: 0;
     z-index: 1;
 }
@@ -3820,7 +3821,7 @@ body.fiflp-editorial-nav-open {
 
 .rotulo-editorial__franja--principal {
     margin-left: 28px;
-    padding: var(--rotulo-principal-pad-y) var(--rotulo-principal-pad-x) calc(var(--rotulo-principal-pad-y) - 1px) var(--rotulo-principal-pad-x);
+    padding: var(--rotulo-principal-pad-y) max(6px, calc(var(--rotulo-principal-pad-x) - var(--rotulo-edge-trim))) calc(var(--rotulo-principal-pad-y) - 1px) max(6px, calc(var(--rotulo-principal-pad-x) - var(--rotulo-edge-trim)));
     min-width: min(100%, var(--rotulo-principal-min-width));
     z-index: 2;
 }
@@ -4027,6 +4028,27 @@ body.fiflp-editorial-nav-open {
     display: inline-flex;
     width: 100%;
     max-width: 100%;
+    /* Ajuste global efectivo: reduce margen interno texto-borde en Página + Portada Hero. */
+    --rotulo-edge-trim: 14px;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--superior,
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--principal {
+    width: fit-content !important;
+    padding-top: 12px !important;
+    padding-right: 42px !important;
+    padding-bottom: 11px !important;
+    padding-left: 46px !important;
+    visibility: visible !important;
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__texto--superior,
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__texto--principal {
+    transform: translateY(0.5px);
+}
+
+.rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__subtitulo {
+    margin-top: -5px !important;
 }
 
 .rotulo-editorial-bloque--page > .rotulo-editorial,
@@ -4218,7 +4240,11 @@ p.rotulo-editorial__subtitulo {
     }
 
     .rotulo-editorial__franja {
-        padding: 9px 13px 8px;
+        padding: 9px 10px 8px;
+    }
+
+    .rotulo-editorial-bloque--page .rotulo-editorial--context-page {
+        --rotulo-edge-trim: 10px;
     }
 
     .rotulo-editorial__marco-shape {
@@ -6313,6 +6339,7 @@ body.fiflp-landing-gate .portada-hero__content {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 40px;
 }
 
 .portada-hero__logo img,
@@ -6338,6 +6365,7 @@ body.fiflp-landing-gate .portada-hero__content {
 
 .portada-hero__subtitulo {
     margin: 4px 0 0;
+    padding-top: 24px;
     width: min(920px, 100%);
     font-family: var(--fiflp-font-body);
     font-size: clamp(1.02rem, 1.9vw, 1.24rem);
@@ -6375,6 +6403,7 @@ body.fiflp-landing-gate .portada-hero__content {
 
 .portada-hero__acciones {
     margin-top: 8px;
+    padding-top: 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6405,6 +6434,24 @@ body.fiflp-landing-gate .portada-hero__content {
     display: block;
 }
 
+.portada-hero__boton-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.35rem;
+}
+
+.portada-hero__boton-icon svg {
+    width: 1.84em;
+    height: 1.84em;
+    display: block;
+    stroke: #fde25f;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 .portada-hero__boton--central {
     padding: 0.66rem 1.24rem;
     font-size: 0.95rem;
@@ -6413,8 +6460,8 @@ body.fiflp-landing-gate .portada-hero__content {
 }
 
 .portada-hero__boton--sec {
-    padding: 0.52rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.39rem 0.75rem;
+    font-size: 0.675rem;
     font-weight: 600;
 }
 
