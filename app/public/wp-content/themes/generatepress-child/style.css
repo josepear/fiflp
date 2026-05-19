@@ -6240,6 +6240,9 @@ a.lightbox-trigger img {
     margin: 0;
     overflow: hidden;
     background: var(--portada-hero-color-desktop, #0f2d30);
+    --ph-retaila-bottom-desktop: 80px;
+    --ph-retaila-bottom-tablet: 44px;
+    --ph-retaila-bottom-mobile: 24px;
 }
 
 /* Portada: el hero debe salir como cabecera completa, no como bloque encajado. */
@@ -6322,7 +6325,7 @@ body.fiflp-landing-gate .portada-hero__content {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(180deg, rgba(4, 17, 18, 0.25) 0%, rgba(4, 17, 18, 0.6) 100%);
+    background: #000;
     opacity: var(--ph-overlay-opacity-desktop, 0.6);
 }
 
@@ -6336,7 +6339,7 @@ body.fiflp-landing-gate .portada-hero__content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 20px;
     text-align: center;
     color: #fff;
@@ -6482,13 +6485,40 @@ body.fiflp-landing-gate .portada-hero__content {
 }
 
 .portada-hero .portada-hero-retaila {
-    margin-top: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--ph-retaila-bottom-desktop);
+    transform: none;
     width: 100%;
-    padding-top: 16px;
+    margin: 0;
+    padding-top: 0;
+    z-index: 3;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.portada-hero .portada-hero-retaila .footer-editorial__partners {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
 }
 
 .portada-hero .footer-editorial__partners-title {
     color: rgba(255, 255, 255, 0.84);
+}
+
+.portada-hero .footer-editorial__partners {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 0 !important;
+    max-width: none !important;
+    transition: none !important;
+    animation: none !important;
 }
 
 .portada-hero .footer-editorial__partner img {
@@ -6502,31 +6532,48 @@ body.fiflp-landing-gate .portada-hero__content {
 }
 
 .portada-hero .footer-editorial__partners-grid {
-    --footer-logo-slot-h: clamp(32px, 4vh, 50px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: clamp(8px, 1.2vh, 14px);
+    --footer-logo-slot-h: clamp(38px, 5.2vh, 64px);
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    justify-items: center !important;
+    row-gap: clamp(12px, 1.9vh, 24px) !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    left: auto !important;
+    transition: none !important;
+    animation: none !important;
 }
 
 .portada-hero .footer-editorial__partners-row {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    gap: clamp(12px, 1.8vw, 24px);
-    width: 100%;
-    max-width: min(980px, 100%);
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: clamp(16px, 2.4vw, 34px) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    left: auto !important;
+    transition: none !important;
+    animation: none !important;
 }
 
 .portada-hero .footer-editorial__partner {
-    width: auto;
+    width: clamp(70px, 13.5vw, 168px);
+    max-width: 100%;
     min-width: 0;
     height: var(--footer-logo-slot-h);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 1 auto;
+    flex: 0 0 auto !important;
+    transition: none !important;
+    animation: none !important;
 }
 
 .portada-hero .footer-editorial__partner > a {
@@ -6539,10 +6586,10 @@ body.fiflp-landing-gate .portada-hero__content {
 
 .portada-hero .footer-editorial__partner img,
 .portada-hero .footer-editorial__partner-logo {
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     max-height: 100%;
-    max-width: clamp(96px, 14vw, 190px);
+    max-width: 100%;
     object-fit: contain;
 }
 
@@ -6715,6 +6762,12 @@ body.fiflp-landing-gate .portada-hero__content {
         padding-top: var(--ph-tablet-content-pt, clamp(64px, 10vh, 108px));
         padding-left: var(--ph-tablet-content-px, 28px);
         padding-right: var(--ph-tablet-content-px, 28px);
+        justify-content: center;
+    }
+
+    .portada-hero .portada-hero-retaila {
+        bottom: var(--ph-retaila-bottom-tablet);
+        width: 100%;
     }
 
     .portada-hero__logo {
@@ -6748,7 +6801,7 @@ body.fiflp-landing-gate .portada-hero__content {
     }
 
     .portada-hero .footer-editorial__partners-row {
-        gap: clamp(12px, 2.2vw, 22px);
+        gap: clamp(12px, 2.2vw, 22px) !important;
     }
 
 }
@@ -6816,6 +6869,12 @@ body.fiflp-landing-gate .portada-hero__content {
         padding-top: var(--ph-mobile-content-pt, var(--ph-tablet-content-pt, 72px));
         padding-left: var(--ph-mobile-content-px, var(--ph-tablet-content-px, 20px));
         padding-right: var(--ph-mobile-content-px, var(--ph-tablet-content-px, 20px));
+        justify-content: center;
+    }
+
+    .portada-hero .portada-hero-retaila {
+        bottom: var(--ph-retaila-bottom-mobile);
+        width: 100%;
     }
 
     .portada-hero .footer-editorial__partners-grid {
@@ -6824,8 +6883,8 @@ body.fiflp-landing-gate .portada-hero__content {
     }
 
     .portada-hero .footer-editorial__partners-row {
-        gap: clamp(10px, 3.4vw, 16px);
-        max-width: 100%;
+        gap: clamp(10px, 3.4vw, 16px) !important;
+        max-width: 100% !important;
     }
 }
 
@@ -6837,6 +6896,7 @@ body.fiflp-landing-gate .portada-hero__content {
     .portada-hero__content {
         height: 100svh;
         min-height: 100svh;
+        justify-content: center;
         padding-top: clamp(18px, 3.2vh, var(--ph-desktop-content-pt, 96px));
         padding-bottom: clamp(8px, 1.5vh, 22px);
         gap: clamp(6px, 1.15vh, 14px);
@@ -6857,7 +6917,8 @@ body.fiflp-landing-gate .portada-hero__content {
     }
 
     .portada-hero .portada-hero-retaila {
-        padding-top: clamp(0px, 0.4vh, 6px);
+        bottom: var(--ph-retaila-bottom-desktop);
+        padding-top: 0;
     }
 
     .portada-hero .footer-editorial__partners-title {
