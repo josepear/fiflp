@@ -2857,10 +2857,10 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 }
 
 @media (max-width: 768px) {
-    /* Móvil onepage: ocultar rótulos editoriales en módulos onepage y mantener pie de foto */
-    body.fiflp-onepage .rotulo-editorial,
-    body.fiflp-onepage .bloque.rotulo-editorial-bloque,
-    body.fiflp-onepage .seccion-onepage__modulo--rotulo-editorial {
+    /* Móvil onepage: ocultar SOLO rótulos dentro del módulo onepage específico */
+    body.fiflp-onepage .seccion-onepage__modulo--rotulo-editorial,
+    body.fiflp-onepage .seccion-onepage__modulo--rotulo-editorial .rotulo-editorial,
+    body.fiflp-onepage .seccion-onepage__modulo--rotulo-editorial .bloque.rotulo-editorial-bloque {
         display: none !important;
     }
 
@@ -4230,6 +4230,19 @@ p.rotulo-editorial__subtitulo {
     .rotulo-editorial {}
 }
 
+@media (max-width: 1024px) {
+    /* Página (context-page): mismo margen texto↔borde SVG en tablet */
+    .rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--superior,
+    .rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--principal {
+        width: fit-content !important;
+        padding-top: 12px !important;
+        padding-right: 42px !important;
+        padding-bottom: 11px !important;
+        padding-left: 46px !important;
+        visibility: visible !important;
+    }
+}
+
 @media (max-width: 640px) {
 
     .rotulo-editorial {
@@ -4256,6 +4269,17 @@ p.rotulo-editorial__subtitulo {
     .rotulo-editorial__subtitulo {
         margin-top: 16px;
         font-size: 1rem;
+    }
+
+    /* Página (context-page): mantener márgenes internos texto↔SVG en móvil */
+    .rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--superior,
+    .rotulo-editorial-bloque--page .rotulo-editorial--context-page .rotulo-editorial__franja--principal {
+        width: fit-content !important;
+        padding-top: 12px !important;
+        padding-right: 42px !important;
+        padding-bottom: 11px !important;
+        padding-left: 46px !important;
+        visibility: visible !important;
     }
 
     .rotulo-editorial-demo__header {

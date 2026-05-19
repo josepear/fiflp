@@ -226,6 +226,13 @@ document.addEventListener("DOMContentLoaded", function () {
             rotulo.style.setProperty('--ph-rotulo-from-y', fromY.toFixed(2) + 'px');
         }
 
+        // Móvil: sin intro cinemática para evitar pérdidas de render del rótulo/línea.
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            hero.classList.add('is-ready');
+            scheduleRotuloFit();
+            return;
+        }
+
         if (reduceMotion) {
             hero.classList.add('is-ready');
             return;
