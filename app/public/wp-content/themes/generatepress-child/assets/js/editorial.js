@@ -74,12 +74,23 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const fitRotuloText = () => {
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
         document.querySelectorAll('.rotulo-editorial__texto').forEach(function (text) {
             const franja = text.closest('.rotulo-editorial__franja');
             const rotulo = text.closest('.rotulo-editorial');
             const bloque = text.closest('.rotulo-editorial-bloque');
+            const isContextPage = !!(rotulo && rotulo.classList.contains('rotulo-editorial--context-page'));
 
             if (!franja) {
+                return;
+            }
+
+            // Unificación Página + Portada Hero:
+            // en móvil, el rótulo context-page no se autoajusta por JS; manda CSS.
+            if (isMobile && isContextPage) {
+                text.style.fontSize = '';
+                franja.style.width = '';
                 return;
             }
 
@@ -113,6 +124,18 @@ document.addEventListener("DOMContentLoaded", function () {
             const subtitulo = rotulo.querySelector('.rotulo-editorial__subtitulo');
             const bloque = rotulo.closest('.rotulo-editorial-bloque');
             const maxTrackWidth = getRotuloMaxTrackWidth(bloque, rotulo);
+            const isContextPage = rotulo.classList.contains('rotulo-editorial--context-page');
+
+            if (isMobile && isContextPage) {
+                if (cabecera) {
+                    cabecera.style.transform = '';
+                }
+                if (subtitulo) {
+                    subtitulo.style.width = '';
+                    subtitulo.style.maxWidth = '';
+                }
+                return;
+            }
 
             if (cabecera && maxTrackWidth > 0) {
                 cabecera.style.transform = '';
@@ -165,6 +188,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         hero.dataset.introDone = '1';
+
+        // En móvil desactivamos por completo la intro cinemática:
+        // los elementos se muestran directamente en su posición final.
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            hero.classList.add('is-ready');
+            return;
+        }
+
         hero.classList.add('portada-hero--cinematic');
 
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

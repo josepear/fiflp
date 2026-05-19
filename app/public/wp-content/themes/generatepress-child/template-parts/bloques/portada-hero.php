@@ -21,6 +21,30 @@ $get = static function ( $field ) use ( $portada_hero_id ) {
 	return function_exists( 'get_field' ) ? get_field( $field, $portada_hero_id ) : null;
 };
 
+$pick_first_filled = static function ( ...$values ) {
+	foreach ( $values as $value ) {
+		if ( is_string( $value ) ) {
+			if ( '' !== trim( $value ) ) {
+				return $value;
+			}
+			continue;
+		}
+
+		if ( is_array( $value ) ) {
+			if ( ! empty( $value ) ) {
+				return $value;
+			}
+			continue;
+		}
+
+		if ( null !== $value && false !== $value && '' !== $value ) {
+			return $value;
+		}
+	}
+
+	return null;
+};
+
 $desktop_tipo  = strtolower( trim( (string) $get( 'desktop_tipo_fondo' ) ) );
 $tablet_tipo   = strtolower( trim( (string) $get( 'tablet_tipo_fondo' ) ) );
 $mobile_tipo   = strtolower( trim( (string) $get( 'mobile_tipo_fondo' ) ) );
@@ -83,16 +107,26 @@ $logo_url       = isset( $logo_data['url'] ) ? (string) $logo_data['url'] : '';
 $logo_alt       = isset( $logo_data['alt'] ) ? (string) $logo_data['alt'] : get_the_title( $portada_hero_id );
 $logo_svg       = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $logo_principal, array( 'class' => 'portada-hero__logo-svg', 'alt' => $logo_alt ) ) : '';
 
-$rotulo_titulo              = trim( (string) $get( 'rotulo_titulo' ) );
-$rotulo_supertitulo         = trim( (string) $get( 'rotulo_supertitulo' ) );
-$rotulo_subtitulo           = trim( (string) $get( 'rotulo_subtitulo' ) );
-$rotulo_variante_titulo     = trim( (string) $get( 'rotulo_variante_titulo' ) );
-$rotulo_variante_supertitle = trim( (string) $get( 'rotulo_variante_supertitulo' ) );
-$rotulo_tamano              = trim( (string) $get( 'rotulo_tamano' ) );
-$rotulo_align               = trim( (string) $get( 'rotulo_alineacion_rotulo' ) );
-$rotulo_color_trazo         = sanitize_hex_color( (string) $get( 'rotulo_color_trazo' ) );
-$rotulo_color_fondo         = sanitize_hex_color( (string) $get( 'rotulo_color_fondo' ) );
-$rotulo_color_texto         = sanitize_hex_color( (string) $get( 'rotulo_color_texto' ) );
+$rotulo_titulo              = trim( (string) $pick_first_filled( $get( 'rotulo_titulo' ), $get( 'titulo' ) ) );
+$rotulo_supertitulo         = trim( (string) $pick_first_filled( $get( 'rotulo_supertitulo' ), $get( 'supertitulo' ) ) );
+$rotulo_subtitulo           = trim( (string) $pick_first_filled( $get( 'rotulo_subtitulo' ), $get( 'subtitulo' ) ) );
+$rotulo_variante_titulo     = trim( (string) $pick_first_filled( $get( 'rotulo_variante_titulo' ), $get( 'variante_titulo' ) ) );
+$rotulo_variante_supertitle = trim( (string) $pick_first_filled( $get( 'rotulo_variante_supertitulo' ), $get( 'variante_supertitulo' ) ) );
+$rotulo_tamano              = trim( (string) $pick_first_filled( $get( 'rotulo_tamano' ), $get( 'tamano' ) ) );
+$rotulo_align               = trim( (string) $pick_first_filled( $get( 'rotulo_alineacion_rotulo' ), $get( 'alineacion_rotulo' ) ) );
+$rotulo_ancho_subtitulo      = trim( (string) $pick_first_filled( $get( 'rotulo_ancho_subtitulo' ), $get( 'ancho_subtitulo' ) ) );
+$rotulo_alineacion_subtitulo = trim( (string) $pick_first_filled( $get( 'rotulo_alineacion_subtitulo' ), $get( 'alineacion_subtitulo' ) ) );
+$rotulo_tamano_subtitulo     = trim( (string) $pick_first_filled( $get( 'rotulo_tamano_subtitulo' ), $get( 'tamano_subtitulo' ) ) );
+$rotulo_etiqueta_html        = trim( (string) $pick_first_filled( $get( 'rotulo_etiqueta_html' ), $get( 'etiqueta_html' ) ) );
+$rotulo_interlineado         = $pick_first_filled( $get( 'rotulo_interlineado' ), $get( 'interlineado' ) );
+$rotulo_espaciado_letras     = $pick_first_filled( $get( 'rotulo_espaciado_letras' ), $get( 'espaciado_letras' ) );
+$rotulo_interlineado_subtitulo = $pick_first_filled( $get( 'rotulo_interlineado_subtitulo' ), $get( 'interlineado_subtitulo' ) );
+$rotulo_espaciado_letras_subtitulo = $pick_first_filled( $get( 'rotulo_espaciado_letras_subtitulo' ), $get( 'espaciado_letras_subtitulo' ) );
+$rotulo_titulo_lineas       = $pick_first_filled( $get( 'rotulo_titulo_lineas' ), $get( 'titulo_lineas' ) );
+$rotulo_color_trazo         = sanitize_hex_color( (string) $pick_first_filled( $get( 'rotulo_color_trazo' ), $get( 'color_trazo' ) ) );
+$rotulo_color_fondo         = sanitize_hex_color( (string) $pick_first_filled( $get( 'rotulo_color_fondo' ), $get( 'color_fondo' ) ) );
+$rotulo_color_texto         = sanitize_hex_color( (string) $pick_first_filled( $get( 'rotulo_color_texto' ), $get( 'color_texto' ) ) );
+$rotulo_color_subtitulo     = sanitize_hex_color( (string) $pick_first_filled( $get( 'rotulo_color_subtitulo' ), $get( 'color_subtitulo' ) ) );
 
 $subtitulo_portada = trim( (string) $get( 'subtitulo_portada' ) );
 $subtitulo_color = sanitize_hex_color( (string) $get( 'subtitulo_color' ) );
@@ -180,13 +214,25 @@ $rotulo_module = array(
 	'variante_supertitulo' => $rotulo_variante_supertitle,
 	'tamano' => $rotulo_tamano,
 	'alineacion_rotulo' => $rotulo_align,
+	'ancho_subtitulo' => $rotulo_ancho_subtitulo,
+	'alineacion_subtitulo' => $rotulo_alineacion_subtitulo,
+	'tamano_subtitulo' => $rotulo_tamano_subtitulo,
 	'color_trazo' => $rotulo_color_trazo,
 	'color_fondo' => $rotulo_color_fondo,
 	'color_texto' => $rotulo_color_texto,
-	'etiqueta_html' => 'h2',
+	'color_subtitulo' => $rotulo_color_subtitulo,
+	'interlineado' => $rotulo_interlineado,
+	'espaciado_letras' => $rotulo_espaciado_letras,
+	'interlineado_subtitulo' => $rotulo_interlineado_subtitulo,
+	'espaciado_letras_subtitulo' => $rotulo_espaciado_letras_subtitulo,
+	'titulo_lineas' => is_array( $rotulo_titulo_lineas ) ? $rotulo_titulo_lineas : array(),
+	'etiqueta_html' => '' !== $rotulo_etiqueta_html ? $rotulo_etiqueta_html : 'h2',
 );
 
-$has_rotulo = '' !== $rotulo_titulo || '' !== $rotulo_supertitulo || '' !== $rotulo_subtitulo;
+$has_rotulo = '' !== $rotulo_titulo
+	|| '' !== $rotulo_supertitulo
+	|| '' !== $rotulo_subtitulo
+	|| ( is_array( $rotulo_titulo_lineas ) && ! empty( $rotulo_titulo_lineas ) );
 ?>
 <?php
 if ( ! in_array( $subtitulo_alineacion, array( 'left', 'center', 'right' ), true ) ) {

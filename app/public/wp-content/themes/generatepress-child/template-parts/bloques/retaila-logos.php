@@ -47,9 +47,32 @@ if ( empty( $logos ) ) {
 	return;
 }
 
-$rows = function_exists( 'fiflp_partition_partner_logo_rows' ) ? fiflp_partition_partner_logo_rows( $logos ) : array( $logos );
+$rows_raw = function_exists( 'fiflp_partition_partner_logo_rows' ) ? fiflp_partition_partner_logo_rows( $logos ) : array( $logos );
+if ( empty( $rows_raw ) ) {
+	return;
+}
+
+// Respetar siempre el orden editorial de líneas definido en ACF (línea 1 / línea 2).
+// Si por legado aparecen más de 2 líneas, se conserva la primera y se compacta el resto en la segunda.
+$rows = array_values(
+	array_filter(
+		$rows_raw,
+		static function ( $row ) {
+			return is_array( $row ) && ! empty( $row );
+		}
+	)
+);
+
 if ( empty( $rows ) ) {
 	return;
+}
+
+if ( count( $rows ) > 2 ) {
+	$merged_second = array();
+	for ( $i = 1, $len = count( $rows ); $i < $len; $i++ ) {
+		$merged_second = array_merge( $merged_second, $rows[ $i ] );
+	}
+	$rows = array( $rows[0], $merged_second );
 }
 ?>
 <section class="portada-hero-retaila">
