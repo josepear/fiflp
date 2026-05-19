@@ -182,20 +182,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const initPortadaHeroCinematicIntro = () => {
         const hero = document.querySelector('.portada-hero');
+        const rotulo = hero ? hero.querySelector('.portada-hero__rotulo') : null;
 
         if (!hero || hero.dataset.introDone === '1') {
             return;
         }
 
         hero.dataset.introDone = '1';
-
-        // En móvil desactivamos por completo la intro cinemática:
-        // los elementos se muestran directamente en su posición final.
-        if (window.matchMedia('(max-width: 767px)').matches) {
-            hero.classList.add('is-ready');
-            return;
-        }
-
         hero.classList.add('portada-hero--cinematic');
 
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -219,6 +212,20 @@ document.addEventListener("DOMContentLoaded", function () {
         markItems('.portada-hero__acciones-sec .portada-hero__boton', 'btn-sec');
         markItems('.portada-hero .portada-hero-retaila', 'logos');
 
+        // El rótulo parte centrado en pantalla y vuelve a su posición natural.
+        if (rotulo) {
+            const rect = rotulo.getBoundingClientRect();
+            const targetX = rect.left + (rect.width / 2);
+            const targetY = rect.top + (rect.height / 2);
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const fromX = centerX - targetX;
+            const fromY = centerY - targetY;
+
+            rotulo.style.setProperty('--ph-rotulo-from-x', fromX.toFixed(2) + 'px');
+            rotulo.style.setProperty('--ph-rotulo-from-y', fromY.toFixed(2) + 'px');
+        }
+
         if (reduceMotion) {
             hero.classList.add('is-ready');
             return;
@@ -232,7 +239,65 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Reajusta el rótulo tras su transición principal.
-        window.setTimeout(scheduleRotuloFit, 2200);
+        window.setTimeout(scheduleRotuloFit, 3000);
+    };
+
+    const initPortadaHeroGalleryFade = () => {
+        const hero = document.querySelector('.portada-hero');
+        if (!hero) {
+            return;
+        }
+
+        const sanitizeUrl = (url) => String(url || '').replace(/"/g, '\\"');
+
+        hero.querySelectorAll('.portada-hero__bg[data-gallery-autoplay="1"]').forEach((bg) => {
+            if (bg.dataset.galleryBound === '1') {
+                return;
+            }
+            bg.dataset.galleryBound = '1';
+
+            let urls = [];
+            try {
+                const parsed = JSON.parse(bg.dataset.gallery || '[]');
+                if (Array.isArray(parsed)) {
+                    urls = parsed.filter((u) => typeof u === 'string' && u.trim() !== '');
+                }
+            } catch (e) {
+                urls = [];
+            }
+
+            if (urls.length < 2) {
+                return;
+            }
+
+            const intervalMs = Math.max(5000, parseInt(bg.dataset.galleryInterval || '5000', 10) || 5000);
+            const fadeOutMs = 360;
+
+            let index = 0;
+            const inlineImage = bg.style.backgroundImage || '';
+            urls.forEach((url, i) => {
+                if (inlineImage.indexOf(url) !== -1) {
+                    index = i;
+                }
+            });
+
+            const tick = () => {
+                if (document.hidden) {
+                    return;
+                }
+
+                const nextIndex = (index + 1) % urls.length;
+                bg.style.opacity = '0';
+
+                window.setTimeout(() => {
+                    bg.style.backgroundImage = 'url("' + sanitizeUrl(urls[nextIndex]) + '")';
+                    bg.style.opacity = '1';
+                    index = nextIndex;
+                }, fadeOutMs);
+            };
+
+            window.setInterval(tick, intervalMs);
+        });
     };
 
     const getDisclosureBody = (group) => {
@@ -1400,6 +1465,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     scheduleRotuloFit();
+    initPortadaHeroGalleryFade();
     initPortadaHeroCinematicIntro();
 
     if (document.fonts && typeof document.fonts.ready === 'object') {

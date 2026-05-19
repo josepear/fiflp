@@ -51,12 +51,21 @@ $mobile_tipo   = strtolower( trim( (string) $get( 'mobile_tipo_fondo' ) ) );
 $desktop_img   = $get( 'desktop_imagen_fondo' );
 $tablet_img    = $get( 'tablet_imagen_fondo' );
 $mobile_img    = $get( 'mobile_imagen_fondo' );
+$desktop_gallery = $get( 'desktop_galeria_fondos' );
+$tablet_gallery  = $get( 'tablet_galeria_fondos' );
+$mobile_gallery  = $get( 'mobile_galeria_fondos' );
 $desktop_video = trim( (string) $get( 'desktop_video_fondo' ) );
 $tablet_video  = trim( (string) $get( 'tablet_video_fondo' ) );
 $mobile_video  = trim( (string) $get( 'mobile_video_fondo' ) );
 $desktop_color = sanitize_hex_color( (string) $get( 'desktop_color_fondo' ) );
 $tablet_color  = sanitize_hex_color( (string) $get( 'tablet_color_fondo' ) );
 $mobile_color  = sanitize_hex_color( (string) $get( 'mobile_color_fondo' ) );
+$desktop_overlay_opacity = $get( 'desktop_overlay_opacity' );
+$tablet_overlay_opacity  = $get( 'tablet_overlay_opacity' );
+$mobile_overlay_opacity  = $get( 'mobile_overlay_opacity' );
+$desktop_gallery_fade    = (bool) $get( 'desktop_gallery_fade' );
+$tablet_gallery_fade     = (bool) $get( 'tablet_gallery_fade' );
+$mobile_gallery_fade     = (bool) $get( 'mobile_gallery_fade' );
 
 $to_num = static function( $value, $default = 0, $min = null, $max = null ) {
 	$num = is_numeric( $value ) ? (float) $value : (float) $default;
@@ -100,6 +109,12 @@ $mobile_content_padding_top_raw = $get( 'mobile_content_padding_top' );
 $desktop_content_padding_x    = $to_num( $get( 'desktop_content_padding_x' ), 36, 0, 220 );
 $tablet_content_padding_x_raw = $get( 'tablet_content_padding_x' );
 $mobile_content_padding_x_raw = $get( 'mobile_content_padding_x' );
+
+$to_opacity = static function( $value, $default = 0.6 ) {
+	$num = is_numeric( $value ) ? (float) $value : (float) $default;
+	$num = max( 0, min( 1, $num ) );
+	return rtrim( rtrim( number_format( $num, 2, '.', '' ), '0' ), '.' );
+};
 
 $logo_principal = $get( 'logo_principal' );
 $logo_data      = function_exists( 'fiflp_get_image_data' ) ? fiflp_get_image_data( $logo_principal, 'full', get_the_title( $portada_hero_id ) ) : array();
@@ -149,6 +164,57 @@ $img_url = static function ( $image ) {
 	return is_string( $image ) ? trim( $image ) : '';
 };
 
+$pick_random_gallery_image_url = static function ( $gallery, $fallback = '' ) {
+	if ( ! is_array( $gallery ) || empty( $gallery ) ) {
+		return (string) $fallback;
+	}
+
+	$candidates = array();
+	foreach ( $gallery as $item ) {
+		if ( is_array( $item ) ) {
+			$url = isset( $item['url'] ) ? trim( (string) $item['url'] ) : '';
+			if ( '' !== $url ) {
+				$candidates[] = $url;
+			}
+		} elseif ( is_string( $item ) ) {
+			$url = trim( $item );
+			if ( '' !== $url ) {
+				$candidates[] = $url;
+			}
+		}
+	}
+
+	if ( empty( $candidates ) ) {
+		return (string) $fallback;
+	}
+
+	$index = wp_rand( 0, count( $candidates ) - 1 );
+	return $candidates[ $index ];
+};
+
+$gallery_to_urls = static function ( $gallery ) {
+	$urls = array();
+	if ( ! is_array( $gallery ) || empty( $gallery ) ) {
+		return $urls;
+	}
+
+	foreach ( $gallery as $item ) {
+		if ( is_array( $item ) ) {
+			$url = isset( $item['url'] ) ? trim( (string) $item['url'] ) : '';
+			if ( '' !== $url ) {
+				$urls[] = $url;
+			}
+		} elseif ( is_string( $item ) ) {
+			$url = trim( $item );
+			if ( '' !== $url ) {
+				$urls[] = $url;
+			}
+		}
+	}
+
+	return array_values( array_unique( $urls ) );
+};
+
 $file_url = static function ( $file ) {
 	if ( is_array( $file ) ) {
 		return isset( $file['url'] ) ? trim( (string) $file['url'] ) : '';
@@ -159,6 +225,22 @@ $file_url = static function ( $file ) {
 $desktop_img_url = $img_url( $desktop_img );
 $tablet_img_url  = $img_url( $tablet_img );
 $mobile_img_url  = $img_url( $mobile_img );
+
+$desktop_img_url = $pick_random_gallery_image_url( $desktop_gallery, $desktop_img_url );
+$tablet_img_url  = $pick_random_gallery_image_url( $tablet_gallery, $tablet_img_url );
+$mobile_img_url  = $pick_random_gallery_image_url( $mobile_gallery, $mobile_img_url );
+
+$desktop_gallery_urls = $gallery_to_urls( $desktop_gallery );
+$tablet_gallery_urls  = $gallery_to_urls( $tablet_gallery );
+$mobile_gallery_urls  = $gallery_to_urls( $mobile_gallery );
+
+$desktop_gallery_fade_active = $desktop_gallery_fade && count( $desktop_gallery_urls ) > 1;
+$tablet_gallery_fade_active  = $tablet_gallery_fade && count( $tablet_gallery_urls ) > 1;
+$mobile_gallery_fade_active  = $mobile_gallery_fade && count( $mobile_gallery_urls ) > 1;
+
+$desktop_overlay_opacity_value = $to_opacity( $desktop_overlay_opacity, 0.6 );
+$tablet_overlay_opacity_value  = $to_opacity( $tablet_overlay_opacity, $desktop_overlay_opacity_value );
+$mobile_overlay_opacity_value  = $to_opacity( $mobile_overlay_opacity, $tablet_overlay_opacity_value );
 
 if ( '' === $tablet_img_url ) {
 	$tablet_img_url = $desktop_img_url;
@@ -248,7 +330,7 @@ if ( $subtitulo_color ) {
 ?>
 <section
 	class="portada-hero"
-	style="--portada-hero-color-desktop: <?php echo esc_attr( $desktop_color ? $desktop_color : '#0f2d30' ); ?>; --portada-hero-color-tablet: <?php echo esc_attr( $tablet_color ? $tablet_color : '#0f2d30' ); ?>; --portada-hero-color-mobile: <?php echo esc_attr( $mobile_color ? $mobile_color : '#0f2d30' ); ?>; --ph-desktop-logo-max-width: <?php echo esc_attr( $desktop_logo_max_width ); ?>px; --ph-tablet-logo-max-width: <?php echo esc_attr( $tablet_logo_max_width ); ?>px; --ph-mobile-logo-max-width: <?php echo esc_attr( $mobile_logo_max_width ); ?>px; --ph-desktop-logo-mb: <?php echo esc_attr( $desktop_logo_margin_bottom ); ?>px; --ph-tablet-logo-mb: <?php echo esc_attr( $tablet_logo_margin_bottom ); ?>px; --ph-mobile-logo-mb: <?php echo esc_attr( $mobile_logo_margin_bottom ); ?>px; --ph-desktop-rotulo-max-width: <?php echo esc_attr( $desktop_rotulo_max_width ); ?>px; --ph-tablet-rotulo-max-width: <?php echo esc_attr( $tablet_rotulo_max_width ); ?>px; --ph-mobile-rotulo-max-width: <?php echo esc_attr( $mobile_rotulo_max_width ); ?>px; --ph-desktop-subtitulo-pt: <?php echo esc_attr( $desktop_subtitulo_padding_top ); ?>px; --ph-tablet-subtitulo-pt: <?php echo esc_attr( $tablet_subtitulo_padding_top ); ?>px; --ph-mobile-subtitulo-pt: <?php echo esc_attr( $mobile_subtitulo_padding_top ); ?>px; --ph-desktop-acciones-pt: <?php echo esc_attr( $desktop_acciones_padding_top ); ?>px; --ph-tablet-acciones-pt: <?php echo esc_attr( $tablet_acciones_padding_top ); ?>px; --ph-mobile-acciones-pt: <?php echo esc_attr( $mobile_acciones_padding_top ); ?>px; --ph-desktop-btn-sec-scale: <?php echo esc_attr( $desktop_boton_sec_scale ); ?>; --ph-tablet-btn-sec-scale: <?php echo esc_attr( $tablet_boton_sec_scale ); ?>; --ph-mobile-btn-sec-scale: <?php echo esc_attr( $mobile_boton_sec_scale ); ?>; --ph-desktop-content-pt: <?php echo esc_attr( $desktop_content_padding_top ); ?>px; --ph-tablet-content-pt: <?php echo esc_attr( $tablet_content_padding_top ); ?>px; --ph-mobile-content-pt: <?php echo esc_attr( $mobile_content_padding_top ); ?>px; --ph-desktop-content-px: <?php echo esc_attr( $desktop_content_padding_x ); ?>px; --ph-tablet-content-px: <?php echo esc_attr( $tablet_content_padding_x ); ?>px; --ph-mobile-content-px: <?php echo esc_attr( $mobile_content_padding_x ); ?>px;"
+	style="--portada-hero-color-desktop: <?php echo esc_attr( $desktop_color ? $desktop_color : '#0f2d30' ); ?>; --portada-hero-color-tablet: <?php echo esc_attr( $tablet_color ? $tablet_color : '#0f2d30' ); ?>; --portada-hero-color-mobile: <?php echo esc_attr( $mobile_color ? $mobile_color : '#0f2d30' ); ?>; --ph-overlay-opacity-desktop: <?php echo esc_attr( $desktop_overlay_opacity_value ); ?>; --ph-overlay-opacity-tablet: <?php echo esc_attr( $tablet_overlay_opacity_value ); ?>; --ph-overlay-opacity-mobile: <?php echo esc_attr( $mobile_overlay_opacity_value ); ?>; --ph-desktop-logo-max-width: <?php echo esc_attr( $desktop_logo_max_width ); ?>px; --ph-tablet-logo-max-width: <?php echo esc_attr( $tablet_logo_max_width ); ?>px; --ph-mobile-logo-max-width: <?php echo esc_attr( $mobile_logo_max_width ); ?>px; --ph-desktop-logo-mb: <?php echo esc_attr( $desktop_logo_margin_bottom ); ?>px; --ph-tablet-logo-mb: <?php echo esc_attr( $tablet_logo_margin_bottom ); ?>px; --ph-mobile-logo-mb: <?php echo esc_attr( $mobile_logo_margin_bottom ); ?>px; --ph-desktop-rotulo-max-width: <?php echo esc_attr( $desktop_rotulo_max_width ); ?>px; --ph-tablet-rotulo-max-width: <?php echo esc_attr( $tablet_rotulo_max_width ); ?>px; --ph-mobile-rotulo-max-width: <?php echo esc_attr( $mobile_rotulo_max_width ); ?>px; --ph-desktop-subtitulo-pt: <?php echo esc_attr( $desktop_subtitulo_padding_top ); ?>px; --ph-tablet-subtitulo-pt: <?php echo esc_attr( $tablet_subtitulo_padding_top ); ?>px; --ph-mobile-subtitulo-pt: <?php echo esc_attr( $mobile_subtitulo_padding_top ); ?>px; --ph-desktop-acciones-pt: <?php echo esc_attr( $desktop_acciones_padding_top ); ?>px; --ph-tablet-acciones-pt: <?php echo esc_attr( $tablet_acciones_padding_top ); ?>px; --ph-mobile-acciones-pt: <?php echo esc_attr( $mobile_acciones_padding_top ); ?>px; --ph-desktop-btn-sec-scale: <?php echo esc_attr( $desktop_boton_sec_scale ); ?>; --ph-tablet-btn-sec-scale: <?php echo esc_attr( $tablet_boton_sec_scale ); ?>; --ph-mobile-btn-sec-scale: <?php echo esc_attr( $mobile_boton_sec_scale ); ?>; --ph-desktop-content-pt: <?php echo esc_attr( $desktop_content_padding_top ); ?>px; --ph-tablet-content-pt: <?php echo esc_attr( $tablet_content_padding_top ); ?>px; --ph-mobile-content-pt: <?php echo esc_attr( $mobile_content_padding_top ); ?>px; --ph-desktop-content-px: <?php echo esc_attr( $desktop_content_padding_x ); ?>px; --ph-tablet-content-px: <?php echo esc_attr( $tablet_content_padding_x ); ?>px; --ph-mobile-content-px: <?php echo esc_attr( $mobile_content_padding_x ); ?>px;"
 	data-bg-type-desktop="<?php echo esc_attr( 'video' === $desktop_tipo ? 'video' : 'imagen' ); ?>"
 	data-bg-type-tablet="<?php echo esc_attr( 'video' === $tablet_tipo ? 'video' : 'imagen' ); ?>"
 	data-bg-type-mobile="<?php echo esc_attr( 'video' === $mobile_tipo ? 'video' : 'imagen' ); ?>"
@@ -265,9 +347,9 @@ if ( $subtitulo_color ) {
 		</video>
 	<?php endif; ?>
 
-	<div class="portada-hero__bg portada-hero__bg--desktop" style="<?php echo esc_attr( '' !== $desktop_img_url ? 'background-image:url(' . esc_url_raw( $desktop_img_url ) . ');' : '' ); ?>"<?php echo 'imagen' === $desktop_tipo ? '' : ' hidden'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>></div>
-	<div class="portada-hero__bg portada-hero__bg--tablet" style="<?php echo esc_attr( '' !== $tablet_img_url ? 'background-image:url(' . esc_url_raw( $tablet_img_url ) . ');' : '' ); ?>"<?php echo 'imagen' === $tablet_tipo ? '' : ' hidden'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>></div>
-	<div class="portada-hero__bg portada-hero__bg--mobile" style="<?php echo esc_attr( '' !== $mobile_img_url ? 'background-image:url(' . esc_url_raw( $mobile_img_url ) . ');' : '' ); ?>"<?php echo 'imagen' === $mobile_tipo ? '' : ' hidden'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>></div>
+	<div class="portada-hero__bg portada-hero__bg--desktop" style="<?php echo esc_attr( '' !== $desktop_img_url ? 'background-image:url(' . esc_url_raw( $desktop_img_url ) . ');' : '' ); ?>" data-gallery="<?php echo esc_attr( wp_json_encode( $desktop_gallery_urls ) ); ?>" data-gallery-autoplay="<?php echo $desktop_gallery_fade_active ? '1' : '0'; ?>" data-gallery-interval="5000"<?php echo 'imagen' === $desktop_tipo ? '' : ' hidden'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>></div>
+	<div class="portada-hero__bg portada-hero__bg--tablet" style="<?php echo esc_attr( '' !== $tablet_img_url ? 'background-image:url(' . esc_url_raw( $tablet_img_url ) . ');' : '' ); ?>" data-gallery="<?php echo esc_attr( wp_json_encode( $tablet_gallery_urls ) ); ?>" data-gallery-autoplay="<?php echo $tablet_gallery_fade_active ? '1' : '0'; ?>" data-gallery-interval="5000"<?php echo 'imagen' === $tablet_tipo ? '' : ' hidden'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>></div>
+	<div class="portada-hero__bg portada-hero__bg--mobile" style="<?php echo esc_attr( '' !== $mobile_img_url ? 'background-image:url(' . esc_url_raw( $mobile_img_url ) . ');' : '' ); ?>" data-gallery="<?php echo esc_attr( wp_json_encode( $mobile_gallery_urls ) ); ?>" data-gallery-autoplay="<?php echo $mobile_gallery_fade_active ? '1' : '0'; ?>" data-gallery-interval="5000"<?php echo 'imagen' === $mobile_tipo ? '' : ' hidden'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>></div>
 
 	<div class="portada-hero__overlay"></div>
 	<div class="portada-hero__content">
