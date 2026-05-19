@@ -6240,7 +6240,7 @@ a.lightbox-trigger img {
     margin: 0;
     overflow: hidden;
     background: var(--portada-hero-color-desktop, #0f2d30);
-    --ph-retaila-bottom-desktop: 80px;
+    --ph-retaila-bottom-desktop: 60px;
     --ph-retaila-bottom-tablet: 44px;
     --ph-retaila-bottom-mobile: 24px;
 }
@@ -6311,6 +6311,20 @@ body.fiflp-landing-gate .portada-hero__content {
     object-fit: cover;
     object-position: center;
     z-index: 0;
+}
+
+.portada-hero__bg-fade-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+    transition: opacity 1800ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .portada-hero__bg {
@@ -6486,17 +6500,22 @@ body.fiflp-landing-gate .portada-hero__content {
 
 .portada-hero .portada-hero-retaila {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 50%;
     bottom: var(--ph-retaila-bottom-desktop);
-    transform: none;
-    width: 100%;
+    transform: translateX(-50%);
+    width: min(1200px, calc(100% - 24px));
     margin: 0;
+    margin-inline: auto;
     padding-top: 0;
     z-index: 3;
     text-align: center;
     display: flex;
     justify-content: center;
+}
+
+section.portada-hero-retaila {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
 }
 
 .portada-hero .portada-hero-retaila .footer-editorial__partners {
@@ -6538,7 +6557,7 @@ body.fiflp-landing-gate .portada-hero__content {
     align-items: center !important;
     justify-content: center !important;
     justify-items: center !important;
-    row-gap: clamp(12px, 1.9vh, 24px) !important;
+    row-gap: 31px !important;
     width: fit-content !important;
     max-width: 100% !important;
     margin: 0 auto !important;
@@ -6767,7 +6786,7 @@ body.fiflp-landing-gate .portada-hero__content {
 
     .portada-hero .portada-hero-retaila {
         bottom: var(--ph-retaila-bottom-tablet);
-        width: 100%;
+        width: min(980px, calc(100% - 20px));
     }
 
     .portada-hero__logo {
@@ -6874,7 +6893,7 @@ body.fiflp-landing-gate .portada-hero__content {
 
     .portada-hero .portada-hero-retaila {
         bottom: var(--ph-retaila-bottom-mobile);
-        width: 100%;
+        width: calc(100% - 16px);
     }
 
     .portada-hero .footer-editorial__partners-grid {
@@ -6927,7 +6946,11 @@ body.fiflp-landing-gate .portada-hero__content {
 
     .portada-hero .footer-editorial__partners-grid {
         --footer-logo-slot-h: clamp(28px, 4vh, 52px);
-        row-gap: clamp(10px, 1.8vh, 18px);
+        row-gap: clamp(18px, 2.8vh, 30px);
+    }
+
+    .portada-hero .footer-editorial__partners-row:nth-child(2) {
+        margin-top: 10px;
     }
 
     body:not(.fiflp-onepage):not(.home):not(.front-page) .layout-editorial {

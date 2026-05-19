@@ -249,54 +249,158 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const sanitizeUrl = (url) => String(url || '').replace(/"/g, '\\"');
+        const crossfadeMs = 1200;
+        const FALLBACK_INTERVAL = 3000;
+        const bgNodes = Array.from(hero.querySelectorAll('.portada-hero__bg'));
 
-        hero.querySelectorAll('.portada-hero__bg[data-gallery-autoplay="1"]').forEach((bg) => {
-            if (bg.dataset.galleryBound === '1') {
-                return;
-            }
-            bg.dataset.galleryBound = '1';
-
-            let urls = [];
+        const parseUrls = (bg) => {
             try {
                 const parsed = JSON.parse(bg.dataset.gallery || '[]');
-                if (Array.isArray(parsed)) {
-                    urls = parsed.filter((u) => typeof u === 'string' && u.trim() !== '');
+                if (!Array.isArray(parsed)) {
+                    return [];
                 }
+                return parsed.filter((u) => typeof u === 'string' && u.trim() !== '');
             } catch (e) {
-                urls = [];
+                return [];
+            }
+        };
+
+        const isVisibleBg = (bg) => {
+            if (bg.hasAttribute('hidden')) {
+                return false;
+            }
+            const style = window.getComputedStyle(bg);
+            return style.display !== 'none' && style.visibility !== 'hidden';
+        };
+
+        const preloadImage = (url) => new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = url;
+        });
+
+        let timerId = null;
+        let activeBg = null;
+        let activeUrls = [];
+        let activeIndex = 0;
+        let activeInterval = FALLBACK_INTERVAL;
+        let transitioning = false;
+
+        const clearTimer = () => {
+            if (timerId) {
+                window.clearTimeout(timerId);
+                timerId = null;
+            }
+        };
+
+        const selectActiveBg = () => {
+            const visible = bgNodes.find((node) => isVisibleBg(node));
+            if (!visible) {
+                return null;
             }
 
-            if (urls.length < 2) {
-                return;
+            const autoplay = visible.dataset.galleryAutoplay === '1';
+            const urls = parseUrls(visible);
+            if (!autoplay || urls.length < 2) {
+                return null;
             }
 
-            const intervalMs = Math.max(5000, parseInt(bg.dataset.galleryInterval || '5000', 10) || 5000);
-            const fadeOutMs = 360;
+            const interval = Math.max(
+                FALLBACK_INTERVAL,
+                parseInt(visible.dataset.galleryInterval || String(FALLBACK_INTERVAL), 10) || FALLBACK_INTERVAL
+            );
 
-            let index = 0;
-            const inlineImage = bg.style.backgroundImage || '';
+            let currentIndex = 0;
+            const inlineImage = visible.style.backgroundImage || '';
             urls.forEach((url, i) => {
                 if (inlineImage.indexOf(url) !== -1) {
-                    index = i;
+                    currentIndex = i;
                 }
             });
 
-            const tick = () => {
-                if (document.hidden) {
-                    return;
+            return { bg: visible, urls, interval, currentIndex };
+        };
+
+        const scheduleNext = () => {
+            clearTimer();
+            const waitMs = Math.max(80, activeInterval - crossfadeMs);
+            timerId = window.setTimeout(runTick, waitMs);
+        };
+
+        const syncActiveContext = () => {
+            const selected = selectActiveBg();
+            if (!selected) {
+                clearTimer();
+                activeBg = null;
+                activeUrls = [];
+                transitioning = false;
+                return;
+            }
+
+            if (activeBg !== selected.bg) {
+                clearTimer();
+                activeBg = selected.bg;
+                activeUrls = selected.urls;
+                activeInterval = selected.interval;
+                activeIndex = selected.currentIndex;
+                transitioning = false;
+                scheduleNext();
+                return;
+            }
+
+            activeUrls = selected.urls;
+            activeInterval = selected.interval;
+        };
+
+        const runTick = async () => {
+            if (!activeBg || document.hidden || transitioning) {
+                scheduleNext();
+                return;
+            }
+
+            const nextIndex = (activeIndex + 1) % activeUrls.length;
+            const nextUrl = activeUrls[nextIndex];
+
+            transitioning = true;
+            const loaded = await preloadImage(nextUrl);
+            if (!loaded || !activeBg) {
+                transitioning = false;
+                scheduleNext();
+                return;
+            }
+
+            const layer = document.createElement('div');
+            layer.className = 'portada-hero__bg-fade-layer';
+            layer.style.backgroundImage = 'url("' + sanitizeUrl(nextUrl) + '")';
+            layer.style.transitionDuration = crossfadeMs + 'ms';
+
+            const parent = activeBg.parentElement || hero;
+            parent.appendChild(layer);
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    layer.style.opacity = '1';
+                });
+            });
+
+            window.setTimeout(() => {
+                if (activeBg) {
+                    activeBg.style.backgroundImage = 'url("' + sanitizeUrl(nextUrl) + '")';
                 }
+                layer.remove();
+                activeIndex = nextIndex;
+                transitioning = false;
+                scheduleNext();
+            }, crossfadeMs + 60);
+        };
 
-                const nextIndex = (index + 1) % urls.length;
-                bg.style.opacity = '0';
-
-                window.setTimeout(() => {
-                    bg.style.backgroundImage = 'url("' + sanitizeUrl(urls[nextIndex]) + '")';
-                    bg.style.opacity = '1';
-                    index = nextIndex;
-                }, fadeOutMs);
-            };
-
-            window.setInterval(tick, intervalMs);
+        syncActiveContext();
+        window.addEventListener('resize', syncActiveContext, { passive: true });
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                syncActiveContext();
+            }
         });
     };
 
