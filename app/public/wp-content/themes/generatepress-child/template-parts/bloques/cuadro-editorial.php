@@ -7,22 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$args = $args ?? array();
-
-$get_field = static function ( $name, $default = null ) use ( $args ) {
-	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
-		return fiflp_get_sub_field_compat( $name, $args, $default );
-	}
-
-	if ( function_exists( 'get_sub_field' ) ) {
-		$value = get_sub_field( $name );
-		return null !== $value ? $value : $default;
-	}
-
-	return $default;
-};
-
-$cuadro_id = (int) $get_field( 'cuadro', 0 );
+$cuadro_id = (int) fiflp_get_editorial_field( 'cuadro', isset( $args ) && is_array( $args ) ? $args : array(), 0 );
 
 if ( $cuadro_id <= 0 || ! function_exists( 'fiflp_render_cuadro' ) ) {
 	return;

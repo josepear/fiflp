@@ -7,7 +7,7 @@ $portada_hero_id = 0;
 if ( isset( $args['portada_hero_id'] ) ) {
 	$portada_hero_id = (int) $args['portada_hero_id'];
 } else {
-	$sub_ref = function_exists( 'get_sub_field' ) ? get_sub_field( 'portada_hero' ) : null;
+	$sub_ref = fiflp_get_editorial_field( 'portada_hero', array() );
 	if ( is_numeric( $sub_ref ) ) {
 		$portada_hero_id = (int) $sub_ref;
 	}

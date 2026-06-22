@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$seccion_ref = get_sub_field( 'seccion_onepage' );
+$seccion_ref = fiflp_get_editorial_field( 'seccion_onepage', isset( $args ) && is_array( $args ) ? $args : array() );
 $seccion_id  = function_exists( 'fiflp_resolve_onepage_seccion_post_id' ) ? fiflp_resolve_onepage_seccion_post_id( $seccion_ref ) : 0;
 
 if ( $seccion_id <= 0 ) {

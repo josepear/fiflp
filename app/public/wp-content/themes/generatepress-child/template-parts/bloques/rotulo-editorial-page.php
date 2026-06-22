@@ -1,11 +1,6 @@
 <?php
 $get_field = static function ( $name, $default = null ) use ( $args ) {
-	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
-		return fiflp_get_sub_field_compat( $name, $args ?? array(), $default );
-	}
-
-	$value = get_sub_field( $name );
-	return null !== $value ? $value : $default;
+	return fiflp_get_editorial_field( $name, $args ?? array(), $default );
 };
 
 $normalize_color = static function ( $raw, $default = '' ) {
@@ -58,8 +53,8 @@ $interlineado_raw     = $get_field( 'interlineado', null );
 $espaciado_letras_raw = $get_field( 'espaciado_letras', null );
 $titulo_lineas_raw = $get_field( 'titulo_lineas', null );
 
-// Compatibilidad entre contextos de rótulo editorial:
-// - Normal/onepage: `titulo_lineas`
+// Compatibilidad entre contextos de rótulo editorial.
+// Normal/onepage usa `titulo_lineas`.
 if ( ! is_array( $titulo_lineas_raw ) || empty( $titulo_lineas_raw ) ) {
 	$titulo_lineas_raw = $get_field( 'rotulo_titulo_lineas', array() );
 }

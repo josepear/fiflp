@@ -6,12 +6,7 @@
  */
 
 $get_field = static function ( $name, $default = null ) use ( $args ) {
-	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
-		return fiflp_get_sub_field_compat( $name, $args ?? array(), $default );
-	}
-
-	$value = get_sub_field( $name );
-	return null !== $value ? $value : $default;
+	return fiflp_get_editorial_field( $name, $args ?? array(), $default );
 };
 
 $imagen  = $get_field( 'imagen', null );

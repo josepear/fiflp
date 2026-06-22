@@ -1,11 +1,6 @@
 <?php
 $get_field = static function ( $name, $default = null ) use ( $args ) {
-	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
-		return fiflp_get_sub_field_compat( $name, $args ?? array(), $default );
-	}
-
-	$value = get_sub_field( $name );
-	return null !== $value ? $value : $default;
+	return fiflp_get_editorial_field( $name, $args ?? array(), $default );
 };
 
 $cronologia_id = (int) $get_field( 'cronologia', 0 );
@@ -27,7 +22,7 @@ if ( '' !== $titulo_modulo ) {
 	$titulo = $titulo_modulo;
 }
 
-// Compatibilidad temporal por si existe contenido del enfoque anterior en una página.
+// Compatibilidad con contenido anterior por si la página todavía lo usa.
 if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 	$hitos = $get_field( 'hitos', array() );
 }
@@ -65,8 +60,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 			$cuadro_hito_id      = isset( $hito['cuadro'] ) ? (int) $hito['cuadro'] : 0;
 			$hito_tiene_cuadro   = $cuadro_hito_id > 0 && 'fiflp_cuadro' === get_post_type( $cuadro_hito_id );
 
-			// Compatibilidad: si un hito antiguo solo tiene el campo legacy
-			// "imagen_multiplicar", lo reutilizamos para ambas imágenes.
+			// Compatibilidad con el campo antiguo "imagen_multiplicar".
 			$img_multiply_legacy = ! empty( $hito['imagen_multiplicar'] );
 			$img_multiply_1      = array_key_exists( 'imagen_multiplicar_1', $hito )
 				? ! empty( $hito['imagen_multiplicar_1'] )

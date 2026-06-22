@@ -981,22 +981,6 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 	}
 }
 
-if ( ! function_exists( 'fiflp_extend_onepage_module_submenu_fields' ) ) {
-	/**
-	 * Añade controles de submenú a todos los layouts del flexible "modulos_onepage".
-	 * Permite activar cualquier módulo en el submenú lateral onepage.
-	 *
-	 * @param array $field Campo ACF flexible content.
-	 * @return array
-	 */
-	function fiflp_extend_onepage_module_submenu_fields( $field ) {
-		// Desactivado temporalmente: inyección dinámica de subcampos rompía el guardado en editor ACF.
-		return $field;
-	}
-}
-
-// add_filter( 'acf/load_field/key=field_seccion_onepage_modulos', 'fiflp_extend_onepage_module_submenu_fields', 20 );
-
 if ( ! function_exists( 'fiflp_get_sub_field_compat' ) ) {
 	/**
 	 * Devuelve un subcampo desde ACF normal o desde $args['module'] al renderizar desde onepage.
@@ -1020,6 +1004,20 @@ if ( ! function_exists( 'fiflp_get_sub_field_compat' ) ) {
 		}
 
 		return $default;
+	}
+}
+
+if ( ! function_exists( 'fiflp_get_editorial_field' ) ) {
+	/**
+	 * Atajo para leer campos editoriales desde plantillas de bloques.
+	 *
+	 * @param string $field_name Nombre del campo.
+	 * @param array  $args       Args opcionales del bloque / módulo.
+	 * @param mixed  $default    Valor por defecto.
+	 * @return mixed
+	 */
+	function fiflp_get_editorial_field( $field_name, $args = array(), $default = null ) {
+		return fiflp_get_sub_field_compat( $field_name, $args, $default );
 	}
 }
 
@@ -2497,8 +2495,7 @@ add_action(
 );
 
 /**
- * Oculta temporalmente la página "Apariencia editorial" del menú admin
- * sin eliminar sus campos ni datos.
+ * Oculta la página "Apariencia editorial" del menú admin sin borrar sus campos ni datos.
  */
 add_action(
 	'admin_menu',
@@ -2677,8 +2674,8 @@ add_action(
 				);
 			}
 
-			// JS desactivado temporalmente en admin de página:
-			// priorizamos estabilidad de guardado ACF (evitar "Guardando..." infinito).
+			// JS de apoyo desactivado en admin de página.
+			// Priorizamos estabilidad de guardado ACF.
 		}
 	},
 	20

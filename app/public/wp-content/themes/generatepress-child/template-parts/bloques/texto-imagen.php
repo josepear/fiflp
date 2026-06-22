@@ -15,15 +15,7 @@ $bloque_index++;
 $args = $args ?? array();
 
 $gf = static function ( $name, $default = null ) use ( $args ) {
-	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
-		$v = fiflp_get_sub_field_compat( $name, $args, $default );
-		return null !== $v ? $v : $default;
-	}
-	if ( function_exists( 'get_sub_field' ) ) {
-		$v = get_sub_field( $name );
-		return null !== $v ? $v : $default;
-	}
-	return $default;
+	return fiflp_get_editorial_field( $name, $args, $default );
 };
 
 $contenido_raw = $gf( 'contenido', '' );
