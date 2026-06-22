@@ -5,6 +5,43 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+    const fixPrologoStructure = () => {
+        const prologos = document.querySelectorAll('article.prologo');
+
+        prologos.forEach((prologo) => {
+            const hasImgContainer = prologo.querySelector(':scope > .prologo-img');
+            const content = prologo.querySelector(':scope > .prologo-content');
+            const textRoot = prologo.querySelector('.prologo-texto');
+            const internalImg = textRoot ? textRoot.querySelector('img') : null;
+
+            if (hasImgContainer || !content || !internalImg) {
+                return;
+            }
+
+            const imgContainer = document.createElement('div');
+            imgContainer.className = 'prologo-img';
+            imgContainer.appendChild(internalImg);
+            prologo.insertBefore(imgContainer, content);
+
+            // Limpieza de saltos de línea sobrantes tras mover la imagen.
+            if (textRoot) {
+                textRoot.querySelectorAll('br').forEach((br) => br.remove());
+
+                // Elimina párrafos vacíos que a veces quedan tras quitar la imagen.
+                textRoot.querySelectorAll('p').forEach((p) => {
+                    if (p.querySelector('img')) {
+                        return;
+                    }
+                    if (p.textContent.trim() === '') {
+                        p.remove();
+                    }
+                });
+            }
+        });
+    };
+
+    fixPrologoStructure();
+
     // Móvil: al recargar, volver al inicio de la página.
     (function forceTopOnMobileReload() {
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -1685,7 +1722,7 @@ document.addEventListener("DOMContentLoaded", function () {
             requestAnimationFrame(centerLightboxViewport);
         };
 
-        const openLightbox = (src, alt = '') => {
+        const openLightbox = (src, caption = '', alt = '') => {
             if (!src) {
                 return;
             }
@@ -1696,7 +1733,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             resetLightboxZoom();
             lightboxImg.src = src;
-            lightboxImg.alt = alt;
+            lightboxImg.alt = alt || caption;
             const fitOnOpen = getLightboxFitSize();
             if (fitOnOpen) {
                 lightboxImg.style.width = `${fitOnOpen.w}px`;
@@ -1704,8 +1741,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             requestAnimationFrame(centerLightboxViewport);
             if (lightboxCaption) {
-                lightboxCaption.textContent = alt;
+                lightboxCaption.textContent = caption;
             }
+            lightbox.classList.toggle('lightbox--has-caption', caption !== '');
             document.body.classList.add('fiflp-lightbox-open');
             lightbox.setAttribute('aria-hidden', 'false');
             requestAnimationFrame(() => {
@@ -1727,6 +1765,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (lightboxCaption) {
                     lightboxCaption.textContent = '';
                 }
+                lightbox.classList.remove('lightbox--has-caption');
                 closeTimer = null;
             }, LIGHTBOX_CLOSE_MS);
         };
@@ -1739,9 +1778,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const src = link.getAttribute('href');
-            const caption = link.getAttribute('data-caption') || '';
+            const triggerImg = link.querySelector('img');
+            const figure = link.closest('figure');
+            const figureCaption = figure ? figure.querySelector('figcaption') : null;
+            const caption = (
+                link.getAttribute('data-caption')
+                || (figureCaption ? figureCaption.textContent : '')
+                || (triggerImg ? triggerImg.getAttribute('alt') : '')
+                || ''
+            ).trim();
+            const alt = ((triggerImg ? triggerImg.getAttribute('alt') : '') || caption).trim();
             e.preventDefault();
-            openLightbox(src, caption);
+            openLightbox(src, caption, alt);
         });
 
         lightboxClose.addEventListener('click', function() {
@@ -1782,20 +1830,17 @@ document.addEventListener("DOMContentLoaded", function () {
             toggleLightboxZoom();
         });
 
-        // Refuerzo UX: en modo ampliado, click en el viewport también reduce a vista completa.
+        // Clic en la transparencia del visor: cerrar sin exigir la cruz.
         if (lightboxViewport) {
             lightboxViewport.addEventListener('click', function(e) {
-                if (!lightbox.classList.contains('lightbox--zoomed')) {
+                if (e.target !== lightboxViewport) {
                     return;
                 }
                 if (suppressImageClickToggle) {
                     suppressImageClickToggle = false;
                     return;
                 }
-                if (e.target === lightboxClose || (e.target && e.target.closest && e.target.closest('.lightbox-close'))) {
-                    return;
-                }
-                toggleLightboxZoom();
+                closeLightbox();
             });
         }
 

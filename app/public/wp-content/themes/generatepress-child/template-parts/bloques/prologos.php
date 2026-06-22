@@ -12,6 +12,8 @@ if ( empty( $prologos ) || ! is_array( $prologos ) ) {
 		$nombre    = isset( $prologo['nombre'] ) ? trim( (string) $prologo['nombre'] ) : '';
 		$cargo     = isset( $prologo['cargo'] ) ? trim( (string) $prologo['cargo'] ) : '';
 		$contenido = $prologo['contenido'] ?? ( $prologo['texto'] ?? '' );
+		$contenido = trim( (string) $contenido );
+		$contenido = '' !== $contenido ? wp_kses_post( wpautop( $contenido ) ) : '';
 		$foto      = $prologo['foto'] ?? null;
 		$foto_url  = is_array( $foto ) ? ( $foto['url'] ?? '' ) : (string) $foto;
 		$foto_alt  = is_array( $foto ) ? ( $foto['alt'] ?? $nombre ) : $nombre;
@@ -39,7 +41,7 @@ if ( empty( $prologos ) || ! is_array( $prologos ) ) {
 
 				<?php if ( $contenido ) : ?>
 					<div class="prologo-texto">
-						<?php echo wp_kses_post( $contenido ); ?>
+						<?php echo $contenido; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 				<?php endif; ?>
 			</div>

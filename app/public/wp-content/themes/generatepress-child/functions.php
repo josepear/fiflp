@@ -1347,6 +1347,8 @@ function fiflp_render_single_prologo( $prologo_item ) {
 	$nombre    = isset( $prologo_item['nombre'] ) ? trim( (string) $prologo_item['nombre'] ) : '';
 	$cargo     = isset( $prologo_item['cargo'] ) ? trim( (string) $prologo_item['cargo'] ) : '';
 	$contenido = $prologo_item['contenido'] ?? '';
+	$contenido = trim( (string) $contenido );
+	$contenido = '' !== $contenido ? wp_kses_post( wpautop( $contenido ) ) : '';
 	$foto      = $prologo_item['foto'] ?? null;
 	$foto_url  = is_array( $foto ) ? ( $foto['url'] ?? '' ) : (string) $foto;
 	$foto_alt  = is_array( $foto ) ? ( $foto['alt'] ?? $nombre ) : $nombre;
@@ -1374,7 +1376,7 @@ function fiflp_render_single_prologo( $prologo_item ) {
 
 				<?php if ( $contenido ) : ?>
 					<div class="prologo-texto">
-						<?php echo wp_kses_post( $contenido ); ?>
+						<?php echo $contenido; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 				<?php endif; ?>
 			</div>

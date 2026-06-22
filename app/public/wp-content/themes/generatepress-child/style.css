@@ -1524,7 +1524,6 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         margin: 0 !important;
         transform: none !important;
         overflow: visible !important;
-        opacity: 1;
         will-change: clip-path;
     }
 
@@ -5563,6 +5562,10 @@ body.fiflp-lightbox-open {
     font-style: italic;
 }
 
+.lightbox--has-caption .lightbox-caption {
+    display: block;
+}
+
 @media (max-width: 640px) {
 
     .lightbox-caption {
@@ -6086,13 +6089,16 @@ body.fiflp-lightbox-open {
         row-gap: 28px;
     }
 
+    /* Tablet: mantener estructura en 2 columnas (foto + contenido). */
     .prologo {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: minmax(140px, 140px) minmax(0, 1fr);
+        gap: 24px;
     }
 
     .prologo-img {
-        max-width: 280px;
+        width: 140px;
+        max-width: 140px;
+        height: 140px;
     }
 }
 
