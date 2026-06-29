@@ -1,7 +1,7 @@
 <?php
-$module_args = ( isset( $args ) && is_array( $args ) ) ? $args : array();
-$contenido   = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'contenido', $module_args ) : get_sub_field( 'contenido' );
-$capitular_activa = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'capitular_activa', $module_args, true ) : get_sub_field( 'capitular_activa' );
+$module_args = fiflp_normalize_editorial_args( $args );
+$contenido   = fiflp_get_editorial_field( 'contenido', $module_args );
+$capitular_activa = fiflp_get_editorial_field( 'capitular_activa', $module_args, true );
 
 if ( ! $contenido ) {
 	return;

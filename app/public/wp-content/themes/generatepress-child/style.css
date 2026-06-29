@@ -129,17 +129,19 @@ p {
     --fiflp-editorial-gap-x: clamp(36px, 3.2vw, 56px);
     --fiflp-prologos-max-width: 860px;
     --fiflp-modulo-ancho-unificado: 860px;
+    --fiflp-header-current-height: 222px;
+    --fiflp-header-logo-scale: 1;
     /* Offset anclas: páginas interiores lo sobrescriben desde html (header fijo) */
     --fiflp-anchor-scroll-margin: 0px;
 }
 
 /* Altura “útil” bajo header fijo + barra WP; definido en html para scroll-padding y var() global */
 html:has(body:not(.home)) {
-    --fiflp-anchor-scroll-margin: 84px;
+    --fiflp-anchor-scroll-margin: var(--fiflp-header-height, 222px);
 }
 
 html:has(body.admin-bar:not(.home)) {
-    --fiflp-anchor-scroll-margin: 116px;
+    --fiflp-anchor-scroll-margin: calc(var(--fiflp-header-height, 222px) + 32px);
 }
 
 @media (max-width: 782px) {
@@ -154,6 +156,8 @@ html:has(body.admin-bar:not(.home)) {
 
 html {
     /* Anclas nativas (# en URL), scroll-margin en bloques y compensación general */
+    overflow-y: scroll;
+    scrollbar-gutter: stable both-edges;
     scroll-padding-top: calc(var(--fiflp-anchor-scroll-margin) + 12px);
 }
 
@@ -189,10 +193,16 @@ html {
     right: 0;
     width: 100%;
     z-index: 9990;
-    background: transparent;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    background-color: var(--fiflp-header-section-bg, transparent);
     backdrop-filter: none;
+    backface-visibility: hidden;
+    transform: translateZ(0);
     border-bottom: 0;
     box-shadow: none;
+    transition: none;
 }
 
 .site-header,
@@ -200,16 +210,42 @@ html {
 .site-header .inside-header.grid-container,
 .site-header .grid-container,
 .site-header .site-branding {
-    background: transparent !important;
+    background-color: var(--fiflp-header-section-bg, transparent) !important;
     backdrop-filter: none !important;
     box-shadow: none !important;
     border: 0 !important;
 }
 
+.site-header .inside-header,
+.site-header .inside-header.grid-container,
+.site-header .grid-container,
+.site-header .site-branding {
+    transition: none;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+.site-header.is-compact .inside-header {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 .inside-header {
-    padding-top: 10px;
-    padding-bottom: 18px;
+    padding-top: 0;
+    padding-bottom: 0;
     background: transparent;
+}
+
+.site-header .inside-header,
+.site-header .inside-header.grid-container,
+.site-header .grid-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 222px;
+    transition: background-color 1.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .admin-bar .site-header {
@@ -217,25 +253,105 @@ html {
 }
 
 body:not(.home) {
-    padding-top: 84px;
+    padding-top: var(--fiflp-header-height, 222px);
 }
 
 body.admin-bar:not(.home) {
-    padding-top: 116px;
+    padding-top: calc(var(--fiflp-header-height, 222px) + 32px);
+}
+
+@media (min-width: 783px) {
+    /* Escritorio: cabecera fija para que no empuje el contenido al compactarse. */
+    .site-header {
+        position: fixed !important;
+        top: 0 !important;
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        background-color: color-mix(in srgb, var(--fiflp-header-section-bg, transparent) 40%, transparent);
+    }
+
+    .admin-bar .site-header {
+        top: 32px !important;
+    }
+
+    .site-header,
+    .site-header .inside-header,
+    .site-header .inside-header.grid-container,
+    .site-header .grid-container,
+    .site-header .site-branding {
+        background-color: color-mix(in srgb, var(--fiflp-header-section-bg, transparent) 40%, transparent) !important;
+    }
+
+    .site-header .inside-header,
+    .site-header .inside-header.grid-container,
+    .site-header .grid-container {
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        box-sizing: border-box;
+        min-height: var(--fiflp-header-current-height, 222px);
+        transition: background-color 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body:not(.home) {
+        padding-top: 222px;
+    }
+
+    body.admin-bar:not(.home) {
+        padding-top: calc(222px + 32px);
+    }
+
+    .site-header .fiflp-centenario-logo img {
+        width: var(--fiflp-header-logo-width, 180px);
+        max-width: none;
+        height: auto;
+        transform: scale(var(--fiflp-header-logo-scale, 1));
+        transform-origin: center center;
+        transition: filter 0.3s ease;
+    }
+
+    .site-header .fiflp-centenario-logo {
+        transform: translate3d(-50%, -50%, 0);
+        transition: none;
+        backface-visibility: hidden;
+    }
+
+    .site-header.is-compact .inside-header,
+    .site-header.is-compact .inside-header.grid-container,
+    .site-header.is-compact .grid-container {
+        min-height: var(--fiflp-header-current-height, 80px);
+    }
+
+    .site-header.is-compact .fiflp-centenario-logo img {
+        transform: scale(var(--fiflp-header-logo-scale, 0.3334));
+    }
+
 }
 
 @media (max-width: 782px) {
     .admin-bar .site-header {
-        top: 0;
+        top: 46px;
     }
 
-    /* sticky en ≤768px: el header vive en el flujo → no hace falta compensar con padding-top */
+    /* En móvil/tableta compacta, la cabecera sigue fija y la página reserva su alto. */
     body:not(.home) {
-        padding-top: 0;
+        padding-top: var(--fiflp-header-height, 222px);
     }
 
     body.admin-bar:not(.home) {
-        padding-top: 46px;
+        padding-top: calc(var(--fiflp-header-height, 222px) + 46px);
+    }
+
+    html:has(body:not(.home)) {
+        --fiflp-anchor-scroll-margin: var(--fiflp-header-height, 222px);
+    }
+
+    html:has(body.admin-bar:not(.home)) {
+        --fiflp-anchor-scroll-margin: calc(var(--fiflp-header-height, 222px) + 46px);
     }
 
     .site-branding {
@@ -261,8 +377,9 @@ body.admin-bar:not(.home) {
     }
 
     .fiflp-centenario-logo img {
-        height: clamp(54px, 16vw, 82px);
-        max-width: min(52vw, 240px);
+        width: min(52vw, var(--fiflp-header-logo-width-mobile, 150px));
+        height: auto;
+        max-width: 100%;
     }
 }
 
@@ -270,8 +387,10 @@ body.admin-bar:not(.home) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     gap: 12px;
-    min-height: 72px;
+    min-height: 0;
+    width: 100%;
 }
 
 .site-branding .main-title {
@@ -290,7 +409,7 @@ body.admin-bar:not(.home) {
 .fiflp-centenario-logo {
     position: absolute;
     left: 50%;
-    top: 26%;
+    top: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
@@ -305,9 +424,88 @@ body.admin-bar:not(.home) {
 }
 
 .fiflp-centenario-logo img {
-    width: auto;
-    height: clamp(88px, 10.8vw, 134px);
-    max-width: min(44vw, 360px);
+    width: min(44vw, var(--fiflp-header-logo-width, 360px));
+    height: auto;
+    max-width: 100%;
+    transition:
+        width 0.3s var(--fiflp-ease-soft, ease),
+        filter 0.3s ease,
+        transform 0.3s var(--fiflp-ease-soft, ease);
+}
+
+.site-header.is-dark-section .fiflp-centenario-logo img {
+    filter: brightness(0) invert(1);
+}
+
+.site-header.is-dark-section {
+    color: #fcfcf8;
+}
+
+.site-header .mobile-menu-control-wrapper {
+    display: block !important;
+    position: absolute;
+    left: clamp(12px, 2vw, 20px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    background-color: transparent;
+}
+
+.site-header .mobile-menu-control-wrapper .menu-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    color: currentColor;
+    box-shadow: none;
+    overflow: hidden;
+    transition:
+        transform 0.25s var(--fiflp-ease-soft, ease),
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease;
+}
+
+.site-header .mobile-menu-control-wrapper .menu-toggle:hover,
+.site-header .mobile-menu-control-wrapper .menu-toggle:focus-visible {
+    background: rgba(17, 17, 17, 0.06);
+    transform: scale(0.98);
+    outline: none;
+}
+
+.site-header.is-dark-section .mobile-menu-control-wrapper .menu-toggle:hover,
+.site-header.is-dark-section .mobile-menu-control-wrapper .menu-toggle:focus-visible {
+    background: rgba(252, 252, 248, 0.08);
+}
+
+.site-header .mobile-menu-control-wrapper .gp-icon {
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    background-color: transparent;
+}
+
+.site-header .mobile-menu-control-wrapper .gp-icon svg,
+.site-header .mobile-menu-control-wrapper .gp-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.site-header .mobile-menu-control-wrapper .gp-icon img {
+    object-fit: cover;
+    mix-blend-mode: multiply;
+}
+
+body.fiflp-onepage .site-header .mobile-menu-control-wrapper {
+    display: none !important;
 }
 
 .fiflp-centenario-logo.is-fading {
@@ -352,6 +550,25 @@ body.admin-bar:not(.home) {
     text-transform: uppercase;
     color: rgba(17, 17, 17, 0.72);
     font-weight: 600;
+}
+
+button.menu-toggle .gp-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+button.menu-toggle .gp-icon svg,
+button.menu-toggle .gp-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+button.menu-toggle .gp-icon img {
+    object-fit: cover;
 }
 
 .fiflp-global-index {
@@ -1093,6 +1310,10 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     padding-top: min(100svh, 960px);
 }
 
+.seccion-onepage__shell--sin-numero .seccion-onepage__contenido-wrap {
+    padding-top: 0;
+}
+
 .seccion-onepage__contenido {
     display: grid;
     gap: clamp(18px, 2vw, 26px);
@@ -1378,22 +1599,14 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         --onepage-pad-x: 20px;
         --onepage-pad-y: clamp(14px, 3.5vw, 22px);
         --onepage-gap: clamp(12px, 3vw, 20px);
-        /*
-         * Sangría real al viewport: si no, GeneratePress (.grid-container, .inside-article…)
-         * deja el bloque en ~1200px de “referencia” y el número queda minúsculo aunque use vw.
-         */
+        /* Forzamos el bloque a sangre para que el número use el viewport real. */
         width: 100% !important;
         max-width: none !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
         position: relative;
         box-sizing: border-box;
-        /*
-         * El global tiene overflow-x:clip. Según la spec CSS, cuando un eje
-         * es clip y el otro visible, ambos se computan como clip → el SVG del
-         * número queda recortado por la parte inferior de la sección.
-         * En móvil lo forzamos visible en ambos ejes.
-         */
+        /* En móvil dejamos overflow visible para que el SVG no se recorte. */
         overflow: visible !important;
     }
 
@@ -1417,10 +1630,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         padding-right: 0 !important;
     }
 
-    /*
-     * Cadena de contenedores GP que pueden tener overflow-x:clip (→ overflow-y:auto por spec)
-     * y recortar el SVG del número por la parte inferior en móvil.
-     */
+    /* Aseguramos overflow visible en los contenedores GP que rodean la sección. */
     body.fiflp-onepage #page,
     body.fiflp-onepage #content.site-content,
     body.fiflp-onepage .inside-article,
@@ -1429,7 +1639,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         overflow: visible !important;
     }
 
-    /* Columna: stretch; sin padding-bottom:% (WebKit puede hinchar el hueco bajo el número) */
+    /* Columna flexible; sin padding-bottom porcentual. */
     .seccion-onepage__shell {
         display: flex;
         flex-direction: column;
@@ -1440,26 +1650,16 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         width: 100%;
         min-width: 0;
         min-height: 100svh;
-        /* Sin padding lateral aquí: el número usa calc(100vw - 40px) y queda a 20px del borde del viewport */
+        /* Sin padding lateral: el número se calcula contra 100vw. */
         padding: clamp(24px, 6vw, 40px) 0 clamp(18px, 4vw, 32px);
         box-sizing: border-box;
         overflow-x: clip;
         overflow-y: visible;
     }
 
-    /*
-     * Shell: overflow visible en ambos ejes. overflow-x:clip + overflow-y:visible computa
-     * overflow-y como auto (spec), creando un scroll-container que atrapa sticky.
-     */
+    /* El shell debe quedar visible; no queremos que atrape sticky. */
     .bloque.seccion-onepage .seccion-onepage__shell {
         overflow: visible;
-        /*
-         * z-index explícito en root: el shell tiene isolation:isolate (stacking context).
-         * Sin z-index explícito, el contexto del shell queda en "auto" (por debajo de cualquier
-         * elemento fixed con z-index > 0). El .numero-wrap en fixed (z:15) quedaría encima del
-         * aside/título (z:100 dentro del shell pero trapped en su contexto).
-         * Con z-index:20 el shell-context queda sobre el fixed número (z:15) → el título gana. 
-         */
         z-index: 20;
     }
 
@@ -1469,10 +1669,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         background: transparent !important;
     }
 
-    /*
-     * Cuadrado del número (móvil): centrado con márgenes, sin transform en el wrap.
-     * Texto SVG grande + central (alineado con revisión DevTools); morph sigue en clip-path del SVG.
-     */
+    /* Número cuadrado centrado, sin transform en el wrapper. */
     .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__numero-wrap {
         order: 1;
         position: relative !important;
@@ -1482,8 +1679,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         display: block !important;
         width: min(calc(100vw - 40px), 400px) !important;
         max-width: none !important;
-        /* Alto explícito = ancho: evita que aspect-ratio no resuelva bien
-         * en algunos contextos flex y recorte el SVG por la parte inferior. */
+        /* Alto explícito = ancho para que el cuadrado resuelva bien en flex. */
         height: min(calc(100vw - 40px), 400px) !important;
         max-height: min(calc(100vw - 40px), 400px) !important;
         margin-left: auto !important;
@@ -1500,10 +1696,10 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         z-index: 20 !important;
         pointer-events: none;
         overflow: visible !important;
-        /* border-radius eliminado: en Safari/WebKit clip a los hijos aunque overflow:visible */
+        /* Sin border-radius: Safari/WebKit puede recortar hijos. */
     }
 
-    /* Relleno y contorno: mismo cuerpo tipográfico en coords. de usuario (viewBox 2400); HTML usa y=50% en el <text>. */
+    /* Relleno y contorno usan el mismo tamaño tipográfico en el SVG. */
     .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__numero-wrap .seccion-onepage__numero-text {
         font-size: 2400px !important;
         dominant-baseline: central !important;
@@ -1511,7 +1707,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         y: 50% !important;
     }
 
-    /* SVG van dentro de .numero-wrap, no son hijo directo del shell (el > hacía que no aplicara y quedaba clamp(1200px,…svh)). */
+    /* El SVG vive dentro de .numero-wrap, no como hijo directo del shell. */
     .bloque.seccion-onepage .seccion-onepage__shell > .seccion-onepage__numero-wrap .seccion-onepage__numero {
         position: absolute !important;
         left: 0 !important;
@@ -1527,21 +1723,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         will-change: clip-path;
     }
 
-    /*
-     * Morph móvil — clip extendido para cubrir el desbordamiento de glifos.
-     *
-     * El recorte global (inset 0 0 p% 0) se acota al border-box del SVG.
-     * En móvil, el SVG tiene overflow:visible pero la CSS clip-path sigue
-     * referenciando el border-box, cortando los rasgos que asoman por
-     * arriba/abajo del cuadrado.
-     *
-     * Insets negativos (−15%) extienden la región 30% más en altura;
-     * el barrido del morph sigue siendo correcto:
-     *   Sólido  p=0 → inset(−15% −5% −15% −5%)  todo visible incl. overflow
-     *   Sólido  p=1 → inset(−15% −5% 115% −5%)  altura cero → nada visible
-     *   Contorno p=0 → inset(115% −5% −15% −5%)  altura cero → nada visible
-     *   Contorno p=1 → inset(−15% −5% −15% −5%)  todo visible incl. overflow
-     */
+    /* Clip extendido para que el morph no corte los rasgos del SVG. */
     .seccion-onepage__numero--solid {
         z-index: 0;
         clip-path: inset(-15% -5% calc(var(--onepage-morph-progress) * 130% - 15%) -5%) !important;
@@ -1556,9 +1738,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         stroke-width: 1px !important;
     }
 
-    /* Titular: sticky debajo del header, por encima del número (z-index).
-     * --fiflp-header-height la publica JS (initOnepageHeaderSync) midiendo
-     * el offsetHeight real del .site-header en móvil. */
+    /* Titular sticky bajo el header. JS publica --fiflp-header-height. */
     .bloque.seccion-onepage .seccion-onepage__shell > aside.seccion-onepage__indice {
         order: 2;
         position: sticky !important;
@@ -1584,7 +1764,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
 
-    /* Sin dependencia de JS: en móvil el título sticky siempre lleva banda de fondo. */
+    /* En móvil el título lleva siempre banda de fondo. */
 
     .seccion-onepage__titulo,
     .seccion-onepage__titulo--left,
@@ -1595,7 +1775,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         margin-right: auto;
     }
 
-    /* Mantiene la escala original: al anclarse arriba llega al tamaño destino habitual. */
+    /* Al anclarse arriba, mantiene la escala original. */
     .bloque.seccion-onepage .seccion-onepage__shell > aside.seccion-onepage__indice .seccion-onepage__titulo {
         font-size: calc(18px + 20px * (1 - var(--onepage-mobile-title-phase, 0))) !important;
         line-height: 1.15 !important;
@@ -1624,12 +1804,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         background: transparent !important;
     }
 
-    /*
-     * Número en fase morph (JS): fixed al viewport.
-     * sticky no funciona de forma fiable porque overflow-x:clip en #page (herencia GeneratePress)
-     * se computa como overflow-y:auto, convirtiendo #page en scroll-container y atrapando sticky.
-     * fixed es siempre relativo al viewport; el ::before de abajo mantiene el hueco en el flex.
-     */
+    /* El número pasa a fixed porque sticky falla con overflow clip en GP. */
     .bloque.seccion-onepage .seccion-onepage__shell.is-onepage-numero-sticky > .seccion-onepage__numero-wrap {
         position: fixed !important;
         top: var(--onepage-numero-sticky-top, calc(50svh - min(calc(100vw - 40px), 400px) / 2)) !important;
@@ -1647,11 +1822,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         background: transparent !important;
     }
 
-    /*
-     * Placeholder flex: cuando el número pasa a fixed (sale del flujo), este ::before
-     * ocupa el mismo espacio (mismo order:1, mismo tamaño) para que aside e contenido
-     * no salten de posición.
-     */
+    /* Placeholder para que el layout no salte cuando el número sale del flujo. */
     .bloque.seccion-onepage .seccion-onepage__shell.is-onepage-numero-sticky::before {
         content: '';
         display: block;
@@ -1697,8 +1868,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
         transition: none;
     }
 
-    /* En móvil la regla global .is-content-visible { opacity:1 } interfiere:
-     * la anularmos para que el reveal siga siendo gradual (variable-driven). */
+    /* La regla global de visibilidad no debe anular el reveal gradual. */
     .seccion-onepage__shell.seccion-onepage--js.is-content-visible .seccion-onepage__contenido-wrap {
         opacity: var(--onepage-reveal-progress);
         transform: translateY(calc((1 - var(--onepage-reveal-progress)) * 10svh));
@@ -1723,7 +1893,7 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     section.bloque.texto-imagen {
         padding-left: 0 !important;
         gap: 0 !important;
@@ -1743,37 +1913,32 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 }
 
-/* ── Header: color de sección activa + logo compacto (solo móvil) ──────
- * JS (initOnepageHeaderSync) detecta la sección más visible, lee
- * --onepage-bg de su shell y lo pone en --fiflp-header-section-bg del
- * .site-header.  is-compact se añade al pasar 40 px de scroll.
- * is-dark-section invierte el logo en fondos #1e1e1e / #072728.
- * ──────────────────────────────────────────────────────────────────── */
+/* Header móvil: JS pinta el color de sección activa y compacta el logo. */
 @media (max-width: 768px) {
-    /* El site-header pasa a sticky en móvil: vive en el flujo del documento
-     * y se pega al top al hacer scroll. El fondo de color cubre desde el
-     * borde físico superior de la pantalla (env safe-area) hacia abajo. */
+    /* En móvil, la cabecera queda fija arriba del todo. */
     .site-header {
-        position: sticky !important;
+        position: fixed !important;
         top: 0 !important;
-        background: var(--fiflp-header-section-bg, transparent) !important;
+        background-color: var(--fiflp-header-section-bg, transparent) !important;
         transition: background-color 1.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
         padding-top: calc(env(safe-area-inset-top, 0px) + 10px) !important;
         padding-bottom: 5px !important;
     }
 
-    /* Onepage móvil: fallback amarillo para cubrir la franja superior
-     * antes de que JS pinte el color exacto de sección activa. */
+    .admin-bar .site-header {
+        top: 46px !important;
+    }
+
+    /* Onepage móvil: fondo provisional hasta que JS pinte el color real. */
     body.fiflp-onepage .site-header,
     body.fiflp-onepage .site-header .inside-header,
     body.fiflp-onepage .site-header .inside-header.grid-container,
     body.fiflp-onepage .site-header .grid-container,
     body.fiflp-onepage .site-header .site-branding {
-        background: var(--fiflp-header-section-bg, #fde25f) !important;
+        background-color: var(--fiflp-header-section-bg, #fde25f) !important;
     }
 
-    /* Centrado vertical del contenido dentro del header sticky.
-     * overflow:visible evita que GeneratePress grid-container recorte el logo. */
+    /* Centrado vertical; overflow visible evita recortes del logo. */
     .site-header .inside-header {
         display: flex !important;
         align-items: center !important;
@@ -1803,22 +1968,25 @@ body.fiflp-onepage.onepage-menu-open .seccion-onepage__numero--solid {
     }
 
     .site-header .fiflp-centenario-logo img {
-        width: 150px !important;
+        width: var(--fiflp-header-logo-width-mobile, 150px) !important;
         height: auto !important;
         display: block;
-        transition:
-            width 0.3s var(--fiflp-ease-soft, ease),
-            filter 0.3s ease;
     }
 
     /* Compacto al hacer scroll */
     .site-header.is-compact .fiflp-centenario-logo img {
-        width: 112px !important;
+        width: calc(var(--fiflp-header-logo-width-mobile, 150px) * 0.75) !important;
     }
 
     /* Sección oscura: logo en blanco */
     .site-header.is-dark-section .fiflp-centenario-logo img {
         filter: brightness(0) invert(1);
+    }
+}
+
+@media (min-width: 769px) {
+    .site-header.is-compact .fiflp-centenario-logo {
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
@@ -2420,19 +2588,23 @@ body {
         line-height: 22px;
     }
 
-    .editorial p,
-    .bloque.texto p,
-    .bloque.texto-imagen .texto p,
-    .prologo-texto :where(p, li, blockquote),
-    .cronologia-editorial__texto p,
-    .seccion-onepage__texto,
-    .seccion-onepage__texto p,
-    .seccion-onepage__texto li,
-    .editorial .wp-caption .wp-caption-text,
-    .bloque.imagen figcaption {
-        font-size: 16px;
-        line-height: 22px;
-    }
+.editorial p,
+.bloque.texto p,
+.bloque.texto-imagen .texto p,
+.prologo-texto :where(p, li, blockquote),
+.cronologia-editorial__texto p,
+.seccion-onepage__texto,
+.seccion-onepage__texto p,
+.seccion-onepage__texto li,
+.editorial .wp-caption .wp-caption-text,
+.bloque.imagen figcaption {
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.editorial h2 {
+    margin-bottom: 0;
+}
 }
 
 /* TÍTULOS — más carácter editorial */
@@ -2540,10 +2712,7 @@ body.fiflp-onepage .menu-lateral {
     clip-path: inset(50%) !important;
 }
 
-/*
- * Onepage — lienzo a sangre (GeneratePress + envoltorios de contenido).
- * Solo body.fiflp-onepage; no afecta al resto del sitio.
- */
+/* Onepage a sangre: solo afecta a body.fiflp-onepage. */
 body.fiflp-onepage #page,
 body.fiflp-onepage #content.site-content,
 body.fiflp-onepage #content,
@@ -2579,6 +2748,22 @@ body.fiflp-onepage {
     --fiflp-onepage-sidebar-w: var(--onepage-menu-width-open);
 }
 
+body.fiflp-onepage,
+body.fiflp-onepage #page,
+body.fiflp-onepage #content.site-content,
+body.fiflp-onepage .site-content,
+body.fiflp-onepage .content-area,
+body.fiflp-onepage #primary,
+body.fiflp-onepage .site-main,
+body.fiflp-onepage main.site-main,
+body.fiflp-onepage main#primary,
+body.fiflp-onepage article,
+body.fiflp-onepage .inside-article,
+body.fiflp-onepage .entry-content,
+body.fiflp-onepage .layout-editorial--onepage {
+    background-color: var(--fiflp-onepage-canvas-bg, transparent);
+}
+
 body.fiflp-onepage.onepage-menu-open {
     --fiflp-onepage-sidebar-w: var(--onepage-menu-width-open);
 }
@@ -2587,7 +2772,14 @@ body.fiflp-onepage.onepage-menu-closed {
     --fiflp-onepage-sidebar-w: var(--onepage-menu-width-closed);
 }
 
-/* Grid onepage = sidebar onepage + main (no columna 228px de menu-lateral). */
+@media (max-width: 782px) {
+    body.fiflp-onepage:not(.home),
+    body.admin-bar.fiflp-onepage:not(.home) {
+        padding-top: 0;
+    }
+}
+
+/* Grid onepage: sidebar + contenido, sin la columna del menú clásico. */
 body.fiflp-onepage .layout-editorial--onepage {
     position: relative;
     max-width: none !important;
@@ -2597,10 +2789,10 @@ body.fiflp-onepage .layout-editorial--onepage {
     margin-inline: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
-    padding-top: clamp(36px, 5vw, 72px) !important;
+    padding-top: 0 !important;
     padding-bottom: 0 !important;
-    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
-    column-gap: clamp(28px, 3.6vw, 56px);
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
     align-items: start;
     transition: column-gap 0.38s var(--fiflp-ease-gentle, cubic-bezier(0.4, 0, 0.2, 1));
 }
@@ -2610,12 +2802,17 @@ body.fiflp-onepage.onepage-menu-closed .layout-editorial--onepage {
 }
 
 .fiflp-onepage-sidebar-col {
-    width: var(--fiflp-onepage-sidebar-w);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
     min-width: 0;
-    max-width: 100%;
-    overflow: hidden;
+    max-width: 0;
+    overflow: visible;
     align-self: start;
-    transition: width 0.38s var(--fiflp-ease-gentle, cubic-bezier(0.4, 0, 0.2, 1));
+    background-color: var(--fiflp-onepage-canvas-bg, transparent);
+    transition: none;
 }
 
 .fiflp-onepage-sidebar {
@@ -2631,7 +2828,7 @@ body.fiflp-onepage.onepage-menu-closed .layout-editorial--onepage {
 }
 
 .admin-bar .fiflp-onepage-sidebar {
-    top: calc(100px + 32px);
+    top: 132px;
 }
 
 .fiflp-onepage-sidebar__toggle {
@@ -2639,16 +2836,19 @@ body.fiflp-onepage.onepage-menu-closed .layout-editorial--onepage {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: 60px;
+    height: 60px;
     margin: 0;
     padding: 0;
-    border: 1px solid rgba(17, 17, 17, 0.14);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.72);
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
     color: inherit;
     cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    box-shadow: none;
+    overflow: hidden;
     transition:
         border-color 0.25s ease,
         background-color 0.25s ease,
@@ -2657,42 +2857,62 @@ body.fiflp-onepage.onepage-menu-closed .layout-editorial--onepage {
 
 .fiflp-onepage-sidebar__toggle:hover,
 .fiflp-onepage-sidebar__toggle:focus-visible {
-    border-color: rgba(17, 17, 17, 0.24);
-    background: rgba(255, 255, 255, 0.92);
+    background: transparent;
     outline: none;
     transform: scale(0.98);
 }
 
 .fiflp-onepage-sidebar__toggle-bars {
     display: block;
-    width: 20px;
-    height: 2px;
-    border-radius: 1px;
-    background: currentColor;
-    opacity: 0.88;
-    box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+    background: transparent;
+    line-height: 0;
 }
 
-body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__toggle {
-    position: fixed;
-    left: clamp(10px, 2vw, 20px);
-    top: 30px;
-    z-index: 10040;
+.fiflp-onepage-sidebar__toggle-bars--image {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
+.fiflp-onepage-sidebar__toggle-bars--image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    margin: 0;
+    background: transparent;
+    mix-blend-mode: multiply;
+}
+
+.fiflp-onepage-sidebar__brand img {
+    filter: var(--fiflp-onepage-sidebar-logo-filter, none);
+    transition: filter 0.25s ease;
+}
+
+body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__toggle,
 body.fiflp-onepage.onepage-menu-closed .fiflp-onepage-sidebar__toggle {
     position: fixed;
-    left: clamp(10px, 2vw, 20px);
-    top: 30px;
+    left: calc(clamp(10px, 2vw, 20px) + 80px);
+    top: clamp(18px, 2.2vw, 28px);
     z-index: 10040;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
 
+body.admin-bar.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__toggle,
 body.admin-bar.fiflp-onepage.onepage-menu-closed .fiflp-onepage-sidebar__toggle {
-    top: calc(30px + 32px);
-}
-
-body.admin-bar.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__toggle {
-    top: calc(30px + 32px);
+    top: calc(32px + clamp(18px, 2.2vw, 28px));
 }
 
 .fiflp-onepage-sidebar__sheet {
@@ -2710,31 +2930,29 @@ body.admin-bar.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__toggle {
     padding: 12px 14px 16px 14px;
     box-sizing: border-box;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.86);
-    backdrop-filter: blur(4px);
+    background: var(--fiflp-menu-section-bg, transparent);
+    color: var(--fiflp-menu-section-fg, inherit);
+    backdrop-filter: none;
 }
 
-/* Logo del menú onepage (solo móvil; mismo recurso que el header). */
+.fiflp-onepage-sidebar__panel a {
+    color: inherit;
+}
+
+/* Logo del menú onepage (solo móvil). */
 .fiflp-onepage-sidebar__brand {
-    display: none;
-}
-
-.fiflp-onepage-sidebar__heading {
-    margin: 0 0 12px;
-    font-family: var(--fiflp-font-meta);
-    font-size: 14px;
-    line-height: 1.2;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(17, 17, 17, 0.48);
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(122px, var(--fiflp-onepage-logo-width, 122px));
+    margin: 0 auto 24px;
 }
 
 .fiflp-onepage-sidebar__list {
     list-style: none;
     margin: 0;
     padding: 0 0 0 20px;
-    border-left: 1px solid rgba(17, 17, 17, 0.12);
+    border-left: 1px solid var(--fiflp-menu-section-border, rgba(17, 17, 17, 0.12));
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -2749,20 +2967,20 @@ body.admin-bar.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__toggle {
     letter-spacing: 0.02em;
     text-transform: uppercase;
     text-decoration: none;
-    color: rgba(17, 17, 17, 0.52);
+    color: var(--fiflp-menu-section-fg-soft, rgba(17, 17, 17, 0.52));
     font-weight: 600;
     transition: color 0.25s ease, transform 0.25s var(--fiflp-ease-soft, ease);
 }
 
 .fiflp-onepage-sidebar__list a:hover,
 .fiflp-onepage-sidebar__list a:focus-visible {
-    color: #111;
+    color: var(--fiflp-menu-section-fg, #111);
     outline: none;
     transform: translateX(2px);
 }
 
 .fiflp-onepage-sidebar__list a.is-active {
-    color: #111;
+    color: var(--fiflp-menu-section-fg, #111);
 }
 
 .fiflp-onepage-sidebar__list a.is-active::before {
@@ -2802,7 +3020,7 @@ body.admin-bar.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__toggle {
     letter-spacing: 0.015em;
     text-transform: uppercase;
     text-decoration: none;
-    color: rgba(17, 17, 17, 0.56);
+    color: var(--fiflp-menu-section-fg-soft, rgba(17, 17, 17, 0.56));
     font-weight: 600;
 }
 
@@ -2838,25 +3056,96 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 }
 
 @media (min-width: 1025px) {
+    body.fiflp-onepage .layout-editorial--onepage {
+        grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+        column-gap: 0;
+    }
+
+    body.fiflp-onepage.onepage-menu-open .layout-editorial--onepage {
+        column-gap: 0;
+    }
+
+    body.fiflp-onepage .fiflp-onepage-sidebar-col {
+        position: relative;
+        left: auto;
+        top: auto;
+        width: var(--fiflp-onepage-sidebar-w);
+        height: auto;
+        max-width: 100%;
+        overflow: visible;
+        transition: width 0.58s var(--fiflp-ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
     body.fiflp-onepage .fiflp-onepage-sidebar__panel {
         position: fixed;
         left: clamp(10px, 2vw, 20px);
-        top: calc(30px + 56px);
+        top: 148px;
         width: calc(var(--fiflp-onepage-sidebar-w) - 24px);
         max-width: calc(var(--fiflp-onepage-sidebar-w) - 24px);
         max-height: calc(100svh - 110px);
         overflow: auto;
         z-index: 58;
+        opacity: 0;
+        transform: translate3d(-12px, 0, 0) scale(0.985);
+        transition:
+            opacity 0.42s var(--fiflp-ease-soft, cubic-bezier(0.22, 1, 0.36, 1)),
+            transform 0.58s var(--fiflp-ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
     }
 
     body.admin-bar.fiflp-onepage .fiflp-onepage-sidebar__panel {
-        top: calc(30px + 56px + 32px);
+        top: 180px;
         max-height: calc(100svh - 142px);
+    }
+
+    body.fiflp-onepage .fiflp-onepage-sidebar__toggle {
+        position: fixed;
+        left: calc(clamp(10px, 3vw, 18px) + 60px);
+        top: 258px;
+        z-index: 10040;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    body.admin-bar.fiflp-onepage .fiflp-onepage-sidebar__toggle {
+        top: 290px;
+    }
+
+body.fiflp-onepage .fiflp-onepage-sidebar__toggle-bars {
+    transform: scale(1);
+    transform-origin: center;
+}
+
+    body.fiflp-onepage .fiflp-onepage-sidebar__toggle-bars--image {
+        display: block;
+    }
+
+    body.fiflp-onepage .fiflp-onepage-sidebar__toggle-bars--image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+        margin: 0;
+    }
+
+    body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__panel {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    body.fiflp-onepage.onepage-menu-closed .fiflp-onepage-sidebar__panel {
+        opacity: 0;
+        transform: translate3d(-12px, 0, 0) scale(0.985);
     }
 }
 
 @media (max-width: 768px) {
-    /* Móvil onepage: ocultar SOLO rótulos dentro del módulo onepage específico */
+/* Móvil onepage: ocultar rótulos del módulo editorial principal. */
     body.fiflp-onepage .seccion-onepage__modulo--rotulo-editorial,
     body.fiflp-onepage .seccion-onepage__modulo--rotulo-editorial .rotulo-editorial,
     body.fiflp-onepage .seccion-onepage__modulo--rotulo-editorial .bloque.rotulo-editorial-bloque {
@@ -2872,7 +3161,7 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
         opacity: 1 !important;
     }
 
-    /* Móvil: escala única del bloque texto (evita reducción en cascada) */
+    /* Móvil: escala única del bloque texto. */
     .bloque.texto-imagen .texto {
         font-size: 98.828125% !important;
         line-height: 1.25 !important;
@@ -2883,7 +3172,7 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
         line-height: inherit !important;
     }
 
-    /* Móvil: imagen del módulo imagen+texto un 20% más pequeña */
+    /* Móvil: imagen del módulo imagen+texto algo más pequeña. */
     .bloque.texto-imagen .texto-imagen__imagen {
         width: 60% !important;
         max-width: 60% !important;
@@ -2925,13 +3214,20 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     body.fiflp-onepage .fiflp-onepage-sidebar__toggle {
         position: fixed;
         left: clamp(10px, 3vw, 18px);
-        top: 30px;
-        z-index: 10000;
+        top: 12px;
+        z-index: 10040;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        overflow: hidden;
         box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
     }
 
     body.admin-bar.fiflp-onepage .fiflp-onepage-sidebar__toggle {
-        top: calc(30px + 46px);
+        top: 44px;
     }
 
     body.fiflp-onepage .fiflp-onepage-sidebar__sheet {
@@ -2966,11 +3262,9 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
     }
 
     body.fiflp-onepage .fiflp-onepage-sidebar__brand {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        margin: 0 0 40px;
+        display: block;
+        width: min(108px, calc(100vw - 40px));
+        margin: 0 0 12px;
         padding: 0;
         box-sizing: border-box;
         text-decoration: none;
@@ -2978,9 +3272,8 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
 
     body.fiflp-onepage .fiflp-onepage-sidebar__brand img {
         display: block;
-        width: auto;
-        height: clamp(54px, 16vw, 82px);
-        max-width: min(52vw, 240px);
+        width: 100%;
+        height: auto;
     }
 
     /* Reset instantáneo tras animar el cierre hacia abajo (evita “salto” al estado oculto arriba). */
@@ -3005,7 +3298,7 @@ body.fiflp-onepage.onepage-menu-open .fiflp-onepage-sidebar__heading {
         margin: 0;
         overflow: auto;
         overscroll-behavior: contain;
-        background: #fcfcf8;
+        background: transparent;
         box-shadow: none;
         border-radius: 0;
         /* Cerrado: fuera por arriba (entra al abrir). */
@@ -3095,10 +3388,31 @@ body.fiflp-editorial-nav-open {
     padding-top: 80px;
     overflow: visible;
     z-index: 2;
+    background-color: var(--fiflp-menu-section-bg, transparent);
+    color: var(--fiflp-menu-section-fg, #111111);
+    transition:
+        background-color 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+        color 1.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .menu-lateral-mobile-toggle {
     display: none;
+}
+
+.menu-lateral__brand {
+    display: block;
+    width: min(140px, var(--fiflp-menu-logo-width, 140px));
+    margin: 0 0 20px 18px;
+}
+
+.menu-lateral__brand img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.menu-lateral.is-dark-section .menu-lateral__brand img {
+    filter: brightness(0) invert(1);
 }
 
 .menu-lateral-mobile-panel {
@@ -3123,7 +3437,7 @@ body.fiflp-editorial-nav-open {
     gap: 12px;
     margin: 0;
     padding: 0 0 0 18px;
-    border-left: 1px solid rgba(17, 17, 17, 0.12);
+    border-left: 1px solid var(--fiflp-menu-section-border, rgba(17, 17, 17, 0.12));
 }
 
 .menu-lateral li {
@@ -3142,7 +3456,7 @@ body.fiflp-editorial-nav-open {
     margin-top: 10px;
     margin-left: 6px;
     padding-left: 14px;
-    border-left-color: rgba(17, 17, 17, 0.08);
+    border-left-color: var(--fiflp-menu-section-border-soft, rgba(17, 17, 17, 0.08));
     overflow: hidden;
     opacity: 1;
     height: auto;
@@ -3167,10 +3481,10 @@ body.fiflp-editorial-nav-open {
     height: 28px;
     margin: 0;
     padding: 0;
-    border: 1px solid rgba(17, 17, 17, 0.1);
+    border: 1px solid var(--fiflp-menu-section-border-soft, rgba(17, 17, 17, 0.1));
     border-radius: 999px;
     background: transparent;
-    color: rgba(17, 17, 17, 0.56);
+    color: var(--fiflp-menu-section-fg-soft, rgba(17, 17, 17, 0.56));
     font-family: var(--fiflp-font-meta);
     font-size: 16px;
     line-height: 1;
@@ -3180,9 +3494,9 @@ body.fiflp-editorial-nav-open {
 
 .menu-lateral-toggle:hover,
 .menu-lateral-toggle:focus-visible {
-    border-color: rgba(17, 17, 17, 0.24);
-    color: #111;
-    background: rgba(17, 17, 17, 0.04);
+    border-color: var(--fiflp-menu-section-border-strong, rgba(17, 17, 17, 0.24));
+    color: var(--fiflp-menu-section-fg, #111111);
+    background: var(--fiflp-menu-section-hover, rgba(17, 17, 17, 0.04));
     transform: scale(0.96);
 }
 
@@ -3222,12 +3536,17 @@ body.fiflp-editorial-nav-open {
         min-width: 0;
         padding-top: 0;
         margin-bottom: 12px;
-        border: 1px solid rgba(17, 17, 17, 0.08);
+        border: 1px solid var(--fiflp-menu-section-border-soft, rgba(17, 17, 17, 0.08));
         border-radius: 20px;
-        background: rgba(252, 252, 248, 0.92);
+        background-color: var(--fiflp-menu-section-bg, rgba(252, 252, 248, 0.92));
         box-shadow: 0 14px 32px rgba(0, 0, 0, 0.05);
         overflow: clip;
         backdrop-filter: blur(10px);
+    }
+
+    .menu-lateral__brand {
+        width: min(var(--fiflp-menu-logo-width-mobile, 128px), calc(100% - 36px));
+        margin: 0 18px 14px;
     }
 
     /* Índice editorial a pantalla completa (móvil / ≤1024px). body.fiflp-editorial-nav-open → editorial.js */
@@ -3247,7 +3566,7 @@ body.fiflp-editorial-nav-open {
         border: 0;
         border-radius: 0;
         box-shadow: none;
-        background-color: #fcfcf8;
+        background-color: var(--fiflp-menu-section-bg, #fcfcf8);
         background-clip: border-box;
         backdrop-filter: none;
         overflow: hidden;
@@ -3260,7 +3579,7 @@ body.fiflp-editorial-nav-open {
 
     .menu-lateral.is-mobile-open .menu-lateral-mobile-toggle {
         flex: 0 0 auto;
-        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+        border-bottom: 1px solid var(--fiflp-menu-section-border-soft, rgba(17, 17, 17, 0.08));
     }
 
     .menu-lateral.is-mobile-open .menu-lateral-mobile-panel {
@@ -3285,7 +3604,7 @@ body.fiflp-editorial-nav-open {
         padding: 16px 18px 15px;
         border: 0;
         background: transparent;
-        color: #111;
+        color: var(--fiflp-menu-section-fg, #111111);
         text-align: left;
         cursor: pointer;
     }
@@ -3299,7 +3618,7 @@ body.fiflp-editorial-nav-open {
         line-height: 1;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: rgba(17, 17, 17, 0.48);
+        color: var(--fiflp-menu-section-fg-soft, rgba(17, 17, 17, 0.48));
         font-weight: 600;
     }
 
@@ -3310,7 +3629,7 @@ body.fiflp-editorial-nav-open {
         font-size: clamp(1.2rem, 2.8vw, 1.7rem);
         line-height: 0.98;
         text-transform: uppercase;
-        color: #111;
+        color: var(--fiflp-menu-section-fg, #111111);
     }
 
     .menu-lateral-mobile-toggle__icon {
@@ -3321,13 +3640,13 @@ body.fiflp-editorial-nav-open {
         justify-content: center;
         width: 38px;
         height: 38px;
-        border: 1px solid rgba(17, 17, 17, 0.12);
+        border: 1px solid var(--fiflp-menu-section-border, rgba(17, 17, 17, 0.12));
         border-radius: 999px;
         font-family: var(--fiflp-font-meta);
         font-size: 24px;
         line-height: 1;
-        color: rgba(17, 17, 17, 0.72);
-        background: rgba(255, 255, 255, 0.48);
+        color: var(--fiflp-menu-section-fg, rgba(17, 17, 17, 0.72));
+        background: var(--fiflp-menu-section-hover, rgba(255, 255, 255, 0.48));
         transition:
             transform var(--fiflp-duration-fast) var(--fiflp-ease-soft),
             background-color var(--fiflp-duration-fast) ease,
@@ -3335,16 +3654,37 @@ body.fiflp-editorial-nav-open {
             color var(--fiflp-duration-fast) ease;
     }
 
+    .menu-lateral-mobile-toggle__icon--image {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+    }
+
+    .menu-lateral-mobile-toggle__icon--image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
     .menu-lateral-mobile-toggle:hover .menu-lateral-mobile-toggle__icon,
     .menu-lateral-mobile-toggle:focus-visible .menu-lateral-mobile-toggle__icon,
     .menu-lateral.is-mobile-open .menu-lateral-mobile-toggle__icon {
-        color: #111;
-        border-color: rgba(17, 17, 17, 0.2);
-        background: rgba(17, 17, 17, 0.04);
+        color: var(--fiflp-menu-section-fg, #111111);
+        border-color: var(--fiflp-menu-section-border-strong, rgba(17, 17, 17, 0.2));
+        background: var(--fiflp-menu-section-hover, rgba(17, 17, 17, 0.04));
         transform: scale(0.96);
     }
 
-    .menu-lateral.is-mobile-open .menu-lateral-mobile-toggle__icon {
+    .menu-lateral-mobile-toggle:hover .menu-lateral-mobile-toggle__icon--image,
+    .menu-lateral-mobile-toggle:focus-visible .menu-lateral-mobile-toggle__icon--image,
+    .menu-lateral.is-mobile-open .menu-lateral-mobile-toggle__icon--image {
+        background: transparent;
+        border-color: transparent;
+    }
+
+    .menu-lateral.is-mobile-open .menu-lateral-mobile-toggle__icon:not(.menu-lateral-mobile-toggle__icon--image) {
         transform: scale(0.96) rotate(45deg);
     }
 
@@ -3376,6 +3716,11 @@ body.fiflp-editorial-nav-open {
 @media (max-width: 768px) {
     .menu-lateral {
         border-radius: 18px;
+    }
+
+    .menu-lateral__brand {
+        width: min(118px, calc(100% - 32px));
+        margin: 0 16px 12px;
     }
 
     .menu-lateral-mobile-toggle {
@@ -3415,7 +3760,7 @@ body.fiflp-editorial-nav-open {
     position: relative;
     flex: 1 1 auto;
     min-width: 0;
-    color: rgba(17, 17, 17, 0.56);
+    color: var(--fiflp-menu-section-fg-soft, rgba(17, 17, 17, 0.56));
     text-decoration: none;
     font-family: var(--fiflp-font-display);
     font-size: var(--fiflp-nav-size-main);
@@ -3457,7 +3802,7 @@ body.fiflp-editorial-nav-open {
 
 .menu-lateral a:hover,
 .menu-lateral a:focus-visible {
-    color: #111;
+    color: var(--fiflp-menu-section-fg, #111111);
     transform: translateX(1px);
 }
 
@@ -3472,7 +3817,7 @@ body.fiflp-editorial-nav-open {
    ========================= */
 
 .menu-lateral a.activo {
-    color: #111;
+    color: var(--fiflp-menu-section-fg, #111111);
     font-weight: 500;
 }
 
@@ -3480,7 +3825,7 @@ body.fiflp-editorial-nav-open {
 .menu-lateral .current_page_ancestor > a,
 .menu-lateral .current_page_ancestor > .menu-lateral-grupo > .menu-lateral-summary > a,
 .menu-lateral .current_page_parent > .menu-lateral-grupo > .menu-lateral-summary > a {
-    color: #111;
+    color: var(--fiflp-menu-section-fg, #111111);
     font-weight: 500;
 }
 
@@ -3491,8 +3836,8 @@ body.fiflp-editorial-nav-open {
     width: auto;
     padding: 6px 14px 5px;
     font-family: var(--fiflp-font-display-slanted);
-    color: var(--fiflp-nav-active-fg);
-    background: var(--fiflp-nav-active-bg);
+    color: var(--fiflp-nav-active-fg, #fcfcf8);
+    background: var(--fiflp-nav-active-bg, var(--fiflp-accent, #0f2d30));
     clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
     transform: none;
     animation: fiflpMenuActiveReveal 1.04s var(--fiflp-ease-gentle);
@@ -3513,7 +3858,7 @@ body.fiflp-editorial-nav-open {
 .menu-lateral .current_page_item > a:focus-visible,
 .menu-lateral .current_page_item > .menu-lateral-grupo > .menu-lateral-summary > a:hover,
 .menu-lateral .current_page_item > .menu-lateral-grupo > .menu-lateral-summary > a:focus-visible {
-    color: var(--fiflp-nav-active-fg);
+    color: var(--fiflp-nav-active-fg, #fcfcf8);
     transform: none;
 }
 
@@ -4075,6 +4420,23 @@ body.fiflp-editorial-nav-open {
     align-items: center;
 }
 
+@media (min-width: 1025px) {
+    /* Centrado visual real: compensa todo el carril lateral para que el rótulo
+       quede alineado con el eje del logo del sitio, no con el inicio del contenido. */
+    .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center,
+    .seccion-onepage__modulo--rotulo-editorial .rotulo-editorial--align-center {
+        position: relative;
+        left: calc((var(--fiflp-onepage-sidebar-w, 0px) + clamp(24px, 3vw, 56px)) * -1);
+        width: 100%;
+        max-width: none;
+    }
+
+    .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__cabecera,
+    .seccion-onepage__modulo--rotulo-editorial .rotulo-editorial--align-center .rotulo-editorial__cabecera {
+        margin-inline: auto;
+    }
+}
+
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__franja--superior,
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__franja--principal,
 .rotulo-editorial-bloque--page .rotulo-editorial--context-page.rotulo-editorial--align-center .rotulo-editorial__franja--superior.is-inversa,
@@ -4226,7 +4588,6 @@ p.rotulo-editorial__subtitulo {
         margin-right: 0;
     }
 
-    .rotulo-editorial {}
 }
 
 @media (max-width: 1024px) {
@@ -4304,7 +4665,7 @@ p.rotulo-editorial__subtitulo {
 
 .prologo {
     display: grid;
-    grid-template-columns: minmax(170px, 170px) minmax(0, 1fr);
+    grid-template-columns: minmax(100px, 100px) minmax(0, 1fr);
     gap: 32px;
     align-items: start;
     padding-top: 60px;
@@ -4317,22 +4678,35 @@ p.rotulo-editorial__subtitulo {
     border-top: 1px solid rgba(17, 17, 17, 0.08);
 }
 
-.prologo-img {
-    width: 170px;
-    height: 170px;
-    border-radius: 22px;
+.prologo .prologo-img {
+    position: relative;
+    width: 100px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
     overflow: hidden;
     background: none;
     display: block;
+    flex: 0 0 100px;
+    transform: translateY(70px);
 }
 
-.prologo-img img {
-    width: 100%;
-    height: 100%;
+.prologo .prologo-img img {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
     object-fit: cover;
-    object-position: center top;
+    object-position: center center;
     display: block;
-    border-radius: 22px;
+    border-radius: 12px;
 }
 
 .prologo-content {
@@ -4343,8 +4717,12 @@ p.rotulo-editorial__subtitulo {
     gap: 0;
 }
 
+h2.prologo-nombre,
 .prologo-nombre {
-    margin: 0;
+    margin-bottom: 0 !important;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
     font-family: var(--fiflp-font-display);
     font-size: clamp(28px, 4vw, 36px);
     line-height: 1;
@@ -4353,13 +4731,17 @@ p.rotulo-editorial__subtitulo {
 }
 
 .prologo-cargo {
-    margin: -2px 0 16px;
+    margin: 0 0 16px;
     font-family: var(--fiflp-font-meta);
     color: rgba(17, 17, 17, 0.66);
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.15;
     font-weight: 400;
     font-style: italic;
+}
+
+.prologo-nombre + .prologo-cargo {
+    margin-top: 0 !important;
 }
 
 .prologo-texto {
@@ -4430,7 +4812,7 @@ p.rotulo-editorial__subtitulo {
     max-width: 100%;
 }
 
-/* Onepage: desde el inicio del módulo hacia el margen derecho de viewport. */
+/* Onepage: escala desde el inicio del módulo hacia el borde derecho. */
 body.fiflp-onepage .bloque.imagen .imagen-full-page-figure {
     width: calc(100% + (50vw - 50%));
     max-width: none;
@@ -4675,7 +5057,7 @@ body.fiflp-onepage .bloque.imagen .imagen-full-page-figure {
     margin: 0;
     font-family: var(--fiflp-font-body);
     line-height: 1.5;
-    color: rgba(17, 17, 17, 0.66);
+    color: var(--imagen-caption-color, rgba(17, 17, 17, 0.66));
     font-style: italic;
     flex: 1 1 18rem;
     min-width: min(100%, 18rem);
@@ -5647,8 +6029,8 @@ body.fiflp-lightbox-open {
 }
 
 .footer-editorial__brand-logo {
-    max-width: 180px;
-    max-height: 72px;
+    max-width: var(--fiflp-footer-logo-width, 180px);
+    max-height: var(--fiflp-footer-logo-height, 72px);
     width: auto;
     height: auto;
     object-fit: contain;
@@ -6091,29 +6473,36 @@ body.fiflp-lightbox-open {
 
     /* Tablet: mantener estructura en 2 columnas (foto + contenido). */
     .prologo {
-        grid-template-columns: minmax(140px, 140px) minmax(0, 1fr);
+        grid-template-columns: minmax(100px, 100px) minmax(0, 1fr);
         gap: 24px;
     }
 
-    .prologo-img {
-        width: 140px;
-        max-width: 140px;
-        height: 140px;
+    .prologo .prologo-img {
+        position: relative;
+        width: 100px !important;
+        min-width: 100px !important;
+        max-width: 100px !important;
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+        aspect-ratio: 1 / 1;
+        transform: translateY(70px);
     }
 }
 
 @media (max-width: 768px) {
-    /* Prólogos (solo móvil): careto 90×105; nombre y cargo a la derecha; cuerpo debajo a ancho completo */
-    .prologo-img {
-        width: 90px !important;
-        max-width: 90px !important;
-        height: 105px !important;
-        min-height: 105px !important;
-        max-height: 105px !important;
+    /* Prólogos (solo móvil): foto cuadrada y texto alineado a la derecha */
+    .prologo .prologo-img {
+        width: 100px !important;
+        max-width: 100px !important;
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
         overflow: hidden !important;
-        border-radius: 14px !important;
+        border-radius: 10px !important;
         display: block !important;
         margin-bottom: 0 !important;
+        transform: none !important;
     }
 
     .prologo-img img {
@@ -6151,14 +6540,14 @@ body.fiflp-lightbox-open {
     .prologo:has(.prologo-img) .prologo-nombre {
         grid-column: 2;
         grid-row: 1;
-        margin: 0;
+        margin: 0 0 -8px !important;
         align-self: end;
     }
 
     .prologo:has(.prologo-img) .prologo-cargo {
         grid-column: 2;
         grid-row: 2;
-        margin: 6px 0 0;
+        margin: 0 !important;
         align-self: start;
     }
 
@@ -6387,6 +6776,16 @@ body.fiflp-landing-gate .portada-hero__content {
     gap: 20px;
     text-align: center;
     color: #fff;
+}
+
+.portada-hero__main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    transform: translateY(-50px);
 }
 
 .portada-hero__logo {
@@ -6856,7 +7255,7 @@ section.portada-hero-retaila {
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    /* Tablet: 2ª línea más abierta horizontalmente */
+    /* Tablet: la segunda fila respira más. */
     .portada-hero .footer-editorial__partners-row:nth-child(2) {
         width: min(100%, 980px);
         margin-inline: auto;
@@ -6865,7 +7264,7 @@ section.portada-hero-retaila {
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .portada-hero {
         background: var(--portada-hero-color-mobile, var(--portada-hero-color-tablet, #0f2d30));
     }

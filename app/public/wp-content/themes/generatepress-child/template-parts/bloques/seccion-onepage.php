@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$seccion_ref = get_sub_field( 'seccion_onepage' );
+$seccion_ref = fiflp_get_editorial_field( 'seccion_onepage', fiflp_normalize_editorial_args( $args ) );
 $seccion_id  = function_exists( 'fiflp_resolve_onepage_seccion_post_id' ) ? fiflp_resolve_onepage_seccion_post_id( $seccion_ref ) : 0;
 
 if ( $seccion_id <= 0 ) {
@@ -15,6 +15,7 @@ $numero   = function_exists( 'fiflp_format_onepage_section_number' )
 	? fiflp_format_onepage_section_number( $numero_raw )
 	: trim( (string) $numero_raw );
 $titulo   = trim( (string) get_field( 'titulo_seccion', $seccion_id ) );
+$ocultar_titulo_pagina = (bool) get_field( 'ocultar_titulo_pagina', $seccion_id );
 $titulo_alineacion = strtolower( trim( (string) get_field( 'titulo_alineacion', $seccion_id ) ) );
 $titulo_tamano = strtolower( trim( (string) get_field( 'titulo_tamano', $seccion_id ) ) );
 $fondo    = strtolower( trim( (string) get_field( 'fondo_color', $seccion_id ) ) );
@@ -142,12 +143,18 @@ if ( in_array( $fondo, array( '#072728', '#1e1e1e' ), true ) ) {
 	$shell_classes[] = 'seccion-onepage__shell--dark-bg';
 }
 
+if ( '' === $numero ) {
+	$shell_classes[] = 'seccion-onepage__shell--sin-numero';
+}
+
 ?>
 
 <section class="bloque seccion-onepage seccion-onepage--fullscreen fade-in"<?php echo '' !== $onepage_anchor_id ? ' id="' . esc_attr( $onepage_anchor_id ) . '"' : ''; ?>>
 	<div class="<?php echo esc_attr( implode( ' ', $shell_classes ) ); ?>" style="--onepage-bg: <?php echo esc_attr( $fondo ); ?>; --onepage-number-solid-color: <?php echo esc_attr( $numero_color_relleno ); ?>; --onepage-number-outline-color: <?php echo esc_attr( $numero_color_linea ); ?>; --onepage-number-stroke-width: <?php echo esc_attr( $numero_grosor_linea ); ?>px; --onepage-number-solid-opacity: <?php echo esc_attr( (string) $numero_opacidad_relleno ); ?>; --onepage-number-outline-opacity: <?php echo esc_attr( (string) $numero_opacidad_linea ); ?>; --onepage-number-size-vh: <?php echo esc_attr( (string) $numero_escala_vh ); ?>; --onepage-number-offset-x: <?php echo esc_attr( (string) $numero_offset_x ); ?>%; --onepage-number-top-vh: <?php echo esc_attr( (string) $numero_top_vh ); ?>vh;" data-onepage-shell data-onepage-morph-end="<?php echo esc_attr( (string) ( $onepage_morph_end_pct / 100 ) ); ?>"<?php echo $has_mobile_morph_override ? ' data-onepage-morph-end-mobile="' . esc_attr( (string) ( $onepage_morph_end_mobile_pct / 100 ) ) . '"' : ''; ?>>
 		<aside class="seccion-onepage__indice" aria-label="Índice de sección">
-			<h2 class="seccion-onepage__titulo seccion-onepage__titulo--<?php echo esc_attr( $titulo_alineacion ); ?> seccion-onepage__titulo--tam-<?php echo esc_attr( $titulo_tamano ); ?>"><?php echo esc_html( $titulo ); ?></h2>
+			<?php if ( ! $ocultar_titulo_pagina ) : ?>
+				<h2 class="seccion-onepage__titulo seccion-onepage__titulo--<?php echo esc_attr( $titulo_alineacion ); ?> seccion-onepage__titulo--tam-<?php echo esc_attr( $titulo_tamano ); ?>"><?php echo esc_html( $titulo ); ?></h2>
+			<?php endif; ?>
 		</aside>
 		<?php if ( '' !== $numero ) : ?>
 			<div class="seccion-onepage__numero-wrap" aria-hidden="true">

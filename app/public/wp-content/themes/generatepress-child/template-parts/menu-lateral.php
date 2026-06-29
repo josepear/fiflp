@@ -200,6 +200,42 @@ $render_menu_branch = function( $page, $level = 0 ) use ( &$render_menu_branch, 
 ?>
 
 <aside class="menu-lateral" aria-label="Navegacion editorial" data-mobile-nav>
+	<?php
+	$hamburger_icons = function_exists( 'fiflp_get_option_gallery_image_list' )
+		? fiflp_get_option_gallery_image_list( 'apariencia_iconos_hamburguesa', 'thumbnail', esc_html__( 'Icono de menú', 'generatepress' ) )
+		: array();
+	$hamburger_icon = ! empty( $hamburger_icons )
+		? $hamburger_icons[ array_rand( $hamburger_icons ) ]
+		: array(
+			'url' => '',
+			'alt' => '',
+		);
+
+	$menu_logo_style = function_exists( 'fiflp_build_style_attribute' )
+		? fiflp_build_style_attribute(
+			array(
+				'--fiflp-menu-logo-width'        => function_exists( 'fiflp_get_option_number' ) ? fiflp_get_option_number( 'apariencia_logo_menu_ancho', 140, 0, 400 ) . 'px' : '140px',
+				'--fiflp-menu-logo-width-mobile' => function_exists( 'fiflp_get_option_number' ) ? fiflp_get_option_number( 'apariencia_logo_menu_ancho_movil', 118, 0, 400 ) . 'px' : '118px',
+			)
+		)
+		: '';
+	?>
+	<a class="menu-lateral__brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php echo esc_attr__( 'Ir a la portada de FIFLP', 'generatepress' ); ?>"<?php echo '' !== $menu_logo_style ? ' style="' . esc_attr( $menu_logo_style ) . '"' : ''; ?>>
+		<?php
+		$menu_logo = function_exists( 'fiflp_get_option_image_data' )
+			? fiflp_get_option_image_data(
+				'apariencia_logo_menu',
+				function_exists( 'fiflp_get_theme_asset_url' ) ? fiflp_get_theme_asset_url( 'assets/logo-centenario.svg' ) : get_stylesheet_directory_uri() . '/assets/logo-centenario.svg',
+				esc_html__( 'FIFLP', 'generatepress' )
+			)
+			: array(
+				'url' => get_stylesheet_directory_uri() . '/assets/logo-centenario.svg',
+				'alt' => esc_html__( 'FIFLP', 'generatepress' ),
+			);
+		?>
+		<img src="<?php echo esc_url( isset( $menu_logo['url'] ) ? $menu_logo['url'] : '' ); ?>" alt="<?php echo esc_attr( isset( $menu_logo['alt'] ) ? $menu_logo['alt'] : esc_html__( 'FIFLP', 'generatepress' ) ); ?>" width="180" height="67" decoding="async" loading="lazy" />
+	</a>
+
 	<button
 		class="menu-lateral-mobile-toggle"
 		type="button"
@@ -209,7 +245,13 @@ $render_menu_branch = function( $page, $level = 0 ) use ( &$render_menu_branch, 
 	>
 		<span class="menu-lateral-mobile-toggle__eyebrow">Indice</span>
 		<span class="menu-lateral-mobile-toggle__title"><?php echo esc_html( get_the_title( $current_id ) ); ?></span>
-		<span class="menu-lateral-mobile-toggle__icon" aria-hidden="true">+</span>
+		<span class="menu-lateral-mobile-toggle__icon<?php echo ! empty( $hamburger_icon['url'] ) ? ' menu-lateral-mobile-toggle__icon--image' : ''; ?>" aria-hidden="true"<?php echo ! empty( $hamburger_icons ) ? ' data-menu-icon-image="1" data-hamburger-icons="' . esc_attr( wp_json_encode( $hamburger_icons ) ) . '"' : ''; ?>>
+			<?php if ( ! empty( $hamburger_icon['url'] ) ) : ?>
+				<img src="<?php echo esc_url( $hamburger_icon['url'] ); ?>" alt="" width="40" height="40" decoding="async" />
+			<?php else : ?>
+				+
+			<?php endif; ?>
+		</span>
 	</button>
 
 	<div class="menu-lateral-mobile-panel" id="menu-lateral-panel" data-mobile-nav-panel>

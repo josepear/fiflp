@@ -1,5 +1,5 @@
 <?php
-$prologos = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'prologos', $args ?? array() ) : get_sub_field( 'prologos' );
+$prologos = fiflp_get_editorial_field( 'prologos', fiflp_normalize_editorial_args( $args ) );
 
 if ( empty( $prologos ) || ! is_array( $prologos ) ) {
 	return;

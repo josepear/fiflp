@@ -7,7 +7,7 @@ $portada_hero_id = 0;
 if ( isset( $args['portada_hero_id'] ) ) {
 	$portada_hero_id = (int) $args['portada_hero_id'];
 } else {
-	$sub_ref = function_exists( 'get_sub_field' ) ? get_sub_field( 'portada_hero' ) : null;
+	$sub_ref = fiflp_get_editorial_field( 'portada_hero', array() );
 	if ( is_numeric( $sub_ref ) ) {
 		$portada_hero_id = (int) $sub_ref;
 	}
@@ -353,55 +353,57 @@ if ( $subtitulo_color ) {
 
 	<div class="portada-hero__overlay"></div>
 	<div class="portada-hero__content">
-		<?php if ( $logo_svg || '' !== $logo_url ) : ?>
-			<div class="portada-hero__logo">
-				<?php if ( $logo_svg ) : ?>
-					<?php echo $logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<?php else : ?>
-					<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $logo_alt ); ?>">
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
-
-		<?php if ( $has_rotulo ) : ?>
-			<div class="portada-hero__rotulo">
-				<?php get_template_part( 'template-parts/bloques/rotulo-editorial-page', null, array( 'module' => $rotulo_module ) ); ?>
-			</div>
-		<?php endif; ?>
-
-		<?php if ( '' !== $subtitulo_portada ) : ?>
-			<p class="portada-hero__subtitulo portada-hero__subtitulo--align-<?php echo esc_attr( $subtitulo_alineacion ); ?> portada-hero__subtitulo--font-<?php echo esc_attr( $subtitulo_tipografia ); ?>"<?php echo $subtitulo_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo wp_kses_post( nl2br( esc_html( $subtitulo_portada ) ) ); ?></p>
-		<?php endif; ?>
-
-		<div class="portada-hero__acciones">
-			<?php if ( '' !== $boton_central_texto && '' !== $boton_central_url ) : ?>
-				<a class="portada-hero__boton portada-hero__boton--central" href="<?php echo esc_url( $boton_central_url ); ?>"><span><?php echo esc_html( $boton_central_texto ); ?></span></a>
+		<div class="portada-hero__main">
+			<?php if ( $logo_svg || '' !== $logo_url ) : ?>
+				<div class="portada-hero__logo">
+					<?php if ( $logo_svg ) : ?>
+						<?php echo $logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php else : ?>
+						<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $logo_alt ); ?>">
+					<?php endif; ?>
+				</div>
 			<?php endif; ?>
-			<div class="portada-hero__acciones-sec">
-				<?php if ( '' !== $boton_pdf_texto && '' !== $boton_pdf_url ) : ?>
-					<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_pdf_url ); ?>">
-						<span class="portada-hero__boton-icon" aria-hidden="true">
-							<svg viewBox="0 0 24 24" focusable="false">
-								<path d="M6 2h8l4 4v16H6z"></path>
-								<path d="M14 2v5h5"></path>
-								<path d="M8 16h8M8 19h8"></path>
-							</svg>
-						</span>
-						<span><?php echo esc_html( $boton_pdf_texto ); ?></span>
-					</a>
+
+			<?php if ( $has_rotulo ) : ?>
+				<div class="portada-hero__rotulo">
+					<?php get_template_part( 'template-parts/bloques/rotulo-editorial-page', null, array( 'module' => $rotulo_module ) ); ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( '' !== $subtitulo_portada ) : ?>
+				<p class="portada-hero__subtitulo portada-hero__subtitulo--align-<?php echo esc_attr( $subtitulo_alineacion ); ?> portada-hero__subtitulo--font-<?php echo esc_attr( $subtitulo_tipografia ); ?>"<?php echo $subtitulo_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo wp_kses_post( nl2br( esc_html( $subtitulo_portada ) ) ); ?></p>
+			<?php endif; ?>
+
+			<div class="portada-hero__acciones">
+				<?php if ( '' !== $boton_central_texto && '' !== $boton_central_url ) : ?>
+					<a class="portada-hero__boton portada-hero__boton--central" href="<?php echo esc_url( $boton_central_url ); ?>"><span><?php echo esc_html( $boton_central_texto ); ?></span></a>
 				<?php endif; ?>
-				<?php if ( '' !== $boton_epub_texto && '' !== $boton_epub_url ) : ?>
-					<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_epub_url ); ?>">
-						<span class="portada-hero__boton-icon" aria-hidden="true">
-							<svg viewBox="0 0 24 24" focusable="false">
-								<path d="M6 3h12v18H6z"></path>
-								<path d="M9 3v18"></path>
-								<path d="M11 8h5M11 12h5M11 16h5"></path>
-							</svg>
-						</span>
-						<span><?php echo esc_html( $boton_epub_texto ); ?></span>
-					</a>
-				<?php endif; ?>
+				<div class="portada-hero__acciones-sec">
+					<?php if ( '' !== $boton_pdf_texto && '' !== $boton_pdf_url ) : ?>
+						<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_pdf_url ); ?>">
+							<span class="portada-hero__boton-icon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" focusable="false">
+									<path d="M6 2h8l4 4v16H6z"></path>
+									<path d="M14 2v5h5"></path>
+									<path d="M8 16h8M8 19h8"></path>
+								</svg>
+							</span>
+							<span><?php echo esc_html( $boton_pdf_texto ); ?></span>
+						</a>
+					<?php endif; ?>
+					<?php if ( '' !== $boton_epub_texto && '' !== $boton_epub_url ) : ?>
+						<a class="portada-hero__boton portada-hero__boton--sec" href="<?php echo esc_url( $boton_epub_url ); ?>">
+							<span class="portada-hero__boton-icon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" focusable="false">
+									<path d="M6 3h12v18H6z"></path>
+									<path d="M9 3v18"></path>
+									<path d="M11 8h5M11 12h5M11 16h5"></path>
+								</svg>
+							</span>
+							<span><?php echo esc_html( $boton_epub_texto ); ?></span>
+						</a>
+					<?php endif; ?>
+				</div>
 			</div>
 		</div>
 

@@ -45,6 +45,27 @@
             "append": ""
         },
         {
+            "key": "field_seccion_onepage_ocultar_titulo_pagina",
+            "label": "Ocultar título en la página",
+            "name": "ocultar_titulo_pagina",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Actívalo si quieres que el título siga en el menú, pero no se vea dentro de la sección.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "80",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Sí",
+            "ui_off_text": "No",
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_seccion_onepage_titulo_alineacion",
             "label": "Alineación del título",
             "name": "titulo_alineacion",
@@ -515,6 +536,25 @@
                             "placeholder": "",
                             "prepend": "",
                             "append": ""
+                        },
+                        {
+                            "key": "field_onepage_mod_imagen_color_caption",
+                            "label": "Color del caption",
+                            "name": "color_caption_imagen",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "Cambia el color del pie de foto solo en este bloque.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "30",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "allow_in_bindings": 0,
+                            "enable_opacity": 0,
+                            "return_format": "string"
                         },
                         {
                             "key": "field_onepage_mod_imagen_full",

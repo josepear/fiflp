@@ -153,6 +153,269 @@
             "step": 10,
             "prepend": "",
             "append": "px"
+        },
+        {
+            "key": "field_apariencia_tab_identidad",
+            "label": "Identidad",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_apariencia_logo_cabecera",
+            "label": "Logo cabecera",
+            "name": "apariencia_logo_cabecera",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Logo que sale en la cabecera del sitio. Si lo dejas vacío, se usa el logo actual del tema.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0,
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_apariencia_logo_menu",
+            "label": "Logo menú",
+            "name": "apariencia_logo_menu",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Logo pequeño para el menú lateral y el menú onepage. Si lo dejas vacío, se usan los logos actuales del tema.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0,
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_apariencia_tab_hamburguesa",
+            "label": "Hamburguesa",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_apariencia_iconos_hamburguesa",
+            "label": "Iconos hamburguesa",
+            "name": "apariencia_iconos_hamburguesa",
+            "aria-label": "",
+            "type": "gallery",
+            "instructions": "Añade aquí los iconos que quieres que aparezcan en el botón del menú. El tema elegirá uno al azar en cada carga de página.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min": 0,
+            "max": 0,
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "insert": "append",
+            "preview_size": "thumbnail"
+        },
+        {
+            "key": "field_apariencia_tab_tamanos",
+            "label": "Tamaños",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_apariencia_logo_cabecera_ancho",
+            "label": "Ancho logo cabecera",
+            "name": "apariencia_logo_cabecera_ancho",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Ancho máximo del logo de la cabecera en escritorio.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 360,
+            "min": 0,
+            "max": 400,
+            "placeholder": "",
+            "step": 10,
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_apariencia_logo_cabecera_ancho_movil",
+            "label": "Ancho logo cabecera móvil",
+            "name": "apariencia_logo_cabecera_ancho_movil",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Ancho máximo del logo de cabecera en móvil.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 150,
+            "min": 0,
+            "max": 400,
+            "placeholder": "",
+            "step": 5,
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_apariencia_logo_menu_ancho",
+            "label": "Ancho logo menú",
+            "name": "apariencia_logo_menu_ancho",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Ancho máximo del logo del menú lateral y onepage en escritorio.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 140,
+            "min": 0,
+            "max": 400,
+            "placeholder": "",
+            "step": 5,
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_apariencia_logo_menu_ancho_movil",
+            "label": "Ancho logo menú móvil",
+            "name": "apariencia_logo_menu_ancho_movil",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Ancho máximo del logo del menú en móvil.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 118,
+            "min": 0,
+            "max": 400,
+            "placeholder": "",
+            "step": 5,
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_apariencia_logo_footer_ancho",
+            "label": "Ancho logo footer",
+            "name": "apariencia_logo_footer_ancho",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Ancho máximo del logo principal del footer.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 180,
+            "min": 0,
+            "max": 400,
+            "placeholder": "",
+            "step": 5,
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_apariencia_logo_footer_alto",
+            "label": "Alto logo footer",
+            "name": "apariencia_logo_footer_alto",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Alto máximo del logo principal del footer.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 72,
+            "min": 0,
+            "max": 400,
+            "placeholder": "",
+            "step": 2,
+            "prepend": "",
+            "append": "px"
         }
     ],
     "location": [
@@ -173,5 +436,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1778500600
+    "modified": 1779142200
 }

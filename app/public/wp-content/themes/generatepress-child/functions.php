@@ -122,6 +122,268 @@ add_filter( 'acf/prepare_field', 'fiflp_acf_harden_field_shape', 1 );
 add_filter( 'acf/get_field', 'fiflp_acf_harden_field_shape', 2 );
 
 /**
+ * ACF: fuerza la presencia del color del caption en el bloque Imagen.
+ * Así el campo aparece aunque la sincronización local no se muestre.
+ */
+add_filter(
+	'acf/load_field_group',
+	function ( $group ) {
+		if ( ! is_array( $group ) || empty( $group['key'] ) || 'group_bloques_editoriales' !== (string) $group['key'] ) {
+			return $group;
+		}
+
+		if ( empty( $group['fields'] ) || ! is_array( $group['fields'] ) ) {
+			return $group;
+		}
+
+		$caption_field = array(
+			'key' => 'field_imagen_color_caption',
+			'label' => 'Color del caption',
+			'name' => 'color_caption_imagen',
+			'type' => 'color_picker',
+			'instructions' => 'Cambia el color del pie de foto solo en este bloque.',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '30',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
+			'allow_in_bindings' => 0,
+			'enable_opacity' => 0,
+			'return_format' => 'string',
+		);
+
+		foreach ( $group['fields'] as &$field ) {
+			if ( ! is_array( $field ) || empty( $field['key'] ) || 'field_bloques' !== (string) $field['key'] ) {
+				continue;
+			}
+			if ( empty( $field['layouts'] ) || ! is_array( $field['layouts'] ) ) {
+				continue;
+			}
+			foreach ( $field['layouts'] as &$layout ) {
+				if ( ! is_array( $layout ) || empty( $layout['key'] ) || 'layout_imagen' !== (string) $layout['key'] ) {
+					continue;
+				}
+				if ( empty( $layout['sub_fields'] ) || ! is_array( $layout['sub_fields'] ) ) {
+					$layout['sub_fields'] = array();
+				}
+
+				$exists = false;
+				foreach ( $layout['sub_fields'] as $sub_field ) {
+					if ( is_array( $sub_field ) && ! empty( $sub_field['key'] ) && 'field_imagen_color_caption' === (string) $sub_field['key'] ) {
+						$exists = true;
+						break;
+					}
+				}
+
+				if ( ! $exists ) {
+					$layout['sub_fields'][] = $caption_field;
+				}
+				break;
+			}
+			unset( $layout );
+			break;
+		}
+		unset( $field );
+
+		return $group;
+	}
+);
+
+/**
+ * ACF: mismo campo de color del caption, pero para el grupo de Secciones Onepage.
+ */
+add_filter(
+	'acf/load_field_group',
+	function ( $group ) {
+		if ( ! is_array( $group ) || empty( $group['key'] ) || 'group_secciones_onepage' !== (string) $group['key'] ) {
+			return $group;
+		}
+
+		if ( empty( $group['fields'] ) || ! is_array( $group['fields'] ) ) {
+			return $group;
+		}
+
+		$caption_field = array(
+			'key' => 'field_onepage_mod_imagen_color_caption',
+			'label' => 'Color del caption',
+			'name' => 'color_caption_imagen',
+			'type' => 'color_picker',
+			'instructions' => 'Cambia el color del pie de foto solo en este bloque.',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '30',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
+			'allow_in_bindings' => 0,
+			'enable_opacity' => 0,
+			'return_format' => 'string',
+		);
+
+		foreach ( $group['fields'] as &$field ) {
+			if ( ! is_array( $field ) || empty( $field['key'] ) || 'field_seccion_onepage_modulos' !== (string) $field['key'] ) {
+				continue;
+			}
+			if ( empty( $field['layouts'] ) || ! is_array( $field['layouts'] ) ) {
+				continue;
+			}
+			foreach ( $field['layouts'] as &$layout ) {
+				if ( ! is_array( $layout ) || empty( $layout['key'] ) || 'layout_imagen' !== (string) $layout['key'] ) {
+					continue;
+				}
+				if ( empty( $layout['sub_fields'] ) || ! is_array( $layout['sub_fields'] ) ) {
+					$layout['sub_fields'] = array();
+				}
+				$exists = false;
+				$insert_at = null;
+				foreach ( $layout['sub_fields'] as $idx => $sub_field ) {
+					if ( ! is_array( $sub_field ) ) {
+						continue;
+					}
+					if ( ! empty( $sub_field['key'] ) && 'field_onepage_mod_imagen_color_caption' === (string) $sub_field['key'] ) {
+						$exists = true;
+						break;
+					}
+					if ( ! empty( $sub_field['key'] ) && 'field_onepage_mod_imagen_caption' === (string) $sub_field['key'] ) {
+						$insert_at = $idx + 1;
+					}
+				}
+				if ( ! $exists ) {
+					if ( null === $insert_at ) {
+						$layout['sub_fields'][] = $caption_field;
+					} else {
+						array_splice( $layout['sub_fields'], $insert_at, 0, array( $caption_field ) );
+					}
+				}
+				break;
+			}
+			unset( $layout );
+			break;
+		}
+		unset( $field );
+
+		return $group;
+	}
+);
+
+/**
+ * Registro de respaldo para el grupo "Bloques editoriales".
+ * Si ACF no enseña la sincronización o está tirando de una copia vieja,
+ * cargamos el grupo modificado desde tema para que el campo exista de verdad.
+ */
+function fiflp_register_bloques_editoriales_with_caption_color() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	$group_file = get_stylesheet_directory() . '/acf-json/group_bloques_editoriales.json';
+	if ( ! file_exists( $group_file ) ) {
+		$group_file = get_stylesheet_directory() . '/fiflp.json';
+	}
+
+	if ( ! file_exists( $group_file ) ) {
+		return;
+	}
+
+	$raw = file_get_contents( $group_file );
+	if ( false === $raw ) {
+		return;
+	}
+
+	$data = json_decode( $raw, true );
+	if ( ! is_array( $data ) || empty( $data ) ) {
+		return;
+	}
+
+	// En ambos archivos el grupo vive como primer elemento del array o como el array directo.
+	$group = isset( $data[0] ) && is_array( $data[0] ) && ! empty( $data[0]['key'] ) ? $data[0] : $data;
+	if ( ! is_array( $group ) || empty( $group['key'] ) || 'group_bloques_editoriales' !== (string) $group['key'] ) {
+		return;
+	}
+
+	$caption_field = array(
+		'key' => 'field_imagen_color_caption',
+		'label' => 'Color del caption',
+		'name' => 'color_caption_imagen',
+		'type' => 'color_picker',
+		'instructions' => 'Cambia el color del pie de foto solo en este bloque.',
+		'required' => 0,
+		'conditional_logic' => 0,
+		'wrapper' => array(
+			'width' => '30',
+			'class' => '',
+			'id' => '',
+		),
+		'default_value' => '',
+		'allow_in_bindings' => 0,
+		'enable_opacity' => 0,
+		'return_format' => 'string',
+		'parent_layout' => 'layout_imagen',
+	);
+
+	if ( empty( $group['fields'] ) || ! is_array( $group['fields'] ) ) {
+		return;
+	}
+
+	foreach ( $group['fields'] as &$field ) {
+		if ( ! is_array( $field ) || empty( $field['key'] ) || 'field_bloques' !== (string) $field['key'] ) {
+			continue;
+		}
+		if ( empty( $field['layouts'] ) || ! is_array( $field['layouts'] ) ) {
+			continue;
+		}
+
+		foreach ( $field['layouts'] as &$layout ) {
+			if ( ! is_array( $layout ) || empty( $layout['key'] ) || 'layout_imagen' !== (string) $layout['key'] ) {
+				continue;
+			}
+			if ( empty( $layout['sub_fields'] ) || ! is_array( $layout['sub_fields'] ) ) {
+				$layout['sub_fields'] = array();
+			}
+
+			$exists = false;
+			$insert_at = null;
+			foreach ( $layout['sub_fields'] as $idx => $sub_field ) {
+				if ( ! is_array( $sub_field ) ) {
+					continue;
+				}
+				if ( ! empty( $sub_field['key'] ) && 'field_imagen_color_caption' === (string) $sub_field['key'] ) {
+					$exists = true;
+					break;
+				}
+				if ( ! empty( $sub_field['key'] ) && 'field_imagen_caption' === (string) $sub_field['key'] ) {
+					$insert_at = $idx + 1;
+				}
+			}
+
+			if ( ! $exists ) {
+				if ( null === $insert_at ) {
+					$layout['sub_fields'][] = $caption_field;
+				} else {
+					array_splice( $layout['sub_fields'], $insert_at, 0, array( $caption_field ) );
+				}
+			}
+			break;
+		}
+		unset( $layout );
+		break;
+	}
+	unset( $field );
+
+	if ( function_exists( 'acf_remove_local_field_group' ) ) {
+		acf_remove_local_field_group( 'group_bloques_editoriales' );
+	}
+
+	acf_add_local_field_group( $group );
+}
+add_action( 'acf/init', 'fiflp_register_bloques_editoriales_with_caption_color', 20 );
+
+/**
  * Ruta canónica de ACF Local JSON: guardado y sincronización apuntan aquí.
  *
  * - Tema hijo activo: `acf-json` dentro del stylesheet.
@@ -376,6 +638,195 @@ function fiflp_get_image_data( $image, $size = 'full', $fallback_alt = '' ) {
 	}
 
 	return $data;
+}
+
+function fiflp_get_theme_asset_url( $relative_path ) {
+	return trailingslashit( get_stylesheet_directory_uri() ) . ltrim( (string) $relative_path, '/' );
+}
+
+function fiflp_get_option_image_data( $field_name, $fallback_url = '', $fallback_alt = '', $size = 'full' ) {
+	$image = null;
+
+	if ( function_exists( 'get_field' ) ) {
+		$image = get_field( $field_name, 'option' );
+	}
+
+	$data = fiflp_get_image_data( $image, $size, $fallback_alt );
+
+	if ( '' === $data['url'] && '' !== $fallback_url ) {
+		$data['url'] = (string) $fallback_url;
+	}
+
+	if ( '' === $data['alt'] ) {
+		$data['alt'] = (string) $fallback_alt;
+	}
+
+	return $data;
+}
+
+function fiflp_get_option_random_image_data( $field_name, $fallback_url = '', $fallback_alt = '', $size = 'full' ) {
+	$images = array();
+
+	if ( function_exists( 'get_field' ) ) {
+		$images = get_field( $field_name, 'option' );
+	}
+
+	if ( ! is_array( $images ) || empty( $images ) ) {
+		return array(
+			'id'  => 0,
+			'url' => (string) $fallback_url,
+			'alt' => (string) $fallback_alt,
+		);
+	}
+
+	$normalized = array();
+
+	foreach ( $images as $image ) {
+		$data = fiflp_get_image_data( $image, $size, $fallback_alt );
+
+		if ( '' === $data['url'] ) {
+			continue;
+		}
+
+		$normalized[] = $data;
+	}
+
+	if ( empty( $normalized ) ) {
+		return array(
+			'id'  => 0,
+			'url' => (string) $fallback_url,
+			'alt' => (string) $fallback_alt,
+		);
+	}
+
+	return $normalized[ array_rand( $normalized ) ];
+}
+
+function fiflp_get_option_gallery_image_list( $field_name, $size = 'full', $fallback_alt = '' ) {
+	$images = array();
+
+	if ( function_exists( 'get_field' ) ) {
+		$images = get_field( $field_name, 'option' );
+	}
+
+	if ( ! is_array( $images ) || empty( $images ) ) {
+		return array();
+	}
+
+	$list = array();
+
+	foreach ( $images as $image ) {
+		$data = fiflp_get_image_data( $image, $size, $fallback_alt );
+
+		if ( '' === $data['url'] ) {
+			continue;
+		}
+
+		$list[] = array(
+			'url' => $data['url'],
+			'alt' => $data['alt'],
+		);
+	}
+
+	return $list;
+}
+
+function fiflp_get_hamburger_icon_candidates( $size = 'thumbnail' ) {
+	$candidates = function_exists( 'fiflp_get_option_gallery_image_list' )
+		? fiflp_get_option_gallery_image_list( 'apariencia_iconos_hamburguesa', $size, 'Icono de menú' )
+		: array();
+
+	if ( ! empty( $candidates ) ) {
+		return $candidates;
+	}
+
+	$wanted_names = array(
+		'1icon@4x-8.png',
+		'2icon@4x-8.png',
+		'3icon@4x-8.png',
+		'4icon@4x-8.png',
+		'5icon@4x-8.png',
+		'6icon@4x-8.png',
+		'7icon@4x-8.png',
+		'8icon@4x-8.png',
+		'9icon@4x-8.png',
+	);
+
+	$wanted_lookup = array_fill_keys( $wanted_names, true );
+	$attachments   = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'post_mime_type' => 'image',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
+
+	if ( empty( $attachments ) ) {
+		return array();
+	}
+
+	foreach ( $attachments as $attachment_id ) {
+		$path = (string) get_post_meta( (int) $attachment_id, '_wp_attached_file', true );
+		$file = strtolower( basename( $path ) );
+
+		if ( ! isset( $wanted_lookup[ $file ] ) ) {
+			continue;
+		}
+
+		$image = fiflp_get_image_data( (int) $attachment_id, $size, 'Icono de menú' );
+
+		if ( '' === $image['url'] ) {
+			continue;
+		}
+
+		$candidates[] = array(
+			'url' => $image['url'],
+			'alt' => $image['alt'],
+		);
+	}
+
+	return $candidates;
+}
+
+function fiflp_get_option_number( $field_name, $default_value = 0, $min = null, $max = null ) {
+	$value = $default_value;
+
+	if ( function_exists( 'get_field' ) ) {
+		$raw = get_field( $field_name, 'option' );
+
+		if ( is_numeric( $raw ) ) {
+			$value = (int) $raw;
+		}
+	}
+
+	if ( null !== $min ) {
+		$value = max( (int) $min, (int) $value );
+	}
+
+	if ( null !== $max ) {
+		$value = min( (int) $max, (int) $value );
+	}
+
+	return (int) $value;
+}
+
+function fiflp_build_style_attribute( array $styles ) {
+	$parts = array();
+
+	foreach ( $styles as $property => $value ) {
+		$property = trim( (string) $property );
+		$value    = trim( (string) $value );
+
+		if ( '' === $property || '' === $value ) {
+			continue;
+		}
+
+		$parts[] = $property . ': ' . $value;
+	}
+
+	return implode( '; ', $parts );
 }
 
 function fiflp_get_local_svg_path_from_url( $url ) {
@@ -981,22 +1432,6 @@ if ( ! function_exists( 'fiflp_collect_onepage_nav_sections' ) ) {
 	}
 }
 
-if ( ! function_exists( 'fiflp_extend_onepage_module_submenu_fields' ) ) {
-	/**
-	 * Añade controles de submenú a todos los layouts del flexible "modulos_onepage".
-	 * Permite activar cualquier módulo en el submenú lateral onepage.
-	 *
-	 * @param array $field Campo ACF flexible content.
-	 * @return array
-	 */
-	function fiflp_extend_onepage_module_submenu_fields( $field ) {
-		// Desactivado temporalmente: inyección dinámica de subcampos rompía el guardado en editor ACF.
-		return $field;
-	}
-}
-
-// add_filter( 'acf/load_field/key=field_seccion_onepage_modulos', 'fiflp_extend_onepage_module_submenu_fields', 20 );
-
 if ( ! function_exists( 'fiflp_get_sub_field_compat' ) ) {
 	/**
 	 * Devuelve un subcampo desde ACF normal o desde $args['module'] al renderizar desde onepage.
@@ -1020,6 +1455,32 @@ if ( ! function_exists( 'fiflp_get_sub_field_compat' ) ) {
 		}
 
 		return $default;
+	}
+}
+
+if ( ! function_exists( 'fiflp_get_editorial_field' ) ) {
+	/**
+	 * Atajo para leer campos editoriales desde plantillas de bloques.
+	 *
+	 * @param string $field_name Nombre del campo.
+	 * @param array  $args       Args opcionales del bloque / módulo.
+	 * @param mixed  $default    Valor por defecto.
+	 * @return mixed
+	 */
+	function fiflp_get_editorial_field( $field_name, $args = array(), $default = null ) {
+		return fiflp_get_sub_field_compat( $field_name, $args, $default );
+	}
+}
+
+if ( ! function_exists( 'fiflp_normalize_editorial_args' ) ) {
+	/**
+	 * Convierte cualquier valor de entrada en un array seguro para plantillas.
+	 *
+	 * @param mixed $args Args recibidos desde el bloque o el template part.
+	 * @return array
+	 */
+	function fiflp_normalize_editorial_args( $args ) {
+		return is_array( $args ) ? $args : array();
 	}
 }
 
@@ -1567,6 +2028,16 @@ add_action(
 			file_exists( $script_path ) ? filemtime( $script_path ) : null,
 			true
 		);
+
+		$hamburger_icons = function_exists( 'fiflp_get_option_gallery_image_list' )
+			? fiflp_get_option_gallery_image_list( 'apariencia_iconos_hamburguesa', 'thumbnail', 'Icono de menú' )
+			: array();
+
+		wp_add_inline_script(
+			'editorial-js',
+			'window.fiflpHamburgerIcons = ' . wp_json_encode( $hamburger_icons ) . ';',
+			'before'
+		);
 	}
 );
 
@@ -1699,27 +2170,70 @@ add_action(
 
 		acf_add_options_page(
 			array(
-				'page_title' => 'Apariencia editorial',
-				'menu_title' => 'Apariencia editorial',
-				'menu_slug'  => 'fiflp-apariencia',
+				'page_title' => 'FIFLP',
+				'menu_title' => 'FIFLP',
+				'menu_slug'  => 'fiflp-panel',
 				'capability' => 'edit_posts',
 				'redirect'   => false,
 				'position'   => 60,
 			)
 		);
 
-		acf_add_options_page(
+		acf_add_options_sub_page(
 			array(
-				'page_title' => 'Footer editorial',
-				'menu_title' => 'Footer editorial',
-				'menu_slug'  => 'fiflp-footer',
-				'capability' => 'edit_posts',
-				'redirect'   => false,
-				'position'   => 61,
+				'page_title'  => 'Cabecera y menú',
+				'menu_title'  => 'Cabecera y menú',
+				'menu_slug'   => 'fiflp-apariencia',
+				'parent_slug' => 'fiflp-panel',
+				'capability'  => 'edit_posts',
+				'redirect'    => false,
+			)
+		);
+
+		acf_add_options_sub_page(
+			array(
+				'page_title'  => 'Footer',
+				'menu_title'  => 'Footer',
+				'menu_slug'   => 'fiflp-footer',
+				'parent_slug' => 'fiflp-panel',
+				'capability'  => 'edit_posts',
+				'redirect'    => false,
 			)
 		);
 
 		if ( function_exists( 'acf_add_local_field_group' ) ) {
+			acf_add_local_field_group(
+				array(
+					'key' => 'group_fiflp_panel_hub',
+					'title' => 'Panel FIFLP',
+					'fields' => array(
+						array(
+							'key' => 'field_fiflp_panel_message',
+							'label' => 'Panel de control',
+							'name' => '',
+							'type' => 'message',
+							'message' => 'Usa estas dos pantallas para cambiar la cabecera, el menú y el footer. Si dejas algo vacío, el sitio usa los valores de siempre.',
+							'new_lines' => 'wpautop',
+							'esc_html' => 0,
+						),
+					),
+					'location' => array(
+						array(
+							array(
+								'param' => 'options_page',
+								'operator' => '==',
+								'value' => 'fiflp-panel',
+							),
+						),
+					),
+					'position' => 'normal',
+					'style' => 'default',
+					'label_placement' => 'top',
+					'instruction_placement' => 'label',
+					'active' => true,
+				)
+			);
+
 			acf_add_local_field_group(
 				array(
 					'key' => 'group_fiflp_front_page_portada_hero',
@@ -2497,16 +3011,28 @@ add_action(
 );
 
 /**
- * Oculta temporalmente la página "Apariencia editorial" del menú admin
- * sin eliminar sus campos ni datos.
+ * Pantalla de entrada del panel FIFLP en el admin.
  */
-add_action(
-	'admin_menu',
-	function() {
-		remove_menu_page( 'fiflp-apariencia' );
-	},
-	999
-);
+function fiflp_render_options_hub_page() {
+	?>
+	<div class="wrap">
+		<h1>FIFLP</h1>
+		<p>Desde aquí puedes cambiar la parte visual del sitio sin tocar el libro ni romper nada.</p>
+
+		<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin-top:20px;">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=fiflp-apariencia' ) ); ?>" style="display:block;padding:18px 20px;background:#fff;border:1px solid #dcdcde;border-radius:12px;text-decoration:none;">
+				<strong style="display:block;font-size:16px;margin-bottom:6px;">Cabecera y menú</strong>
+				<span style="color:#646970;">Logo de la cabecera, logo del menú y ajustes visuales compartidos.</span>
+			</a>
+
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=fiflp-footer' ) ); ?>" style="display:block;padding:18px 20px;background:#fff;border:1px solid #dcdcde;border-radius:12px;text-decoration:none;">
+				<strong style="display:block;font-size:16px;margin-bottom:6px;">Footer</strong>
+				<span style="color:#646970;">Logo del pie, colaboradores, copyright y texto adicional.</span>
+			</a>
+		</div>
+	</div>
+	<?php
+}
 
 function fiflp_get_editorial_theme_tokens() {
 	$tokens = array(
@@ -2677,8 +3203,8 @@ add_action(
 				);
 			}
 
-			// JS desactivado temporalmente en admin de página:
-			// priorizamos estabilidad de guardado ACF (evitar "Guardando..." infinito).
+			// JS de apoyo desactivado en admin de página.
+			// Priorizamos estabilidad de guardado ACF.
 		}
 	},
 	20
@@ -3277,11 +3803,24 @@ add_action(
 add_filter(
 	'generate_site_branding_output',
 	function( $output ) {
+		$logo = fiflp_get_option_image_data(
+			'apariencia_logo_cabecera',
+			fiflp_get_theme_asset_url( 'assets/logo-centenario.svg' ),
+			__( 'Logo centenario FIFLP', 'generatepress' )
+		);
+		$logo_style = fiflp_build_style_attribute(
+			array(
+				'--fiflp-header-logo-width'        => fiflp_get_option_number( 'apariencia_logo_cabecera_ancho', 360, 0, 400 ) . 'px',
+				'--fiflp-header-logo-width-mobile' => fiflp_get_option_number( 'apariencia_logo_cabecera_ancho_movil', 150, 0, 400 ) . 'px',
+			)
+		);
+
 		$extra = sprintf(
-			'<a class="fiflp-centenario-logo" href="%3$s" aria-label="%2$s"><img src="%1$s" alt="%2$s"></a>',
-			esc_url( get_stylesheet_directory_uri() . '/assets/logo-centenario.svg' ),
-			esc_attr__( 'Logo centenario FIFLP', 'generatepress' ),
-			esc_url( home_url( '/' ) )
+			'<a class="fiflp-centenario-logo"%4$s href="%3$s" aria-label="%2$s"><img src="%1$s" alt="%2$s"></a>',
+			esc_url( $logo['url'] ),
+			esc_attr( $logo['alt'] ),
+			esc_url( home_url( '/' ) ),
+			'' !== $logo_style ? ' style="' . esc_attr( $logo_style ) . '"' : ''
 		);
 
 		return str_replace( '</div>', $extra . '</div>', $output );
@@ -3397,7 +3936,12 @@ add_action(
 
 			/* cabecera lado derecho */
 			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"] {
-				grid-column: 2 / 8;
+				grid-column: 2 / 7;
+				grid-row: 2;
+			}
+
+			.layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_caption_imagen"] {
+				grid-column: 7 / 8;
 				grid-row: 2;
 			}
 
@@ -4138,7 +4682,9 @@ add_action(
 			.post-type-page .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"],
 			.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="titulo_editorial_imagen"] { grid-column: 2 / 8 !important; grid-row: 1 !important; }
 			.post-type-page .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"],
-			.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"] { grid-column: 2 / 8 !important; grid-row: 2 !important; }
+			.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="caption"] { grid-column: 2 / 7 !important; grid-row: 2 !important; }
+			.post-type-page .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_caption_imagen"],
+			.post-type-fiflp_onepage_sec .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="color_caption_imagen"] { grid-column: 7 / 8 !important; grid-row: 2 !important; }
 
 			/* Fila 3: tres cortos */
 			.post-type-page .layout[data-layout="imagen"] > .acf-fields > .acf-field[data-name="full"],

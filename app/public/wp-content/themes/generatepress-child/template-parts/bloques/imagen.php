@@ -6,12 +6,7 @@
  */
 
 $get_field = static function ( $name, $default = null ) use ( $args ) {
-	if ( function_exists( 'fiflp_get_sub_field_compat' ) ) {
-		return fiflp_get_sub_field_compat( $name, $args ?? array(), $default );
-	}
-
-	$value = get_sub_field( $name );
-	return null !== $value ? $value : $default;
+	return fiflp_get_editorial_field( $name, fiflp_normalize_editorial_args( $args ), $default );
 };
 
 $imagen  = $get_field( 'imagen', null );
@@ -35,6 +30,7 @@ $disposicion_titulo_imagen  = trim( (string) $get_field( 'disposicion_titulo_ima
 $tamano_titulo_imagen       = trim( (string) $get_field( 'tamano_titulo_imagen', '' ) );
 $tamano_pie_imagen          = trim( (string) $get_field( 'tamano_pie_imagen', '' ) );
 $tipografia_pie_imagen      = trim( (string) $get_field( 'tipografia_pie_imagen', '' ) );
+$color_caption_imagen       = sanitize_hex_color( (string) $get_field( 'color_caption_imagen', '' ) );
 $color_titulo_imagen        = sanitize_hex_color( (string) $get_field( 'color_titulo_imagen', '' ) );
 $color_borde_titulo_imagen  = sanitize_hex_color( (string) $get_field( 'color_borde_titulo_imagen', '' ) );
 $color_solido_titulo_imagen = sanitize_hex_color( (string) $get_field( 'color_solido_titulo_imagen', '' ) );
@@ -81,6 +77,10 @@ if ( ! in_array( $tamano_pie_imagen, array( 's', 'm', 'l' ), true ) ) {
 
 if ( ! in_array( $tipografia_pie_imagen, array( 'body', 'meta' ), true ) ) {
 	$tipografia_pie_imagen = 'body';
+}
+
+if ( ! $color_caption_imagen ) {
+	$color_caption_imagen = '';
 }
 
 if ( ! in_array( $escala_visual_imagen, array( '100', '75', '50', '33' ), true ) ) {
@@ -136,6 +136,11 @@ $image_filter_vars = sprintf(
 	rtrim( rtrim( number_format( $ajuste_luces_imagen, 2, '.', '' ), '0' ), '.' )
 );
 
+$figure_style = $image_filter_vars;
+if ( '' !== $color_caption_imagen ) {
+	$figure_style .= '--imagen-caption-color:' . $color_caption_imagen . ';';
+}
+
 $lightbox_classes = array( 'lightbox-trigger' );
 $image_classes    = array();
 
@@ -164,7 +169,7 @@ if ( $es_relleno_titulo ) {
 
 <section class="<?php echo esc_attr( implode( ' ', $clases ) ); ?>">
 
-	<figure class="<?php echo $full_page_imagen ? 'imagen-full-page-figure' : ''; ?>" style="<?php echo esc_attr( $image_filter_vars ); ?>">
+	<figure class="<?php echo $full_page_imagen ? 'imagen-full-page-figure' : ''; ?>" style="<?php echo esc_attr( $figure_style ); ?>">
 
 		<a href="<?php echo esc_url( $imagen_url ); ?>" class="<?php echo esc_attr( implode( ' ', $lightbox_classes ) ); ?>" data-caption="<?php echo esc_attr( $caption ?? '' ); ?>">
 			<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>"<?php echo $image_classes ? ' class="' . esc_attr( implode( ' ', $image_classes ) ) . '"' : ''; ?>>

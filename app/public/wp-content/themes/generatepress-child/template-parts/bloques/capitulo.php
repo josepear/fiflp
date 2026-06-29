@@ -5,8 +5,7 @@
  * - Ya no genera anclas internas
  */
 
-$module_args = ( isset( $args ) && is_array( $args ) ) ? $args : array();
-$titulo      = function_exists( 'fiflp_get_sub_field_compat' ) ? fiflp_get_sub_field_compat( 'titulo', $module_args ) : get_sub_field( 'titulo' );
+$titulo = fiflp_get_editorial_field( 'titulo', fiflp_normalize_editorial_args( $args ) );
 
 if ( ! $titulo ) {
 	return;

@@ -25,6 +25,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$footer_logo_alt        = isset( $footer_logo_data['alt'] ) ? (string) $footer_logo_data['alt'] : get_bloginfo( 'name' );
 	$footer_copyright_final = $footer_copyright ? $footer_copyright : '© ' . gmdate( 'Y' ) . ' FIFLP';
 	$footer_partner_rows    = array();
+	$footer_logo_style      = function_exists( 'fiflp_build_style_attribute' )
+		? fiflp_build_style_attribute(
+			array(
+				'--fiflp-footer-logo-width' => function_exists( 'fiflp_get_option_number' ) ? fiflp_get_option_number( 'apariencia_logo_footer_ancho', 180, 0, 400 ) . 'px' : '180px',
+				'--fiflp-footer-logo-height' => function_exists( 'fiflp_get_option_number' ) ? fiflp_get_option_number( 'apariencia_logo_footer_alto', 72, 0, 400 ) . 'px' : '72px',
+			)
+		)
+		: '';
 
 	if ( '' === $footer_logo_url && function_exists( 'has_custom_logo' ) && has_custom_logo() ) {
 		$custom_logo_id  = (int) get_theme_mod( 'custom_logo' );
@@ -104,7 +112,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<footer class="footer-editorial">
 		<div class="footer-editorial__inner">
 			<div class="footer-editorial__brand">
-				<a class="footer-editorial__brand-link" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+				<a class="footer-editorial__brand-link" href="<?php echo esc_url( home_url( '/' ) ); ?>"<?php echo '' !== $footer_logo_style ? ' style="' . esc_attr( $footer_logo_style ) . '"' : ''; ?>>
 					<?php $footer_logo_svg = function_exists( 'fiflp_get_svg_logo_markup' ) ? fiflp_get_svg_logo_markup( $footer_logo, array( 'class' => 'footer-editorial__brand-logo', 'alt' => $footer_logo_alt ) ) : ''; ?>
 					<?php if ( $footer_logo_svg ) : ?>
 						<?php echo $footer_logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

@@ -154,6 +154,25 @@
                             "append": ""
                         },
                         {
+                            "key": "field_imagen_color_caption",
+                            "label": "Color del caption",
+                            "name": "color_caption_imagen",
+                            "aria-label": "",
+                            "type": "color_picker",
+                            "instructions": "Cambia el color del pie de foto solo en este bloque.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "30",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "allow_in_bindings": 0,
+                            "enable_opacity": 0,
+                            "return_format": "string"
+                        },
+                        {
                             "key": "field_69cc517c81075",
                             "label": "A sangre",
                             "name": "full",
