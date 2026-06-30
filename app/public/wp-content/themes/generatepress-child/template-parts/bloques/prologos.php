@@ -26,7 +26,7 @@ if ( empty( $prologos ) || ! is_array( $prologos ) ) {
 		<article class="prologo">
 			<?php if ( $foto_url ) : ?>
 				<div class="prologo-img">
-					<img src="<?php echo esc_url( $foto_url ); ?>" alt="<?php echo esc_attr( $foto_alt ); ?>">
+					<img src="<?php echo esc_url( $foto_url ); ?>" alt="<?php echo esc_attr( $foto_alt ); ?>" width="100" height="100" loading="lazy" decoding="async">
 				</div>
 			<?php endif; ?>
 

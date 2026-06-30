@@ -60,7 +60,7 @@
                             "name": "contenido",
                             "aria-label": "",
                             "type": "wysiwyg",
-                            "instructions": "",
+                            "instructions": "Mantiene el comportamiento editorial anterior: la imagen respira fuera del ancho normal del módulo, pero no fuerza todo el ancho de pantalla.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -195,11 +195,11 @@
                         },
                         {
                             "key": "field_imagen_full_page",
-                            "label": "Full page",
+                            "label": "Full page ancho pantalla",
                             "name": "full_page_imagen",
                             "aria-label": "",
                             "type": "true_false",
-                            "instructions": "La imagen ocupa todo el ancho de pantalla y mantiene la altura proporcional.",
+                            "instructions": "La imagen ocupa todo el ancho visible de la página. Es independiente de A sangre.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {

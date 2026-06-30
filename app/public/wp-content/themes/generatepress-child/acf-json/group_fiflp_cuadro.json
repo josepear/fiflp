@@ -52,6 +52,30 @@
             "placeholder": ""
         },
         {
+            "key": "field_cuadro_alineacion_titular",
+            "label": "Alineación del titular / mensaje",
+            "name": "alineacion_titular",
+            "aria-label": "",
+            "type": "button_group",
+            "instructions": "Justificación del mensaje superior del cuadro.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Izquierda",
+                "center": "Centro",
+                "right": "Derecha"
+            },
+            "default_value": "left",
+            "return_format": "value",
+            "allow_null": 0,
+            "layout": "horizontal"
+        },
+        {
             "key": "field_cuadro_titular_min_px",
             "label": "Titular: tamaño mín. (px)",
             "name": "titular_min_px",
@@ -544,6 +568,28 @@
             "min": 10,
             "max": 120,
             "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cuadro_texto_interlineado",
+            "label": "Interlineado texto",
+            "name": "texto_interlineado",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Altura de línea del texto de las celdas. 1.45 mantiene el aspecto actual; sube el valor para más aire.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1.45,
+            "min": 0.8,
+            "max": 3,
+            "step": 0.05,
             "placeholder": "",
             "prepend": "",
             "append": ""

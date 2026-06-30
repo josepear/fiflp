@@ -117,7 +117,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php if ( $footer_logo_svg ) : ?>
 						<?php echo $footer_logo_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php elseif ( $footer_logo_url ) : ?>
-						<img class="footer-editorial__brand-logo" src="<?php echo esc_url( $footer_logo_url ); ?>" alt="<?php echo esc_attr( $footer_logo_alt ); ?>">
+						<img class="footer-editorial__brand-logo" src="<?php echo esc_url( $footer_logo_url ); ?>" alt="<?php echo esc_attr( $footer_logo_alt ); ?>" loading="lazy" decoding="async">
 					<?php else : ?>
 						<span class="footer-editorial__brand-text"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
 					<?php endif; ?>
@@ -140,14 +140,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 												<?php if ( $item['svg'] ) : ?>
 													<?php echo $item['svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 												<?php else : ?>
-													<img src="<?php echo esc_url( $item['url'] ); ?>" alt="<?php echo esc_attr( $item['alt'] ); ?>">
+													<img src="<?php echo esc_url( $item['url'] ); ?>" alt="<?php echo esc_attr( $item['alt'] ); ?>" loading="lazy" decoding="async">
 												<?php endif; ?>
 											</a>
 										<?php else : ?>
 											<?php if ( $item['svg'] ) : ?>
 												<?php echo $item['svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 											<?php else : ?>
-												<img src="<?php echo esc_url( $item['url'] ); ?>" alt="<?php echo esc_attr( $item['alt'] ); ?>">
+												<img src="<?php echo esc_url( $item['url'] ); ?>" alt="<?php echo esc_attr( $item['alt'] ); ?>" loading="lazy" decoding="async">
 											<?php endif; ?>
 										<?php endif; ?>
 									</div>

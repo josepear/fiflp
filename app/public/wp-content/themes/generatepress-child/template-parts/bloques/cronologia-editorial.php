@@ -214,7 +214,7 @@ if ( empty( $hitos ) || ! is_array( $hitos ) ) {
 								<div class="cronologia-editorial__media-stack <?php echo count( $medias ) > 1 ? 'cronologia-editorial__media-stack--cols-2' : 'cronologia-editorial__media-stack--cols-1'; ?>">
 									<?php foreach ( $medias as $media ) : ?>
 										<a href="<?php echo esc_url( $media['lightbox_url'] ?? $media['url'] ); ?>" class="lightbox-trigger<?php echo ! empty( $media['multiply'] ) ? ' is-multiply' : ''; ?>" data-caption="<?php echo esc_attr( $media['caption'] ); ?>">
-											<img src="<?php echo esc_url( $media['url'] ); ?>" alt="<?php echo esc_attr( $media['alt'] ); ?>" class="<?php echo ! empty( $media['multiply'] ) ? 'is-multiply' : ''; ?>"<?php echo '' !== $media['tone_style'] ? ' style="' . esc_attr( $media['tone_style'] ) . '"' : ''; ?>>
+											<img src="<?php echo esc_url( $media['url'] ); ?>" alt="<?php echo esc_attr( $media['alt'] ); ?>" loading="lazy" decoding="async" class="<?php echo ! empty( $media['multiply'] ) ? 'is-multiply' : ''; ?>"<?php echo '' !== $media['tone_style'] ? ' style="' . esc_attr( $media['tone_style'] ) . '"' : ''; ?>>
 										</a>
 									<?php endforeach; ?>
 								</div>

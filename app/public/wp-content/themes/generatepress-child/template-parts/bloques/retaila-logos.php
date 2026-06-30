@@ -90,14 +90,14 @@ if ( count( $rows ) > 2 ) {
 									<?php if ( $logo['svg'] ) : ?>
 										<?php echo $logo['svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 									<?php else : ?>
-										<img src="<?php echo esc_url( $logo['url'] ); ?>" alt="<?php echo esc_attr( $logo['alt'] ); ?>">
+										<img src="<?php echo esc_url( $logo['url'] ); ?>" alt="<?php echo esc_attr( $logo['alt'] ); ?>" loading="lazy" decoding="async">
 									<?php endif; ?>
 								</a>
 							<?php else : ?>
 								<?php if ( $logo['svg'] ) : ?>
 									<?php echo $logo['svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								<?php else : ?>
-									<img src="<?php echo esc_url( $logo['url'] ); ?>" alt="<?php echo esc_attr( $logo['alt'] ); ?>">
+									<img src="<?php echo esc_url( $logo['url'] ); ?>" alt="<?php echo esc_attr( $logo['alt'] ); ?>" loading="lazy" decoding="async">
 								<?php endif; ?>
 							<?php endif; ?>
 						</div>

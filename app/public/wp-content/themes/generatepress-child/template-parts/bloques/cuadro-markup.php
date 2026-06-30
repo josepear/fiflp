@@ -60,6 +60,11 @@ if ( ! in_array( $tipografia_titular, $tipografias_cifra_validas, true ) ) {
 	$tipografia_titular = 'manrope';
 }
 
+$alineacion_titular = isset( $fields['alineacion_titular'] ) ? (string) $fields['alineacion_titular'] : 'left';
+if ( ! in_array( $alineacion_titular, array( 'left', 'center', 'right' ), true ) ) {
+	$alineacion_titular = 'left';
+}
+
 $tipografia_intro = isset( $fields['tipografia_intro'] ) ? (string) $fields['tipografia_intro'] : 'editorial';
 if ( ! in_array( $tipografia_intro, $tipografias_cifra_validas, true ) ) {
 	$tipografia_intro = 'editorial';
@@ -80,6 +85,8 @@ list( $tmin, $tmax ) = fiflp_cuadro_normalize_px_pair(
 
 $cifra_clamp = fiflp_cuadro_clamp_font_size( $cmin, $cmax, 4.0 );
 $texto_clamp = fiflp_cuadro_clamp_font_size( $tmin, $tmax, 2.75 );
+$texto_interlineado = isset( $fields['texto_interlineado'] ) ? (float) $fields['texto_interlineado'] : 1.45;
+$texto_interlineado = max( 0.8, min( 3.0, $texto_interlineado ) );
 
 list( $tit_min, $tit_max ) = fiflp_cuadro_normalize_px_pair(
 	$fields['titular_min_px'] ?? 15,
@@ -180,6 +187,7 @@ if ( 'manrope' === $tipografia ) {
 }
 
 $classes[] = 'fiflp-cuadro--titular-' . str_replace( '_', '-', $tipografia_titular );
+$classes[] = 'fiflp-cuadro--titular-align-' . $alineacion_titular;
 $classes[] = 'fiflp-cuadro--intro-' . str_replace( '_', '-', $tipografia_intro );
 
 $aria_label = get_the_title( $cuadro_id );
@@ -188,13 +196,14 @@ if ( '' === trim( $aria_label ) ) {
 }
 
 $style_vars = sprintf(
-	'--fiflp-cuadro-cifra-size:%1$s;--fiflp-cuadro-texto-size:%2$s;--fiflp-cuadro-titular-size:%3$s;--fiflp-cuadro-intro-size:%4$s;--fiflp-cuadro-color-cifra:%5$s;--fiflp-cuadro-color-texto:%6$s;',
+	'--fiflp-cuadro-cifra-size:%1$s;--fiflp-cuadro-texto-size:%2$s;--fiflp-cuadro-titular-size:%3$s;--fiflp-cuadro-intro-size:%4$s;--fiflp-cuadro-color-cifra:%5$s;--fiflp-cuadro-color-texto:%6$s;--fiflp-cuadro-texto-line-height:%7$s;',
 	$cifra_clamp,
 	$texto_clamp,
 	$titular_clamp,
 	$intro_clamp,
 	$color_cifra,
-	$color_texto
+	$color_texto,
+	rtrim( rtrim( number_format( $texto_interlineado, 2, '.', '' ), '0' ), '.' )
 );
 ?>
 

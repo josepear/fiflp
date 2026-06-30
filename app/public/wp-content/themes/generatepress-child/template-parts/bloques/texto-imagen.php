@@ -233,7 +233,7 @@ $rotulo_classes = array(
 			<div class="<?php echo esc_attr( implode( ' ', $clases_col_imagen ) ); ?>">
 				<figure class="texto-imagen__figure">
 					<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
-						<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
+						<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>" loading="lazy" decoding="async">
 					</a>
 
 					<?php if ( '' !== $titulo_editorial_imagen ) : ?>
@@ -278,7 +278,7 @@ $rotulo_classes = array(
 			<div class="<?php echo esc_attr( implode( ' ', $clases_col_imagen ) ); ?>">
 				<figure class="texto-imagen__figure">
 					<a href="<?php echo esc_url( $imagen_url ); ?>" class="lightbox-trigger" data-caption="<?php echo esc_attr( $caption ); ?>">
-						<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>">
+						<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>" loading="lazy" decoding="async">
 					</a>
 
 					<?php if ( '' !== $titulo_editorial_imagen ) : ?>

@@ -872,8 +872,59 @@ document.addEventListener("DOMContentLoaded", function () {
         const panel = document.querySelector('[data-onepage-sidebar-panel]');
         let compactExitTimerId = null;
         let compactExitOnEnd = null;
+        let fullpageImageFrame = 0;
         const easeInOutSine = (t) => {
             return -(Math.cos(Math.PI * Math.max(0, Math.min(1, t))) - 1) / 2;
+        };
+
+        const syncFullpageImages = () => {
+            fullpageImageFrame = 0;
+            const viewportWidth = document.documentElement.clientWidth || window.innerWidth || 0;
+            const sidebar = document.querySelector('.fiflp-onepage-sidebar-col');
+            const sidebarRect = sidebar ? sidebar.getBoundingClientRect() : null;
+            const sidebarWidth = sidebarRect ? Math.max(0, sidebarRect.width) : 0;
+            const imageInsetLeft = !isCompact() && sidebarRect && sidebarWidth > 1
+                ? Math.max(10, sidebarRect.right + 10)
+                : 10;
+            const imageInsetRight = 10;
+            document.querySelectorAll('.bloque.imagen.imagen--fullpage .imagen-full-page-figure').forEach((figure) => {
+                const block = figure.closest('.bloque.imagen');
+                if (!block || !viewportWidth) {
+                    return;
+                }
+
+                const blockRect = block.getBoundingClientRect();
+                const bleedStartOffset = Math.max(0, (blockRect.width - 860) / 2);
+                const captionOffset = blockRect.left + bleedStartOffset - imageInsetLeft;
+                figure.style.setProperty('--imagen-fullpage-offset-x', `${(imageInsetLeft - blockRect.left).toFixed(2)}px`);
+                figure.style.setProperty('--imagen-fullpage-width', `${Math.max(0, viewportWidth - imageInsetLeft - imageInsetRight)}px`);
+                figure.style.setProperty('--imagen-fullpage-caption-offset-x', `${captionOffset.toFixed(2)}px`);
+                figure.style.setProperty('--imagen-fullpage-caption-width', `${Math.max(0, viewportWidth - imageInsetLeft - captionOffset - imageInsetRight)}px`);
+            });
+        };
+
+        const requestFullpageImageSync = () => {
+            if (fullpageImageFrame) {
+                return;
+            }
+            fullpageImageFrame = window.requestAnimationFrame(syncFullpageImages);
+        };
+
+        const syncFullpageImagesDuringMenuMove = () => {
+            const start = performance.now();
+            const tick = () => {
+                syncFullpageImages();
+                if (performance.now() - start < 1300) {
+                    window.requestAnimationFrame(tick);
+                }
+            };
+            window.requestAnimationFrame(tick);
+        };
+
+        const settleFullpageImagesAfterMenuMove = () => {
+            syncFullpageImagesDuringMenuMove();
+            window.setTimeout(requestFullpageImageSync, 560);
+            window.setTimeout(requestFullpageImageSync, 760);
         };
 
         const animateScrollTo = (targetTop) => {
@@ -972,6 +1023,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            if (open) {
+                document.body.classList.remove('onepage-menu-closing');
+            }
+
             if (
                 !open &&
                 isCompact() &&
@@ -984,11 +1039,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             clearCompactExitAnimation();
+            document.body.classList.remove('onepage-menu-closing');
             document.body.classList.remove('onepage-menu-exit-down', 'onepage-menu-skip-panel-transition');
             document.body.classList.toggle('onepage-menu-open', open);
             document.body.classList.toggle('onepage-menu-closed', !open);
             toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             persistDesktop(open);
+            settleFullpageImagesAfterMenuMove();
         };
 
         const initialOpen = () => {
@@ -1014,6 +1071,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const initialIsOpen = initialOpen();
 
         applyState(initialIsOpen);
+        requestFullpageImageSync();
 
         toggle.addEventListener('click', () => {
             if (document.body.classList.contains('onepage-menu-exit-down')) {
@@ -1162,6 +1220,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const compact = isCompact();
 
                 if (compact === lastCompact) {
+                    requestFullpageImageSync();
                     return;
                 }
 
@@ -1176,6 +1235,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const stored = readDesktopPreference();
                     applyState(stored !== 'closed');
                 }
+                requestFullpageImageSync();
             },
             { passive: true }
         );
@@ -2115,10 +2175,16 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll('.bloque.seccion-onepage')
         );
         let syncHeaderFrame = 0;
+        let lastHeaderScrollY = window.scrollY || 0;
+        let headerOpenProgress = 1;
 
         if (!header || !onepageSections.length) return;
 
         const clamp01 = (v) => Math.max(0, Math.min(1, v));
+        const smoothstep = (v) => {
+            const k = clamp01(v);
+            return k * k * (3 - (2 * k));
+        };
 
         const cssColorToRgb = (input) => {
             if (!input || typeof input !== 'string') {
@@ -2224,8 +2290,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 const vh = window.innerHeight;
                 const scrollY = window.scrollY || 0;
                 const isDesktop = !mqMobile782.matches;
-                const progressRaw = isDesktop ? clamp01(scrollY / 180) : 0;
-                const headerProgress = progressRaw * progressRaw * (3 - (2 * progressRaw));
+                const scrollDelta = scrollY - lastHeaderScrollY;
+                const naturalOpenProgress = isDesktop ? (1 - smoothstep(scrollY / 180)) : 1;
+
+                if (!isDesktop) {
+                    headerOpenProgress = 1;
+                } else if (scrollY <= 2) {
+                    headerOpenProgress = 1;
+                } else if (scrollDelta < -1) {
+                    // Si el usuario cambia de sentido y sube, recuperamos la cabecera grande sin esperar al inicio.
+                    headerOpenProgress = Math.max(
+                        naturalOpenProgress,
+                        Math.min(1, headerOpenProgress + (Math.abs(scrollDelta) / 160))
+                    );
+                } else if (scrollDelta > 1) {
+                    // Al bajar, la cabecera vuelve a compactarse con el propio movimiento de scroll.
+                    headerOpenProgress = Math.max(
+                        naturalOpenProgress,
+                        Math.max(0, headerOpenProgress - (scrollDelta / 180))
+                    );
+                } else {
+                    headerOpenProgress = Math.max(naturalOpenProgress, headerOpenProgress);
+                }
+
+                lastHeaderScrollY = scrollY;
+
+                const headerProgress = isDesktop ? (1 - headerOpenProgress) : 0;
                 const isCompact = isDesktop ? headerProgress > 0.02 : scrollY > 40;
                 const headerH = isDesktop ? (222 - (142 * headerProgress)) : (header.offsetHeight || 0);
                 const logoScale = isDesktop ? (1 - (0.6666 * headerProgress)) : 1;

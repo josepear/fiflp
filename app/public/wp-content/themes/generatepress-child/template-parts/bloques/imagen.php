@@ -109,6 +109,9 @@ if ( $full ) {
 	$clases[] = 'imagen-full';
 }
 
+if ( $full_page_imagen ) {
+	$clases[] = 'imagen--fullpage';
+}
 
 if ( $sin_redondeo ) {
 	$clases[] = 'imagen--sin-redondeo';
@@ -172,7 +175,7 @@ if ( $es_relleno_titulo ) {
 	<figure class="<?php echo $full_page_imagen ? 'imagen-full-page-figure' : ''; ?>" style="<?php echo esc_attr( $figure_style ); ?>">
 
 		<a href="<?php echo esc_url( $imagen_url ); ?>" class="<?php echo esc_attr( implode( ' ', $lightbox_classes ) ); ?>" data-caption="<?php echo esc_attr( $caption ?? '' ); ?>">
-			<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>"<?php echo $image_classes ? ' class="' . esc_attr( implode( ' ', $image_classes ) ) . '"' : ''; ?>>
+			<img src="<?php echo esc_url( $imagen_url ); ?>" alt="<?php echo esc_attr( $imagen_alt ); ?>" loading="lazy" decoding="async"<?php echo $image_classes ? ' class="' . esc_attr( implode( ' ', $image_classes ) ) . '"' : ''; ?>>
 		</a>
 
 		<?php if ( '' !== $titulo_editorial_imagen ) : ?>
